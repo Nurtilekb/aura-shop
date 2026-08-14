@@ -1,17 +1,19 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:aurashop/widgets/pressed_button.dart';
 import 'package:flutter/material.dart';
 
-class EmailVerificationScreen extends StatefulWidget {
+@RoutePage()
+class VerificationScreen extends StatefulWidget {
   final String email;
 
-  const EmailVerificationScreen({super.key, required this.email});
+  const VerificationScreen({super.key, required this.email});
 
   @override
-  State<EmailVerificationScreen> createState() =>
-      _EmailVerificationScreenState();
+  State<VerificationScreen> createState() =>
+      _VerificationScreenState();
 }
 
-class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
+class _VerificationScreenState extends State<VerificationScreen> {
   final List<TextEditingController> _otpControllers = List.generate(
     4,
     (index) => TextEditingController(),
@@ -63,7 +65,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => context.router.pop(),
         ),
 
         centerTitle: true,

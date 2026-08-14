@@ -1,9 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:aurashop/screens/registrarion_screen.dart';
 import 'package:aurashop/widgets/app_input_widget.dart';
 import 'package:aurashop/widgets/pressed_button.dart';
 import 'package:flutter/material.dart';
 import 'package:aurashop/utils/validators.dart';
 
+@RoutePage()
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -194,10 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _forLogin() {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => RegistrationScreen()),
-        );
+        context.router.push(const RegistrationRoute());
       },
       child: Text(
         'Зарегистрироваться',

@@ -1,9 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:aurashop/screens/verification_screen.dart';
 import 'package:aurashop/utils/validators.dart';
 import 'package:aurashop/widgets/app_input_widget.dart';
 import 'package:aurashop/widgets/pressed_button.dart';
 import 'package:flutter/material.dart';
 
+@RoutePage()
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
 
@@ -252,12 +254,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   void _handleLogin() {
     if (_formKey2.currentState?.validate() ?? false) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              EmailVerificationScreen(email: _emailController.text),
-        ),
+      context.router.push(
+        VerificationRoute(email: _emailController.text),
       );
     }
   }
