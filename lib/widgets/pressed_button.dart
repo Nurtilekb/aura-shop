@@ -36,8 +36,8 @@ class PressedButton extends StatelessWidget {
         side: borderColor != null
             ? BorderSide(color: borderColor!, width: 0.5)
             : null,
-        backgroundColor: backgroundColor ?? Colors.blue, // ← Исправлено
-        foregroundColor: Colors.white,
+        backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         padding: padding ?? const EdgeInsets.symmetric(vertical: 16),
         shape:
             borderradius ??
@@ -60,7 +60,7 @@ class PressedButton extends StatelessWidget {
                 text,
                 style:
                     textstyle ??
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onPrimary),
               ),
             ],
           ),
