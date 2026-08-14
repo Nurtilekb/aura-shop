@@ -65,14 +65,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Подтверждение почты',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+
         centerTitle: true,
       ),
       body: SafeArea(
@@ -83,16 +76,18 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             children: [
               const SizedBox(height: 20),
               Container(
-                width: 80,
-                height: 80,
+                padding: EdgeInsets.all(10),
+                width: 100,
+                height: 100,
                 decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
                   color: const Color(0xFF5D50FE).withOpacity(0.1),
-                  shape: BoxShape.circle,
+                  border: Border.all(width: 0, color: Colors.transparent),
                 ),
-                child: const Icon(
-                  Icons.email_outlined,
-                  size: 40,
-                  color: Color(0xFF5D50FE),
+                child: Image.asset(
+                  'assets/icons/pochta.png',
+                  width: 25,
+                  height: 25,
                 ),
               ),
               const SizedBox(height: 24),
@@ -172,7 +167,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 child: PressedButton(
                   text: "Подтвердить",
                   textstyle: null,
-                  backroundfcolor: const Color(0xFF5D50FE),
+                  backgroundColor: Color(0xFF5D50FE),
                 ),
               ),
               const SizedBox(height: 24),

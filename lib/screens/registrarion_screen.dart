@@ -205,7 +205,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                   padding: EdgeInsets.only(top: 1),
                   text: 'Регистрация через Google',
-                  backroundfcolor: const Color.fromARGB(255, 212, 16, 16),
+                  backgroundColor: const Color.fromARGB(255, 212, 16, 16),
                   height: 20,
                   textstyle: TextStyle(
                     fontSize: 16,

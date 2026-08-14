@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: _handleLogin,
                   text: 'Войти',
                   height: 30,
-                  backroundfcolor: Color(0xff5D50FE),
+                  backgroundColor: Color(0xff5D50FE),
                   textstyle: null,
                 ),
                 const SizedBox(height: 20),
@@ -126,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderColor: Colors.black,
                   padding: EdgeInsets.only(top: 1),
                   text: 'Регистрация через Google',
-                  backroundfcolor: Color(0xff5D50FE),
+                  backgroundColor: Color(0xff5D50FE),
                   height: 56,
                   textstyle: TextStyle(
                     fontSize: 16,

@@ -6,22 +6,28 @@ class PressedButton extends StatelessWidget {
     this.onPressed,
     required this.text,
     this.height,
-    this.backroundfcolor,
-    required this.textstyle,
+    this.backgroundColor, // ← Исправлено название
+    this.textstyle, // ← Убрал required
     this.borderradius,
     this.padding,
     this.imagePath,
     this.borderColor,
+    this.imageWidth = 24,
+    this.imageHeight = 24,
   });
+
   final VoidCallback? onPressed;
   final String text;
   final double? height;
-  final Color? backroundfcolor;
-  final TextStyle? textstyle;
+  final Color? backgroundColor; // ← Исправлено название
+  final TextStyle? textstyle; // ← Убрал required
   final RoundedRectangleBorder? borderradius;
   final EdgeInsetsGeometry? padding;
   final String? imagePath;
   final Color? borderColor;
+  final double imageWidth;
+  final double imageHeight;
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -30,9 +36,9 @@ class PressedButton extends StatelessWidget {
         side: borderColor != null
             ? BorderSide(color: borderColor!, width: 0.5)
             : null,
-        backgroundColor: backroundfcolor ?? Colors.blue,
+        backgroundColor: backgroundColor ?? Colors.blue, // ← Исправлено
         foregroundColor: Colors.white,
-        padding: padding ?? EdgeInsets.symmetric(vertical: 16),
+        padding: padding ?? const EdgeInsets.symmetric(vertical: 16),
         shape:
             borderradius ??
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -44,15 +50,17 @@ class PressedButton extends StatelessWidget {
         child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              if (imagePath != null)
-                Image.asset(imagePath!, width: 24, height: 24),
-              if (imagePath != null) SizedBox(width: 20),
+              if (imagePath != null && imagePath!.isNotEmpty) ...[
+                Image.asset(imagePath!, width: imageWidth, height: imageHeight),
+                const SizedBox(width: 12),
+              ],
               Text(
                 text,
                 style:
                     textstyle ??
-                    TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
             ],
           ),
