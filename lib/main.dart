@@ -18,9 +18,11 @@ class MyApp extends StatelessWidget {
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, state) {
           final brightness = MediaQuery.platformBrightnessOf(context);
-          final isDarkMode = state.themeMode == ThemeModeStatus.dark ||
-              (state.themeMode == ThemeModeStatus.system && brightness == Brightness.dark);
-          
+          final isDarkMode =
+              state.themeMode == ThemeModeStatus.dark ||
+              (state.themeMode == ThemeModeStatus.system &&
+                  brightness == Brightness.dark);
+
           final appColors = isDarkMode
               ? AppColors.dark(state.seedColor)
               : AppColors.light(state.seedColor);
