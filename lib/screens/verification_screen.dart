@@ -1,3 +1,4 @@
+import 'package:aurashop/widgets/iconwith_background_widget.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:aurashop/widgets/pressed_button.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,7 @@ class VerificationScreen extends StatefulWidget {
   const VerificationScreen({super.key, required this.email});
 
   @override
-  State<VerificationScreen> createState() =>
-      _VerificationScreenState();
+  State<VerificationScreen> createState() => _VerificationScreenState();
 }
 
 class _VerificationScreenState extends State<VerificationScreen> {
@@ -76,22 +76,10 @@ class _VerificationScreenState extends State<VerificationScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 20),
-              Container(
-                padding: EdgeInsets.all(10),
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: const Color(0xFF5D50FE).withOpacity(0.1),
-                  border: Border.all(width: 0, color: Colors.transparent),
-                ),
-                child: Image.asset(
-                  'assets/icons/pochta.png',
-                  width: 25,
-                  height: 25,
-                ),
-              ),
+              const SizedBox(
+                height: 20,
+              ), ///////////////////////////////////////////////////////////////////////////////////////
+              IconWithBack(),
               const SizedBox(height: 24),
               const Text(
                 'Проверьте почту',

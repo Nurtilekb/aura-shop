@@ -1,3 +1,4 @@
+import 'package:aurashop/theme/app_colors.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:flutter/material.dart';
@@ -31,10 +32,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Настройки'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Настройки'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -44,9 +42,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildSectionTitle('Тема оформления'),
             const SizedBox(height: 12),
             _buildThemeModeSelector(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Секция выбора основного цвета
             _buildSectionTitle('Основной цвет (Seed Color)'),
             const SizedBox(height: 12),
@@ -58,16 +56,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(height: 16),
             _buildColorGrid(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Секция предпросмотра
             _buildSectionTitle('Предпросмотр'),
             const SizedBox(height: 12),
             _buildPreviewCard(),
-            
+
             const SizedBox(height: 32),
-            
+
             // Информация о текущем цвете
             _buildCurrentColorInfo(),
           ],
@@ -79,9 +77,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-        fontWeight: FontWeight.bold,
-      ),
+      style: Theme.of(
+        context,
+      ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
     );
   }
 
@@ -256,7 +254,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Поле ввода
                 TextField(
                   decoration: InputDecoration(
@@ -265,7 +263,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     fillColor: previewColors.surface,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: previewColors.outlineVariant),
+                      borderSide: BorderSide(
+                        color: previewColors.outlineVariant,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -277,7 +277,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Чипсы
                 Wrap(
                   spacing: 8,
@@ -301,7 +301,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Индикатор прогресса
                 LinearProgressIndicator(
                   value: 0.7,
@@ -355,9 +355,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         Text(
                           'Seed Color',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
                         ),
                       ],
                     ),

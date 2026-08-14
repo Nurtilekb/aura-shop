@@ -1,4 +1,6 @@
+import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PressedButton extends StatelessWidget {
   const PressedButton({
@@ -30,42 +32,55 @@ class PressedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        side: borderColor != null
-            ? BorderSide(color: borderColor!, width: 0.5)
-            : null,
-        backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        padding: padding ?? const EdgeInsets.symmetric(vertical: 16),
-        shape:
-            borderradius ??
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        elevation: 0,
-      ),
-      child: SizedBox(
-        width: double.infinity,
-        height: height ?? 30,
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (imagePath != null && imagePath!.isNotEmpty) ...[
-                Image.asset(imagePath!, width: imageWidth, height: imageHeight),
-                const SizedBox(width: 12),
-              ],
-              Text(
-                text,
-                style:
-                    textstyle ??
-                    TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onPrimary),
-              ),
-            ],
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, state) {
+        return FilledButton(
+          onPressed: onPressed,
+          style: FilledButton.styleFrom(
+            shadowColor: Colors.transparent,
+            side: borderColor != null
+                ? BorderSide(color: borderColor!, width: 0.5)
+                : null,
+            backgroundColor: backgroundColor ?? state.directAccentColor,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
+            padding: padding ?? const EdgeInsets.symmetric(vertical: 16),
+            shape:
+                borderradius ??
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            elevation: 0,
           ),
-        ),
-      ),
+          child: SizedBox(
+            width: double.infinity,
+            height: height ?? 30,
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (imagePath != null && imagePath!.isNotEmpty) ...[
+                    Image.asset(
+                      imagePath!,
+                      width: imageWidth,
+                      height: imageHeight,
+                    ),
+                    const SizedBox(width: 12),
+                  ],
+                  Text(
+                    text,
+                    style:
+                        textstyle ??
+                        TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

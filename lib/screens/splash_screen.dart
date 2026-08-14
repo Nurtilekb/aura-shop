@@ -1,14 +1,19 @@
-import 'package:aurashop/screens/login_screen.dart';
+import 'package:aurashop/router/app_router.gr.dart';
+import 'package:aurashop/widgets/iconwith_background_widget.dart';
+import 'package:aurashop/widgets/pressed_button.dart';
+
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+@RoutePage()
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  State<SplashScreen> createState() => _SplasScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _SplasScreenState extends State<SplashScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -17,19 +22,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       title: 'Тысячи товаров в одном месте',
       description:
           'Одежда, гаджеты, товары для дома — находите нужное быстро и удобно.',
-      image: 'assets/images/onboarding1.png', // Замените на свой путь
+      image: 'assets/icons/shop_packets.png', // Замените на свой путь
     ),
     const OnboardingItem(
       title: 'Быстрая доставка к вашей двери',
       description:
           'Курьер уже завтра или пункт выдачи рядом с домом — выбирайте удобное.',
-      image: 'assets/images/onboarding2.png', // Замените на свой путь
+      image: 'assets/icons/car.png', // Замените на свой путь
     ),
     const OnboardingItem(
       title: 'Скидки и бонусы каждый день',
       description:
           'Копите бонусы с каждой покупки и получайте персональные предложения.',
-      image: 'assets/images/onboarding3.png', // Замените на свой путь
+      image: 'assets/icons/gift.png', // Замените на свой путь
     ),
   ];
 
@@ -51,21 +56,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _navigateToLogin() {
-    // Переход на экран входа/регистрации
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => const LoginScreen()),
-    // );
+    context.replaceRoute(LoginRoute());
   }
 
   @override
   Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme.primary;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
-            // Skip Button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               child: Row(
@@ -77,7 +78,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       'Пропустить',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.grey.shade600,
+                        color: color,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -85,8 +86,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ],
               ),
             ),
-
-            // Page View
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
@@ -101,13 +100,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 },
               ),
             ),
-
-            // Bottom Section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
               child: Column(
                 children: [
-                  // Page Indicator
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
@@ -127,33 +123,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-
-                  // Next/Start Button
                   SizedBox(
                     width: double.infinity,
                     height: 56,
-                    child: ElevatedButton(
+                    child: PressedButton(
+                      text: _currentPage == _pages.length - 1
+                          ? 'Начать'
+                          : 'Далее',
                       onPressed: _nextPage,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF5D50FE),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: Text(
-                        _currentPage == _pages.length - 1 ? 'Начать' : 'Далее',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
-
-                  // Login Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -187,7 +167,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
-// Модель данных для страниц онбординга
 class OnboardingItem {
   final String title;
   final String description;
@@ -200,7 +179,6 @@ class OnboardingItem {
   });
 }
 
-// Виджет отдельной страницы онбординга
 class OnboardingPage extends StatelessWidget {
   final OnboardingItem item;
 
@@ -213,29 +191,12 @@ class OnboardingPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Изображение (замените на свой виджет)
-          Container(
-            width: 280,
-            height: 280,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(20),
-              image: const DecorationImage(
-                image: AssetImage('assets/images/placeholder.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Center(
-              child: Icon(
-                Icons.shopping_bag,
-                size: 80,
-                color: Colors.grey.shade400,
-              ),
-            ),
+          IconWithBack(
+            imagePath: item.image,
+            sizes: 280,
+            padding: EdgeInsets.all(50),
           ),
           const SizedBox(height: 48),
-
-          // Заголовок
           Text(
             item.title,
             style: const TextStyle(
@@ -246,8 +207,6 @@ class OnboardingPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
-
-          // Описание
           Text(
             item.description,
             style: TextStyle(
