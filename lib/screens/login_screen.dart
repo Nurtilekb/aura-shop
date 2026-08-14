@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:aurashop/screens/registrarion_screen.dart';
+import 'package:aurashop/screens/settings_screen.dart';
 import 'package:aurashop/widgets/app_input_widget.dart';
 import 'package:aurashop/widgets/pressed_button.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,16 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings, color: Colors.black),
+            onPressed: () => context.router.push(const SettingsRoute()),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           controller: _scrollController,
