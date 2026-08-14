@@ -38,14 +38,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Секция выбора темы
             _buildSectionTitle('Тема оформления'),
             const SizedBox(height: 12),
             _buildThemeModeSelector(),
-
             const SizedBox(height: 24),
-
-            // Секция выбора основного цвета
             _buildSectionTitle('Основной цвет (Seed Color)'),
             const SizedBox(height: 12),
             Text(
@@ -56,17 +52,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(height: 16),
             _buildColorGrid(),
-
             const SizedBox(height: 24),
-
-            // Секция предпросмотра
             _buildSectionTitle('Предпросмотр'),
             const SizedBox(height: 12),
             _buildPreviewCard(),
-
             const SizedBox(height: 32),
-
-            // Информация о текущем цвете
             _buildCurrentColorInfo(),
           ],
         ),
@@ -254,8 +244,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-
-                // Поле ввода
                 TextField(
                   decoration: InputDecoration(
                     labelText: 'Поле ввода',
@@ -277,8 +265,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-
-                // Чипсы
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -301,8 +287,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-
-                // Индикатор прогресса
                 LinearProgressIndicator(
                   value: 0.7,
                   backgroundColor: previewColors.primaryContainer,

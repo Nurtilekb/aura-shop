@@ -1,6 +1,5 @@
 import 'package:aurashop/router/app_router.gr.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:aurashop/screens/registrarion_screen.dart';
 import 'package:aurashop/widgets/app_input_widget.dart';
 import 'package:aurashop/widgets/pressed_button.dart';
 import 'package:flutter/material.dart';
