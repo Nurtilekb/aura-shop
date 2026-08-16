@@ -79,11 +79,11 @@ class AppColors {
     errorContainer = colorScheme.errorContainer;
     onErrorContainer = colorScheme.onErrorContainer;
 
-    background = colorScheme.background;
-    onBackground = colorScheme.onBackground;
+    background = colorScheme.surface;
+    onBackground = colorScheme.onSurface;
     surface = colorScheme.surface;
     onSurface = colorScheme.onSurface;
-    surfaceVariant = colorScheme.surfaceVariant;
+    surfaceVariant = colorScheme.surfaceContainerHighest;
     onSurfaceVariant = colorScheme.onSurfaceVariant;
     outline = colorScheme.outline;
     outlineVariant = colorScheme.outlineVariant;
@@ -122,11 +122,11 @@ class AppColors {
     errorContainer = colorScheme.errorContainer;
     onErrorContainer = colorScheme.onErrorContainer;
 
-    background = colorScheme.background;
-    onBackground = colorScheme.onBackground;
+    background = colorScheme.surface;
+    onBackground = colorScheme.onSurface;
     surface = colorScheme.surface;
     onSurface = colorScheme.onSurface;
-    surfaceVariant = colorScheme.surfaceVariant;
+    surfaceVariant = colorScheme.surfaceContainerHighest;
     onSurfaceVariant = colorScheme.onSurfaceVariant;
     outline = colorScheme.outline;
     outlineVariant = colorScheme.outlineVariant;

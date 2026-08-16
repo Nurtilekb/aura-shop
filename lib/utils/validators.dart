@@ -29,7 +29,7 @@ class Validators {
     return null;
   }
 
-  static validatebox(bool? value) {
+  static String? validatebox(bool? value) {
     if (value == null || value == false) {
       return 'Please accept the contain';
     }

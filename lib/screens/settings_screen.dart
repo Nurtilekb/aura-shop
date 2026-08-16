@@ -78,7 +78,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (context, state) {
         return Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceVariant,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -173,7 +173,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           itemCount: _presetColors.length,
           itemBuilder: (context, index) {
             final color = _presetColors[index];
-            final isSelected = color.value == state.seedColor.value;
+            final isSelected = color.toARGB32() == state.seedColor.toARGB32();
             return InkWell(
               onTap: () {
                 context.read<ThemeCubit>().setSeedColor(color);
@@ -192,7 +192,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   boxShadow: isSelected
                       ? [
                           BoxShadow(
-                            color: color.withOpacity(0.5),
+                            color: color.withValues(alpha: 0.5),
                             blurRadius: 8,
                             spreadRadius: 2,
                           ),
@@ -307,7 +307,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceVariant,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -334,7 +334,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '#${state.seedColor.value.toRadixString(16).toUpperCase().padLeft(8, '0')}',
+                          '#${state.seedColor.toARGB32().toRadixString(16).toUpperCase().padLeft(8, '0')}',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         Text(
