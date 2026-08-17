@@ -1,4 +1,4 @@
-import 'package:aurashop/screens/all_categories_screen.dart';
+import 'package:aurashop/screens/home/all_categories_screen.dart';
 import 'package:aurashop/widgets/app_input_widget.dart';
 import 'package:aurashop/widgets/banner_widget.dart';
 import 'package:aurashop/widgets/iconwith_background_widget.dart';
@@ -82,7 +82,7 @@ class HomeScreen extends StatelessWidget {
                       forborder: Border.all(width: 0.5, color: Colors.grey),
                       bordRadius: BorderRadius.circular(15),
                       imagePath: 'assets/icons/paper_packets.png',
-                      sizes: 55,
+                      sizes: 50,
                     ),
                     SizedBox(width: 10),
                     IconWithBack(
@@ -91,7 +91,7 @@ class HomeScreen extends StatelessWidget {
                       forborder: Border.all(width: 0.5, color: Colors.grey),
                       bordRadius: BorderRadius.circular(15),
                       imagePath: 'assets/icons/home.png',
-                      sizes: 55,
+                      sizes: 50,
                     ),
                   ],
                 ),

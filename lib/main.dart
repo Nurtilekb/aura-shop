@@ -1,6 +1,6 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/router/app_router.dart';
-import 'package:aurashop/screens/home_screen.dart';
+import 'package:aurashop/screens/home/home_screen.dart';
 import 'package:aurashop/theme/app_colors.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';

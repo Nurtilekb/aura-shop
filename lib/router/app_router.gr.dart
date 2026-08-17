@@ -10,12 +10,12 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:aurashop/main.dart' as _i3;
-import 'package:aurashop/screens/home_screen.dart' as _i1;
-import 'package:aurashop/screens/login_screen.dart' as _i2;
-import 'package:aurashop/screens/registrarion_screen.dart' as _i4;
-import 'package:aurashop/screens/settings_screen.dart' as _i5;
-import 'package:aurashop/screens/splash_screen.dart' as _i6;
-import 'package:aurashop/screens/verification_screen.dart' as _i7;
+import 'package:aurashop/screens/home/home_screen.dart' as _i1;
+import 'package:aurashop/screens/auth/login_screen.dart' as _i2;
+import 'package:aurashop/screens/auth/registrarion_screen.dart' as _i4;
+import 'package:aurashop/screens/settings/settings_screen.dart' as _i5;
+import 'package:aurashop/screens/splash/splash_screen.dart' as _i6;
+import 'package:aurashop/screens/auth/verification_screen.dart' as _i7;
 import 'package:auto_route/auto_route.dart' as _i8;
 import 'package:flutter/material.dart' as _i9;
 

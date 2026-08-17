@@ -1,3 +1,5 @@
+import 'package:aurashop/widgets/custom_widgets/brand_filter_widget.dart';
+import 'package:aurashop/widgets/custom_widgets/slider_widget.dart';
 import 'package:aurashop/widgets/production_card_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -8,10 +10,13 @@ class AllCategories extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
               title: const Text(
                 'Обувь',
                 style: TextStyle(
@@ -198,41 +203,190 @@ class AllCategories extends StatelessWidget {
   void _showSortDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true, // 👈 Важно для полного размера
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Сортировка',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            _buildSortOption('Популярные'),
-            _buildSortOption('Новинки'),
-            _buildSortOption('Цена: по возрастанию'),
-            _buildSortOption('Цена: по убыванию'),
-          ],
-        ),
-      ),
-    );
-  }
+      backgroundColor: Colors.transparent,
+      builder: (context) => SafeArea(
+        top: false,
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.7,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
 
-  // 👇 НОВАЯ ФУНКЦИЯ: Опция сортировки
-  Widget _buildSortOption(String label) {
-    return ListTile(
-      title: Text(label),
-      leading: Radio<String>(
-        value: label,
-        groupValue: 'Популярные', // Временно, можно сделать Stateful
-        onChanged: (value) {
-          // Здесь можно добавить логику сортировки
-        },
-        activeColor: Colors.purple.shade700,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Фильтры',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Cбросить',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const Divider(height: 20, thickness: 1),
+
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+
+                        child: SizedBox(
+                          height: 100, // 👈 Ограничиваем высоту
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Заголовок',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Text(
+                                  'Этот контент займет все свободное  ',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // Цена
+                      CustomRangeSlider(
+                        minValue: 0,
+                        maxValue: 10000,
+                        startValue: 2000,
+                        endValue: 8000,
+                        onChanged: (start, end) {
+                          // Обработка изменения цены
+                          print('Цена: $start - $end');
+                        },
+                      ),
+                      const SizedBox(height: 24),
+
+                      BrandFilterWidget(
+                        onChanged: (selected) {
+                          print('Выбраны бренды: $selected');
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        children: [
+                          // Кнопка "Сбросить" (белая)
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // // Сбросить фильтры
+                                // _resetFilters();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.purple.shade700,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                side: BorderSide(
+                                  color: Colors.purple.shade700,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: const Text(
+                                'Сбросить',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+
+                          // Кнопка "Применить" (фиолетовая)
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // // Применить фильтры
+                                // _applyFilters();
+                                Navigator.pop(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.purple.shade700,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text(
+                                'Применить',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -296,12 +450,3 @@ class Product {
     this.discount,
   });
 }
-
-final List<String> _categories = [
-  'Все',
-  'Кроссовки',
-  'Ботинки',
-  'Кеды',
-  'Слипоны',
-  'Туфли',
-];
