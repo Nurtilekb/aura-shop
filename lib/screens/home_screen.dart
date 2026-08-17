@@ -1,5 +1,8 @@
-import 'package:aurashop/widgets/app_navBar_widget.dart';
+import 'package:aurashop/screens/all_categories_screen.dart';
+import 'package:aurashop/widgets/app_input_widget.dart';
+import 'package:aurashop/widgets/banner_widget.dart';
 import 'package:aurashop/widgets/iconwith_background_widget.dart';
+import 'package:aurashop/widgets/production_card_widget.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +12,35 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _banners = [
+      [
+        'Скидка 30%',
+        'На все товары этой недели',
+        Icons.local_offer_rounded,
+        [Colors.purple, Color(0xFFD1A3FF)],
+        'Купить сейчас',
+      ],
+      [
+        'Новинки',
+        'Свежие поступления',
+        Icons.shopping_bag_rounded,
+        [Colors.blue, Color(0xFF66B2FF)],
+        'Смотреть',
+      ],
+      [
+        'Бесплатная доставка',
+        'При заказе от 5000 ₽',
+        Icons.local_shipping_rounded,
+        [Colors.orange, Color(0xFFFFBE7D)],
+        'Заказать',
+      ],
+    ];
+    final imagesPath1 = [
+      "assets/icons/box.png",
+      "assets/icons/box.png",
+      "assets/icons/paper_packets.png",
+      "assets/icons/home.png",
+    ];
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       body: SafeArea(
@@ -65,8 +97,6 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Поиск
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
@@ -75,64 +105,45 @@ class HomeScreen extends StatelessWidget {
                     color: Colors.grey.shade200,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const TextField(
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                    decoration: InputDecoration(
-                      hintText: 'Поиск товаров...',
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.grey,
-                        size: 22,
-                      ),
-                      suffixIcon: Icon(
-                        Icons.tune_rounded,
-                        color: Colors.grey,
-                        size: 22,
-                      ),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(vertical: 14),
+                  child: AppInputWidget(
+                    isBorder: false,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 15,
                     ),
+                    filledColor: Colors.transparent,
+                    hintText: 'Поиск товаров...',
+                    leading: Icon(Icons.search),
+                    trailing: Icon(Icons.settings, size: 15),
                   ),
                 ),
               ),
             ),
-            SliverToBoxAdapter(child: SizedBox(height: 10)),
-            // Баннер
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SizedBox(
-                  height: 180,
-                  child: PageView(
-                    children: [
-                      _buildBanner(
-                        title: 'Скидка 30%',
-                        subtitle: 'На все товары этой недели',
-                        actionText: 'Купить сейчас',
-                        color: Colors.purple,
-                      ),
-                      _buildBanner(
-                        title: 'Новинки',
-                        subtitle: 'Свежие поступления',
-                        actionText: 'Смотреть',
-                        color: Colors.blue,
-                      ),
-                      _buildBanner(
-                        title: 'Бесплатная доставка',
-                        subtitle: 'При заказе от 5000 ₽',
-                        actionText: 'Заказать',
-                        color: Colors.orange,
-                      ),
-                    ],
-                  ),
+                child: BannerWidget(
+                  height: 200,
+                  banners: _banners
+                      .map(
+                        (b) => BannerData(
+                          title: b[0] as String,
+                          subtitle: b[1] as String,
+                          icon: b[2] as IconData,
+                          actionText: b[4] as String,
+                          gradient: LinearGradient(
+                            colors: b[3] as List<Color>,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          onTap: () {},
+                        ),
+                      )
+                      .toList(),
+                  color: Colors.purple,
                 ),
               ),
             ),
-
-            // Секция «Популярное»
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
@@ -140,7 +151,7 @@ class HomeScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Популярное',
+                      'Категории',
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
@@ -162,192 +173,95 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                child: SizedBox(
+                  height: 100,
+                  child: ListView.separated(
+                    physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
 
-            // Сетка товаров
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(20, 4, 20, 100),
-              sliver: SliverToBoxAdapter(
-                child: GridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 0.7,
-                  children: List.generate(
-                    6,
-                    (index) => _buildProductCard(index),
-                  ),
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(child: AppNavBar()),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBanner({
-    required String title,
-    required String subtitle,
-    required String actionText,
-    required Color color,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [color, color.withValues(alpha: 0.7)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      padding: const EdgeInsets.all(20),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white.withValues(alpha: 0.9),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    actionText,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Icon(
-            Icons.local_offer_rounded,
-            size: 56,
-            color: Colors.white.withValues(alpha: 0.5),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProductCard(int index) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Изображение товара
-          Expanded(
-            flex: 2,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(16),
-                ),
-              ),
-              child: Center(
-                child: Icon(
-                  Icons.shopping_bag_outlined,
-                  size: 48,
-                  color: Colors.grey.shade400,
-                ),
-              ),
-            ),
-          ),
-          // Информация о товаре
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Товар',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '2 499 ₽',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.purple.shade700,
-                        ),
-                      ),
-                      Row(
+                    itemCount: 4,
+                    separatorBuilder: (_, _) => SizedBox(width: 30),
+                    itemBuilder: (context, index) {
+                      return Column(
                         children: [
-                          Icon(
-                            Icons.star,
-                            size: 14,
-                            color: Colors.amber.shade700,
+                          IconWithBack(
+                            ontap: () {},
+                            backroundcolor: Colors.grey.shade200,
+                            imageSizes: 10,
+                            bordRadius: BorderRadius.circular(18),
+                            imagePath: imagesPath1[index],
+                            sizes: 70,
                           ),
-                          const SizedBox(width: 4),
                           Text(
-                            '4.8',
+                            'Ка  ${index + 1}',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.grey.shade600,
+                              color: Colors.grey.shade700,
                             ),
                           ),
                         ],
-                      ),
-                    ],
+                      );
+                    },
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ],
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Популярное',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AllCategories(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Смотреть все',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 30),
+              sliver: SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 250,
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) => Productcard(indexx: index),
+                    separatorBuilder: (context, index) => SizedBox(width: 20),
+                    itemCount: 2,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

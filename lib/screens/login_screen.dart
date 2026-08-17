@@ -178,9 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleLogin() {
     if (_formKey.currentState?.validate() ?? false) {
-      final email = _emailController.text.trim();
-      final password = _passwordController.text;
-      print('Email: $email, Password: $password');
+      _emailController.text.trim();
     }
   }
 }

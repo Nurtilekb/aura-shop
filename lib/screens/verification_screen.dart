@@ -208,23 +208,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
     return '${minutes.toString().padLeft(1, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
-  void _handleVerification() {
-    String otp = _otpControllers.map((c) => c.text).join();
-    if (otp.length == 4) {
-      print('OTP: $otp');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Регистрация успешна!')));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Введите полный код подтверждения'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-
   void _resendCode() {
     _startTimer();
     for (var controller in _otpControllers) {
