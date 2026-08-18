@@ -1,9 +1,12 @@
-import 'package:aurashop/screens/settings/settings_screen.dart';
+import 'package:aurashop/screens/profile/my_orders_page.dart';
+import 'package:aurashop/screens/profile/settings_screen.dart';
 import 'package:aurashop/widgets/pressed_button.dart';
 import 'package:aurashop/widgets/profile_widgets/menu_item.dart';
 import 'package:aurashop/widgets/profile_widgets/stat_card_widget.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+@RoutePage()
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -40,7 +43,16 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 24),
 
               // Список пунктов меню
-              MenuItem(emaji: '📦', title: 'Мои заказы', onTap: () {}),
+              MenuItem(
+                emaji: '📦',
+                title: 'Мои заказы',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyOrdersPage()),
+                  );
+                },
+              ),
               MenuItem(emaji: '♡', title: 'Избранное', onTap: () {}),
               MenuItem(emaji: '📍', title: 'Мои адреса', onTap: () {}),
               MenuItem(

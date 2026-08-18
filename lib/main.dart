@@ -1,8 +1,7 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/router/app_router.dart';
 import 'package:aurashop/screens/home/home_screen.dart';
-import 'package:aurashop/screens/settings/progile_screen.dart';
-import 'package:aurashop/theme/app_colors.dart';
+import 'package:aurashop/screens/profile/progile_screen.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,21 +19,19 @@ class MyApp extends StatelessWidget {
       create: (_) => ThemeCubit(),
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, state) {
-          final brightness = MediaQuery.platformBrightnessOf(context);
-
-          final isDarkMode =
-              state.themeMode == ThemeModeStatus.dark ||
-              (state.themeMode == ThemeModeStatus.system &&
-                  brightness == Brightness.dark);
-
-          final appColors = isDarkMode
-              ? AppColors.dark(state.seedColor)
-              : AppColors.light(state.seedColor);
-
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
             title: 'AuraShop',
-            theme: appColors.toThemeData(),
+
+            // 1. Передаем динамические темы из нашего расширения ThemeStateX
+            theme: state.buildTheme(Brightness.light),
+            darkTheme: state.buildTheme(Brightness.dark),
+            themeMode: switch (state.themeMode) {
+              ThemeModeStatus.light => ThemeMode.light,
+              ThemeModeStatus.dark => ThemeMode.dark,
+              ThemeModeStatus.system => ThemeMode.system,
+            },
+
             routerConfig: AppRouter().config(),
           );
         },
@@ -64,21 +61,24 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 2. Получаем схему цветов из контекста
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       body: IndexedStack(index: _selectedIndex, children: _screens),
       bottomNavigationBar: Container(
-        padding: EdgeInsets.only(top: 6),
-        decoration: const BoxDecoration(
-          color: Colors.white,
+        padding: const EdgeInsets.only(top: 6),
+        decoration: BoxDecoration(
+          color: colorScheme.surface, // Авто-цвет фона (белый / тёмный)
           border: Border(
             top: BorderSide(
-              color: Color.fromARGB(137, 158, 158, 158),
+              color: colorScheme.outlineVariant, // Адаптивная рамка
               width: 1,
             ),
           ),
         ),
         child: BottomNavigationBar(
-          backgroundColor: Colors.white,
+          backgroundColor: colorScheme.surface,
           currentIndex: _selectedIndex,
           onTap: (index) {
             setState(() {
@@ -86,8 +86,12 @@ class _MainScreenState extends State<MainScreen> {
             });
           },
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: Colors.purple.shade700,
-          unselectedItemColor: Colors.grey.shade600,
+
+          // Активный пункт использует ваш выбранный directAccentColor
+          selectedItemColor: colorScheme.primary,
+          // Неактивные пункты адаптивно серого цвета
+          unselectedItemColor: colorScheme.onSurfaceVariant,
+
           showUnselectedLabels: true,
           items: const [
             BottomNavigationBarItem(

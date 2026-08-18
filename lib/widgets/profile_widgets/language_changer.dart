@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileSettings extends StatefulWidget {
   final bool isDarkMode;
@@ -72,28 +73,28 @@ class BuiltLangItem extends StatelessWidget {
     required this.onTap,
   });
 
-  //   // @override
-  //   // void didChangeDependencies() {
-  //   //   super.didChangeDependencies();
-  //   //   if (_initializedLanguage) return;
-  //   //   selectedLanguage = _languageLabelForCode(context.locale.languageCode);
-  //   //   _initializedLanguage = true;
-  //   // }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_initializedLanguage) return;
+  //   selectedLanguage = _languageLabelForCode(context.locale.languageCode);
+  //   _initializedLanguage = true;
+  // }
 
-  //   // String _languageLabelForCode(String code) {
-  //   //   for (final lang in languages) {
-  //   //     if (lang['code'] == code) {
-  //   //       return '${lang['flag']} ${lang['name']}';
-  //   //     }
-  //   //   }
-  //   //   return '🇷🇺 Русский';
-  //   // }
+  // String _languageLabelForCode(String code) {
+  //   for (final lang in languages) {
+  //     if (lang['code'] == code) {
+  //       return '${lang['flag']} ${lang['name']}';
+  //     }
+  //   }
+  //   return '🇷🇺 Русский';
+  // }
 
-  //   // Future<void> _saveLanguage(String code) async {
-  //   //   final prefs = await SharedPreferences.getInstance();
-  //   //   await prefs.setString('selected_language_code', code);
-  //   //   await prefs.setString('selected_language', _languageLabelForCode(code));
-  //   // }
+  // Future<void> _saveLanguage(String code) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.setString('selected_language_code', code);
+  //   await prefs.setString('selected_language', _languageLabelForCode(code));
+  // }
 
   @override
   Widget build(BuildContext context) {

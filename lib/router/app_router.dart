@@ -1,4 +1,5 @@
 import 'package:aurashop/router/app_router.gr.dart';
+
 import 'package:auto_route/auto_route.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Screen,Route')
@@ -8,9 +9,10 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: LoginRoute.page),
     AutoRoute(page: RegistrationRoute.page),
     AutoRoute(page: VerificationRoute.page),
-    AutoRoute(page: SettingsRoute.page, initial: true),
-    AutoRoute(page: SplashRoute.page),
+    AutoRoute(page: SettingsRoute.page),
+    AutoRoute(page: SplashRoute.page, initial: true),
     AutoRoute(page: HomeRoute.page),
     AutoRoute(page: MainRoute.page),
+    AutoRoute(page: ProfileRoute.page),
   ];
 }

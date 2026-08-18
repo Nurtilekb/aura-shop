@@ -19,7 +19,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     const Color.fromRGBO(37, 99, 235, 1),
     const Color(0xFF159a6b),
     const Color(0xFFdf4a34),
-    const Color(0xFF9C27B0),
+    Colors.black,
   ];
 
   @override
@@ -53,25 +53,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionTitle('Тема оформления'),
+            _buildSectionTitle('ТЕМА ОФОРМЛЕНИЯ'),
             const SizedBox(height: 12),
             _buildThemeModeSelector(),
             const SizedBox(height: 24),
-            _buildSectionTitle('Основной цвет (Seed Color)'),
+            _buildSectionTitle('АКЦЕНТНЫЙ ЦВЕТ'),
             const SizedBox(height: 12),
-            Text(
-              'Выберите цвет для кастомизации всех виджетов',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 16),
             _buildColorGrid(),
-            const SizedBox(height: 24),
-            _buildSectionTitle('Предпросмотр'),
+            SizedBox(height: 12),
+            _buildSectionTitle('ЯЗЫК'),
             const SizedBox(height: 12),
             _buildPreviewCard(),
-            const SizedBox(height: 32),
+            const SizedBox(height: 18),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildSectionTitle('Push-уведомления'),
+                Switch(
+                  value: false,
+                  onChanged: (bool? newValue) {
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -83,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       title,
       style: Theme.of(context).textTheme.titleLarge?.copyWith(
         fontWeight: FontWeight.w500,
-        fontSize: 20,
+        fontSize: 15,
         color: Colors.grey,
       ),
     );
@@ -262,44 +267,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildColorGrid() {
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, state) {
-        return GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 6,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-          ),
-          itemCount: _presetColors.length,
-          itemBuilder: (context, index) {
-            final color = _presetColors[index];
-            final isSelected = color.toARGB32() == state.seedColor.toARGB32();
-            return InkWell(
-              onTap: () {
-                context.read<ThemeCubit>().setSeedColor(color);
-              },
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(1000),
-                  border: Border.all(color: Colors.transparent, width: 3),
-                ),
+        return SizedBox(
+          height: 50,
+          child: ListView.separated(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            physics: const NeverScrollableScrollPhysics(),
+
+            itemCount: _presetColors.length,
+            itemBuilder: (context, index) {
+              final color = _presetColors[index];
+              final isSelected = color.toARGB32() == state.seedColor.toARGB32();
+              return InkWell(
+                onTap: () {
+                  context.read<ThemeCubit>().setSeedColor(color);
+                },
+                borderRadius: BorderRadius.circular(12),
                 child: Container(
+                  width: 50,
                   decoration: BoxDecoration(
                     color: color,
                     borderRadius: BorderRadius.circular(1000),
-                    border: Border.all(
-                      color: isSelected
-                          ? Theme.of(context).scaffoldBackgroundColor
-                          : Colors.transparent,
-                      width: 3,
+                    border: Border.all(color: Colors.transparent, width: 3),
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(1000),
+                      border: Border.all(
+                        color: isSelected
+                            ? Theme.of(context).scaffoldBackgroundColor
+                            : Colors.transparent,
+                        width: 2,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return SizedBox(width: 12);
+            },
+          ),
         );
       },
     );
