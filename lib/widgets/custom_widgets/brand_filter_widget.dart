@@ -21,9 +21,6 @@ class _BrandFilterWidgetState extends State<BrandFilterWidget> {
     Brand(name: 'Aura', icon: Icons.star),
     Brand(name: 'Nike', icon: Icons.sports_soccer),
     Brand(name: 'Adidas', icon: Icons.sports),
-    Brand(name: 'Puma', icon: Icons.pets),
-    Brand(name: 'Reebok', icon: Icons.run_circle),
-    Brand(name: 'New Balance', icon: Icons.balance),
   ];
 
   @override

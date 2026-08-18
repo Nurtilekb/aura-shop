@@ -22,19 +22,19 @@ class _SplasScreenState extends State<SplashScreen> {
       title: 'Тысячи товаров в одном месте',
       description:
           'Одежда, гаджеты, товары для дома — находите нужное быстро и удобно.',
-      image: 'assets/icons/shop_packets.png', // Замените на свой путь
+      image: '🛍️', // Замените на свой путь
     ),
     const OnboardingItem(
       title: 'Быстрая доставка к вашей двери',
       description:
           'Курьер уже завтра или пункт выдачи рядом с домом — выбирайте удобное.',
-      image: 'assets/icons/car.png', // Замените на свой путь
+      image: '🚚', // Замените на свой путь
     ),
     const OnboardingItem(
       title: 'Скидки и бонусы каждый день',
       description:
           'Копите бонусы с каждой покупки и получайте персональные предложения.',
-      image: 'assets/icons/gift.png', // Замените на свой путь
+      image: '🎁', // Замените на свой путь
     ),
   ];
 
@@ -192,9 +192,11 @@ class OnboardingPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconWithBack(
-            imagePath: item.image,
+            emoji: item.image,
             sizes: 280,
             padding: EdgeInsets.all(50),
+            emojiSizes: 100,
+            bordRadius: BorderRadius.circular(50),
           ),
           const SizedBox(height: 48),
           Text(

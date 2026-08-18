@@ -1,3 +1,4 @@
+import 'package:aurashop/screens/search/search_screen.dart';
 import 'package:aurashop/widgets/custom_widgets/brand_filter_widget.dart';
 import 'package:aurashop/widgets/custom_widgets/slider_widget.dart';
 import 'package:aurashop/widgets/production_card_widget.dart';
@@ -31,12 +32,19 @@ class AllCategories extends StatelessWidget {
 
               elevation: 0,
               actions: [
-                IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+                IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchScreen()),
+                    );
+                  },
+                ),
               ],
               actionsPadding: const EdgeInsets.only(right: 20),
             ),
 
-            // Количество товаров
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -46,8 +54,6 @@ class AllCategories extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Категории (горизонтальный список)
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),

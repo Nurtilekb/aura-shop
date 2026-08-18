@@ -5,22 +5,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class IconWithBack extends StatelessWidget {
   const IconWithBack({
     super.key,
-    this.imagePath,
+    this.emoji,
     this.sizes,
     this.padding,
     this.bordRadius,
     this.forborder,
     this.backroundcolor,
-    this._ontap, this.imageSizes,
+    this._ontap,
+    this.emojiSizes,
   });
-  final String? imagePath;
+  final String? emoji;
   final double? sizes;
   final EdgeInsetsGeometry? padding;
   final BorderRadiusGeometry? bordRadius;
   final BoxBorder? forborder;
   final Color? backroundcolor;
   final VoidCallback? _ontap;
-  final double? imageSizes ;
+  final double? emojiSizes;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeState>(
@@ -38,10 +39,11 @@ class IconWithBack extends StatelessWidget {
               border:
                   forborder ?? Border.all(width: 0, color: Colors.transparent),
             ),
-            child: Image.asset(
-              imagePath ?? 'assets/icons/pochta.png',
-              width: imageSizes ?? 25,
-              height: imageSizes ?? 25,
+            child: Center(
+              child: Text(
+                emoji ?? '',
+                style: TextStyle(fontSize: emojiSizes ?? 30),
+              ),
             ),
           ),
         );

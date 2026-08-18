@@ -1,6 +1,8 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/router/app_router.dart';
 import 'package:aurashop/screens/home/home_screen.dart';
+import 'package:aurashop/screens/settings/progile_screen.dart';
+import 'package:aurashop/screens/settings/settings_screen.dart';
 import 'package:aurashop/theme/app_colors.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +60,7 @@ class _MainScreenState extends State<MainScreen> {
     const SizedBox.shrink(),
     const SizedBox.shrink(),
     const SizedBox.shrink(),
-    const SizedBox.shrink(),
+    ProfileScreen(),
   ];
 
   @override
@@ -113,10 +115,5 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
     );
-  }
-
-  String _getTitle(int index) {
-    const titles = ['Главная', 'Поиск', 'Корзина', 'Избранное', 'Профиль'];
-    return titles[index];
   }
 }

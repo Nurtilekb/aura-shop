@@ -1,9 +1,11 @@
 import 'package:aurashop/screens/home/all_categories_screen.dart';
+import 'package:aurashop/screens/search/search_screen.dart';
 import 'package:aurashop/widgets/app_input_widget.dart';
 import 'package:aurashop/widgets/banner_widget.dart';
 import 'package:aurashop/widgets/iconwith_background_widget.dart';
 import 'package:aurashop/widgets/production_card_widget.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
@@ -35,12 +37,8 @@ class HomeScreen extends StatelessWidget {
         'Заказать',
       ],
     ];
-    final imagesPath1 = [
-      "assets/icons/box.png",
-      "assets/icons/box.png",
-      "assets/icons/paper_packets.png",
-      "assets/icons/home.png",
-    ];
+    final imagesPath1 = ["👕", "👟", "📱", "🏠"];
+    final categoryNames = ["Одежда", "Обувь", "Гаджеты", "Дом"];
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       body: SafeArea(
@@ -77,11 +75,19 @@ class HomeScreen extends StatelessWidget {
                     ),
                     Spacer(),
                     IconWithBack(
-                      ontap: () {},
+                      ontap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SearchScreen(),
+                          ),
+                        );
+                      },
                       backroundcolor: Colors.white,
                       forborder: Border.all(width: 0.5, color: Colors.grey),
                       bordRadius: BorderRadius.circular(15),
-                      imagePath: 'assets/icons/paper_packets.png',
+                      emoji: '🔍',
+                      emojiSizes: 25,
                       sizes: 50,
                     ),
                     SizedBox(width: 10),
@@ -90,7 +96,8 @@ class HomeScreen extends StatelessWidget {
                       backroundcolor: Colors.white,
                       forborder: Border.all(width: 0.5, color: Colors.grey),
                       bordRadius: BorderRadius.circular(15),
-                      imagePath: 'assets/icons/home.png',
+                      emoji: '🛍',
+                      emojiSizes: 25,
                       sizes: 50,
                     ),
                   ],
@@ -113,7 +120,10 @@ class HomeScreen extends StatelessWidget {
                     ),
                     filledColor: Colors.transparent,
                     hintText: 'Поиск товаров...',
-                    leading: Icon(Icons.search),
+                    leading: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('🔍', style: TextStyle(fontSize: 20)),
+                    ),
                     trailing: Icon(Icons.settings, size: 15),
                   ),
                 ),
@@ -190,13 +200,14 @@ class HomeScreen extends StatelessWidget {
                           IconWithBack(
                             ontap: () {},
                             backroundcolor: Colors.grey.shade200,
-                            imageSizes: 10,
+                            emojiSizes: 30,
                             bordRadius: BorderRadius.circular(18),
-                            imagePath: imagesPath1[index],
+                            emoji: imagesPath1[index],
                             sizes: 70,
                           ),
+                          SizedBox(height: 8),
                           Text(
-                            'Ка  ${index + 1}',
+                            '${categoryNames[index]}',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade700,

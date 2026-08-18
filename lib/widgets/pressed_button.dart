@@ -8,8 +8,8 @@ class PressedButton extends StatelessWidget {
     this.onPressed,
     required this.text,
     this.height,
-    this.backgroundColor, // ← Исправлено название
-    this.textstyle, // ← Убрал required
+    this.backgroundColor,
+    this.textstyle,
     this.borderradius,
     this.padding,
     this.imagePath,
@@ -21,8 +21,8 @@ class PressedButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String text;
   final double? height;
-  final Color? backgroundColor; // ← Исправлено название
-  final TextStyle? textstyle; // ← Убрал required
+  final Color? backgroundColor;
+  final TextStyle? textstyle;
   final RoundedRectangleBorder? borderradius;
   final EdgeInsetsGeometry? padding;
   final String? imagePath;

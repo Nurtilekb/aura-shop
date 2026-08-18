@@ -1,7 +1,8 @@
-import 'package:aurashop/theme/app_colors.dart';
+import 'package:aurashop/widgets/profile_widgets/language_changer.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
@@ -13,28 +14,42 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  // Предопределенные цвета для выбора
   final List<Color> _presetColors = [
-    const Color(0xFF5D50FE), // Фиолетовый (основной)
-    const Color(0xFF2196F3), // Синий
-    const Color(0xFF4CAF50), // Зеленый
-    const Color(0xFFFF9800), // Оранжевый
-    const Color(0xFFF44336), // Красный
-    const Color(0xFF9C27B0), // Пурпурный
-    const Color(0xFF00BCD4), // Бирюзовый
-    const Color(0xFFE91E63), // Розовый
-    const Color(0xFF795548), // Коричневый
-    const Color(0xFF607D8B), // Серо-синий
-    const Color(0xFF3F51B5), // Индиго
-    const Color(0xFF009688), // Бирюзово-зеленый
+    const Color(0xFF5b4bf0),
+    const Color.fromRGBO(37, 99, 235, 1),
+    const Color(0xFF159a6b),
+    const Color(0xFFdf4a34),
+    const Color(0xFF9C27B0),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Настройки'), centerTitle: true),
+      appBar: AppBar(
+        forceMaterialTransparency: true,
+        title: Text(
+          'Настройки',
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        iconTheme: IconThemeData(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white
+              : Colors.black,
+        ),
+        systemOverlayStyle: Theme.of(context).brightness == Brightness.dark
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark,
+      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -57,7 +72,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 12),
             _buildPreviewCard(),
             const SizedBox(height: 32),
-            _buildCurrentColorInfo(),
           ],
         ),
       ),
@@ -67,25 +81,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: Theme.of(
-        context,
-      ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+        fontWeight: FontWeight.w500,
+        fontSize: 20,
+        color: Colors.grey,
+      ),
     );
   }
 
   Widget _buildThemeModeSelector() {
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, state) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(12),
-          ),
+        return SizedBox(
           child: Row(
             children: [
               Expanded(
                 child: _buildThemeOption(
-                  icon: Icons.light_mode_outlined,
                   label: 'Светлая',
                   value: ThemeModeStatus.light,
                   currentValue: state.themeMode,
@@ -93,7 +104,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               Expanded(
                 child: _buildThemeOption(
-                  icon: Icons.dark_mode_outlined,
                   label: 'Темная',
                   value: ThemeModeStatus.dark,
                   currentValue: state.themeMode,
@@ -101,7 +111,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               Expanded(
                 child: _buildThemeOption(
-                  icon: Icons.brightness_auto_outlined,
                   label: 'Системная',
                   value: ThemeModeStatus.system,
                   currentValue: state.themeMode,
@@ -115,48 +124,139 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildThemeOption({
-    required IconData icon,
     required String label,
     required ThemeModeStatus value,
     required ThemeModeStatus currentValue,
   }) {
     final isSelected = value == currentValue;
+    final activeColor = Theme.of(context).colorScheme.primary;
+    final inactiveBorderColor = Theme.of(context).colorScheme.outlineVariant;
+    final inactiveTextColor = Theme.of(context).colorScheme.onSurfaceVariant;
+
     return InkWell(
       onTap: () {
         context.read<ThemeCubit>().setThemeMode(value);
       },
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? Theme.of(context).colorScheme.primary
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              color: isSelected
-                  ? Theme.of(context).colorScheme.onPrimary
-                  : Theme.of(context).colorScheme.onSurfaceVariant,
+      borderRadius: BorderRadius.circular(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Карточка-превью с динамической обводкой
+          Container(
+            width: 90,
+            height: 85,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isSelected ? activeColor : inactiveBorderColor,
+                width: isSelected ? 2 : 1,
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: isSelected
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : Theme.of(context).colorScheme.onSurfaceVariant,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              child: _buildThemePreview(value),
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Подпись под карточкой
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              color: isSelected ? activeColor : inactiveTextColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Вспомогательный метод для генерации графического превью темы
+  Widget _buildThemePreview(ThemeModeStatus mode) {
+    switch (mode) {
+      case ThemeModeStatus.light:
+        return Container(
+          color: const Color(0xFFF3F4F6),
+          child: Center(
+            child: Container(
+              width: 40,
+              height: 58,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+      case ThemeModeStatus.dark:
+        return Container(
+          color: const Color(0xFF111827),
+          child: Center(
+            child: Container(
+              width: 40,
+              height: 58,
+              decoration: BoxDecoration(
+                color: const Color(0xFF1F2937),
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        );
+
+      case ThemeModeStatus.system:
+        return Stack(
+          children: [
+            Row(
+              children: [
+                Expanded(child: Container(color: const Color(0xFFF3F4F6))),
+                Expanded(child: Container(color: const Color(0xFF111827))),
+              ],
+            ),
+            Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 20,
+                    height: 58,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: const BorderRadius.horizontal(
+                        left: Radius.circular(8),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.06),
+                          blurRadius: 4,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 20,
+                    height: 58,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF1F2937),
+                      borderRadius: BorderRadius.horizontal(
+                        right: Radius.circular(8),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
-        ),
-      ),
-    );
+        );
+    }
   }
 
   Widget _buildColorGrid() {
@@ -166,7 +266,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
+            crossAxisCount: 6,
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
           ),
@@ -182,29 +282,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   color: color,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.onSurface
-                        : Colors.transparent,
-                    width: 3,
-                  ),
-                  boxShadow: isSelected
-                      ? [
-                          BoxShadow(
-                            color: color.withValues(alpha: 0.5),
-                            blurRadius: 8,
-                            spreadRadius: 2,
-                          ),
-                        ]
-                      : null,
+                  borderRadius: BorderRadius.circular(1000),
+                  border: Border.all(color: Colors.transparent, width: 3),
                 ),
-                child: isSelected
-                    ? Icon(
-                        Icons.check,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      )
-                    : null,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: color,
+                    borderRadius: BorderRadius.circular(1000),
+                    border: Border.all(
+                      color: isSelected
+                          ? Theme.of(context).scaffoldBackgroundColor
+                          : Colors.transparent,
+                      width: 3,
+                    ),
+                  ),
+                ),
               ),
             );
           },
@@ -216,143 +308,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildPreviewCard() {
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, state) {
-        final previewColors = AppColors.light(state.seedColor);
-        return Card(
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Кнопка
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: previewColors.primary,
-                      foregroundColor: previewColors.onPrimary,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text('Кнопка'),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Поле ввода',
-                    filled: true,
-                    fillColor: previewColors.surface,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: previewColors.outlineVariant,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: previewColors.primary,
-                        width: 1.5,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    Chip(
-                      label: const Text('Primary'),
-                      backgroundColor: previewColors.primary,
-                      labelStyle: TextStyle(color: previewColors.onPrimary),
-                    ),
-                    Chip(
-                      label: const Text('Secondary'),
-                      backgroundColor: previewColors.secondary,
-                      labelStyle: TextStyle(color: previewColors.onSecondary),
-                    ),
-                    Chip(
-                      label: const Text('Tertiary'),
-                      backgroundColor: previewColors.tertiary,
-                      labelStyle: TextStyle(color: previewColors.onTertiary),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                LinearProgressIndicator(
-                  value: 0.7,
-                  backgroundColor: previewColors.primaryContainer,
-                  color: previewColors.primary,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildCurrentColorInfo() {
-    return BlocBuilder<ThemeCubit, ThemeState>(
-      builder: (context, state) {
-        return Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Текущий цвет',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: state.seedColor,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '#${state.seedColor.toARGB32().toRadixString(16).toUpperCase().padLeft(8, '0')}',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text(
-                          'Seed Color',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurfaceVariant,
-                              ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+        return ProfileSettings(
+          isDarkMode: false,
+          onDarkModeChanged: (bool value) {},
         );
       },
     );
