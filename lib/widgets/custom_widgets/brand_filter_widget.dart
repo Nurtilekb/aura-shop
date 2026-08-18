@@ -90,7 +90,7 @@ class _BrandFilterWidgetState extends State<BrandFilterWidget> {
           ),
           const SizedBox(height: 12),
 
-          ..._brands.map((brand) => _buildBrandTile(brand)).toList(),
+          ..._brands.map((brand) => _buildBrandTile(brand)),
 
           if (_selectedBrands.isNotEmpty)
             Padding(

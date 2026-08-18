@@ -63,7 +63,7 @@ class AllCategories extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     itemCount: _categories.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 12),
+                    separatorBuilder: (_, _) => const SizedBox(width: 12),
                     itemBuilder: (context, index) =>
                         _buildCategoryChip(_categories[index], index == 0),
                   ),
@@ -311,16 +311,11 @@ class AllCategories extends StatelessWidget {
                         endValue: 8000,
                         onChanged: (start, end) {
                           // Обработка изменения цены
-                          print('Цена: $start - $end');
                         },
                       ),
                       const SizedBox(height: 24),
 
-                      BrandFilterWidget(
-                        onChanged: (selected) {
-                          print('Выбраны бренды: $selected');
-                        },
-                      ),
+                      BrandFilterWidget(onChanged: (selected) {}),
                       const SizedBox(height: 24),
                       Row(
                         children: [

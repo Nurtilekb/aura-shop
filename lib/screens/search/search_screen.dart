@@ -1,5 +1,5 @@
 import 'package:aurashop/widgets/app_input_widget.dart';
-import 'package:aurashop/widgets/custom_widgets/popu;ar_chips_widget.dart';
+import 'package:aurashop/widgets/custom_widgets/popular_chips_widget.dart';
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -139,7 +139,7 @@ class _SearchScreenState extends State<SearchScreen> {
           const SizedBox(height: 12),
 
           // Список истории
-          ..._searchHistory.map((query) => _buildHistoryItem(query)).toList(),
+          ..._searchHistory.map((query) => _buildHistoryItem(query)),
 
           if (_searchHistory.isNotEmpty) const SizedBox(height: 24),
 
@@ -206,7 +206,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       itemCount: results.length,
-      separatorBuilder: (_, __) => const Divider(height: 0.5),
+      separatorBuilder: (_, _) => const Divider(height: 0.5),
       itemBuilder: (context, index) => _buildResultItem(results[index]),
     );
   }

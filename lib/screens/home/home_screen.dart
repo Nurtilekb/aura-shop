@@ -5,7 +5,6 @@ import 'package:aurashop/widgets/banner_widget.dart';
 import 'package:aurashop/widgets/iconwith_background_widget.dart';
 import 'package:aurashop/widgets/production_card_widget.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
@@ -14,7 +13,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _banners = [
+    final banners = [
       [
         'Скидка 30%',
         'На все товары этой недели',
@@ -134,7 +133,7 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: BannerWidget(
                   height: 200,
-                  banners: _banners
+                  banners: banners
                       .map(
                         (b) => BannerData(
                           title: b[0] as String,
@@ -207,7 +206,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            '${categoryNames[index]}',
+                            categoryNames[index],
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade700,

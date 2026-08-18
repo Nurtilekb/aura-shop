@@ -97,9 +97,9 @@ class Productcard extends StatelessWidget {
           ),
         ),
         Positioned(
-          child: _buildAddToCartButton(20, Icons.favorite),
           top: 12,
           right: 12,
+          child: _buildAddToCartButton(20, Icons.favorite),
         ),
       ],
     );
@@ -107,11 +107,7 @@ class Productcard extends StatelessWidget {
 
   Widget _buildAddToCartButton(double forborder, IconData icon) {
     return GestureDetector(
-      onTap:
-          onAddToCart ??
-          () {
-            print('Добавлено в корзину!');
-          },
+      onTap: onAddToCart ?? () {},
       child: Container(
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(

@@ -1,5 +1,4 @@
 import 'package:aurashop/screens/settings/settings_screen.dart';
-import 'package:aurashop/widgets/iconwith_background_widget.dart';
 import 'package:aurashop/widgets/pressed_button.dart';
 import 'package:aurashop/widgets/profile_widgets/menu_item.dart';
 import 'package:aurashop/widgets/profile_widgets/stat_card_widget.dart';

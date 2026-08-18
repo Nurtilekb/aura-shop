@@ -10,16 +10,13 @@ class PopularChips extends StatefulWidget {
 
 class _PopularChipsState extends State<PopularChips> {
   final TextEditingController _searchController = TextEditingController();
-  bool _isSearching = false;
-  String _searchQuery = '';
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         setState(() {
           _searchController.text = widget.query;
-          _searchQuery = widget.query;
-          _isSearching = true;
         });
       },
       child: Container(
@@ -34,6 +31,5 @@ class _PopularChipsState extends State<PopularChips> {
         ),
       ),
     );
-    ;
   }
 }
