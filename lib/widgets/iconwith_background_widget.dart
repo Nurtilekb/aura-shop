@@ -13,6 +13,8 @@ class IconWithBack extends StatelessWidget {
     this.backroundcolor,
     this._ontap,
     this.emojiSizes,
+    this._color,
+    this.fontwght,
   });
   final String? emoji;
   final double? sizes;
@@ -22,6 +24,8 @@ class IconWithBack extends StatelessWidget {
   final Color? backroundcolor;
   final VoidCallback? _ontap;
   final double? emojiSizes;
+  final Color? _color;
+  final FontWeight? fontwght;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeState>(
@@ -42,7 +46,11 @@ class IconWithBack extends StatelessWidget {
             child: Center(
               child: Text(
                 emoji ?? '',
-                style: TextStyle(fontSize: emojiSizes ?? 30),
+                style: TextStyle(
+                  fontSize: emojiSizes ?? 30,
+                  color: _color ?? null,
+                  fontWeight: fontwght ?? null,
+                ),
               ),
             ),
           ),

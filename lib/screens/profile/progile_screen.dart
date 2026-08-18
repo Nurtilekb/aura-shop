@@ -49,7 +49,7 @@ class ProfileScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyOrdersPage()),
+                    MaterialPageRoute(builder: (context) => OrdersScreen()),
                   );
                 },
               ),

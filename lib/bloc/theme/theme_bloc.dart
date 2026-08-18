@@ -59,6 +59,9 @@ extension ThemeStateX on ThemeState {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
       ),
+      scaffoldBackgroundColor: brightness == Brightness.light
+          ? Colors.white
+          : customScheme.surface,
 
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
