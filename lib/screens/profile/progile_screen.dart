@@ -1,6 +1,6 @@
 import 'package:aurashop/screens/profile/my_orders_page.dart';
 import 'package:aurashop/screens/profile/settings_screen.dart';
-import 'package:aurashop/widgets/pressed_button.dart';
+import 'package:aurashop/widgets/custom_widgets/pressed_button.dart';
 import 'package:aurashop/widgets/profile_widgets/menu_item.dart';
 import 'package:aurashop/widgets/profile_widgets/stat_card_widget.dart';
 import 'package:auto_route/auto_route.dart';

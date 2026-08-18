@@ -1,3 +1,4 @@
+import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/screens/search/search_screen.dart';
 import 'package:aurashop/widgets/custom_widgets/brand_filter_widget.dart';
 import 'package:aurashop/widgets/custom_widgets/slider_widget.dart';
@@ -5,12 +6,11 @@ import 'package:aurashop/widgets/production_card_widget.dart';
 import 'package:flutter/material.dart';
 
 class AllCategories extends StatelessWidget {
-  AllCategories({super.key});
-
+  AllCategories({super.key, this.state});
+  final ThemeState? state;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: CustomScrollView(
@@ -64,8 +64,11 @@ class AllCategories extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     itemCount: _categories.length,
                     separatorBuilder: (_, _) => const SizedBox(width: 12),
-                    itemBuilder: (context, index) =>
-                        _buildCategoryChip(_categories[index], index == 0),
+                    itemBuilder: (context, index) => _buildCategoryChip(
+                      _categories[index],
+                      index == 0,
+                      state!,
+                    ),
                   ),
                 ),
               ),
@@ -137,14 +140,14 @@ class AllCategories extends StatelessWidget {
   }
 
   // Категории (ваша функция, не трогаем)
-  Widget _buildCategoryChip(String label, bool isActive) {
+  Widget _buildCategoryChip(String label, bool isActive, ThemeState state) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       decoration: BoxDecoration(
-        color: isActive ? Colors.purple.shade700 : Colors.white,
+        color: isActive ? state.directAccentColor : Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isActive ? Colors.purple.shade700 : Colors.grey.shade300,
+          color: isActive ? state.directAccentColor : Colors.grey.shade300,
           width: 1,
         ),
       ),
@@ -173,10 +176,12 @@ class AllCategories extends StatelessWidget {
 
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isActive ? Colors.purple.shade50 : Colors.white,
+            color: isActive
+                ? state!.directAccentColor.withValues(alpha: 0.2)
+                : Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isActive ? Colors.purple.shade700 : Colors.grey.shade300,
+              color: isActive ? state!.directAccentColor : Colors.grey.shade300,
               width: isActive ? 1.5 : 1,
             ),
           ),
@@ -186,7 +191,9 @@ class AllCategories extends StatelessWidget {
               Icon(
                 icon,
                 size: 18,
-                color: isActive ? Colors.purple.shade700 : Colors.grey.shade700,
+                color: isActive
+                    ? state!.directAccentColor
+                    : Colors.grey.shade700,
               ),
               const SizedBox(width: 6),
               Text(
@@ -194,7 +201,7 @@ class AllCategories extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13,
                   color: isActive
-                      ? Colors.purple.shade700
+                      ? state!.directAccentColor
                       : Colors.grey.shade700,
                   fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
                 ),
@@ -213,7 +220,7 @@ class AllCategories extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      backgroundColor: Colors.transparent,
+
       builder: (context) => SafeArea(
         top: false,
         child: Container(
@@ -272,10 +279,13 @@ class AllCategories extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 4,
+                        ),
 
                         child: SizedBox(
-                          height: 100, // 👈 Ограничиваем высоту
+                          height: 90, // 👈 Ограничиваем высоту
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -305,6 +315,7 @@ class AllCategories extends StatelessWidget {
 
                       // Цена
                       CustomRangeSlider(
+                        state: state,
                         minValue: 0,
                         maxValue: 10000,
                         startValue: 2000,
@@ -313,7 +324,6 @@ class AllCategories extends StatelessWidget {
                           // Обработка изменения цены
                         },
                       ),
-                      const SizedBox(height: 24),
 
                       BrandFilterWidget(onChanged: (selected) {}),
                       const SizedBox(height: 24),
@@ -328,7 +338,7 @@ class AllCategories extends StatelessWidget {
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
-                                foregroundColor: Colors.purple.shade700,
+                                foregroundColor: state!.seedColor,
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 16,
                                 ),
@@ -336,7 +346,7 @@ class AllCategories extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 side: BorderSide(
-                                  color: Colors.purple.shade700,
+                                  color: state!.directAccentColor,
                                   width: 1.5,
                                 ),
                               ),
@@ -360,7 +370,7 @@ class AllCategories extends StatelessWidget {
                                 Navigator.pop(context);
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.purple.shade700,
+                                backgroundColor: state!.directAccentColor,
                                 foregroundColor: Colors.white,
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 16,

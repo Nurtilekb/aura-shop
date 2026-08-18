@@ -33,10 +33,7 @@ class _BrandFilterWidgetState extends State<BrandFilterWidget> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -61,31 +58,27 @@ class _BrandFilterWidgetState extends State<BrandFilterWidget> {
                 ),
                 child: Text(
                   'Выбрать все',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.purple.shade700,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                 ),
               ),
               const SizedBox(width: 8),
               // Кнопка "Очистить"
-              TextButton(
-                onPressed: _clearAll,
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                child: Text(
-                  'Очистить',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade600,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
+              // TextButton(
+              //   onPressed: _clearAll,
+              //   style: TextButton.styleFrom(
+              //     padding: EdgeInsets.zero,
+              //     minimumSize: Size.zero,
+              //     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              //   ),
+              //   child: Text(
+              //     'Очистить',
+              //     style: TextStyle(
+              //       fontSize: 12,
+              //       color: Colors.grey.shade600,
+              //       fontWeight: FontWeight.w500,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           const SizedBox(height: 12),

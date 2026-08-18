@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:flutter/material.dart';
 
 class BannerWidget extends StatefulWidget {
@@ -6,6 +7,7 @@ class BannerWidget extends StatefulWidget {
   final double height;
   final Duration autoScrollDuration;
   final Duration animationDuration;
+  final ThemeState? state;
 
   final Color color;
 
@@ -17,6 +19,7 @@ class BannerWidget extends StatefulWidget {
     this.animationDuration = const Duration(milliseconds: 500),
 
     required this.color,
+    this.state,
   });
 
   @override
@@ -187,7 +190,7 @@ class _BannerWidgetState extends State<BannerWidget> {
                 height: 6,
                 decoration: BoxDecoration(
                   color: _currentPage == index
-                      ? const Color.fromARGB(255, 3, 91, 255)
+                      ? widget.state?.directAccentColor
                       : Colors.grey,
                   borderRadius: BorderRadius.circular(12),
                 ),

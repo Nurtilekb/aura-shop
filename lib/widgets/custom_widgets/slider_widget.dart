@@ -1,3 +1,4 @@
+import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:flutter/material.dart';
 
 class CustomRangeSlider extends StatefulWidget {
@@ -8,6 +9,7 @@ class CustomRangeSlider extends StatefulWidget {
     this.startValue = 2000,
     this.endValue = 8000,
     this.onChanged,
+    required this.state,
   });
 
   final double minValue;
@@ -15,6 +17,7 @@ class CustomRangeSlider extends StatefulWidget {
   final double startValue;
   final double endValue;
   final Function(double start, double end)? onChanged;
+  final ThemeState? state;
 
   @override
   State<CustomRangeSlider> createState() => _CustomRangeSliderState();
@@ -67,7 +70,7 @@ class _CustomRangeSliderState extends State<CustomRangeSlider> {
             min: widget.minValue,
             max: widget.maxValue,
             divisions: 100,
-            activeColor: Colors.purple.shade700,
+            activeColor: widget.state!.directAccentColor,
             inactiveColor: Colors.grey.shade200,
             overlayColor: WidgetStateProperty.all(
               Colors.purple.withValues(alpha: 0.1),

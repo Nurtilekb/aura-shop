@@ -1,9 +1,9 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/router/app_router.gr.dart';
-import 'package:aurashop/widgets/iconwith_background_widget.dart';
+import 'package:aurashop/widgets/custom_widgets/iconwith_background_widget.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:aurashop/widgets/app_input_widget.dart';
-import 'package:aurashop/widgets/pressed_button.dart';
+import 'package:aurashop/widgets/custom_widgets/pressed_button.dart';
 import 'package:flutter/material.dart';
 import 'package:aurashop/utils/validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
