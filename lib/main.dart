@@ -4,7 +4,7 @@ import 'package:aurashop/features/basket/presentation/basket_screen.dart';
 import 'package:aurashop/features/catalog/presentation/categories_screen.dart';
 import 'package:aurashop/features/favorites/presentation/favorites_screen.dart';
 import 'package:aurashop/features/home/presentation/home_screen.dart';
-import 'package:aurashop/features/profile/presentation/progile_screen.dart';
+import 'package:aurashop/features/profile/presentation/profile_screen.dart';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
