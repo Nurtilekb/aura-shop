@@ -7,7 +7,7 @@ class PressedButton extends StatelessWidget {
     super.key,
     this.onPressed,
     required this.text,
-    this.height,
+    this.height = 52,
     this.backgroundColor,
     this.textstyle,
     this.borderradius,
@@ -34,50 +34,53 @@ class PressedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, state) {
+        // 1. Вычисляем цвет фона
+        final effectiveBgColor = backgroundColor ?? state.directAccentColor;
+
+        // 2. Автоматически определяем цвет текста/иконок и эффекта нажатия для контраста
+        final isDarkBg =
+            ThemeData.estimateBrightnessForColor(effectiveBgColor) ==
+            Brightness.dark;
+        final defaultFgColor = isDarkBg ? Colors.white : Colors.black;
+        final effectiveFgColor = textstyle?.color ?? defaultFgColor;
+
         return FilledButton(
           onPressed: onPressed,
           style: FilledButton.styleFrom(
+            backgroundColor: effectiveBgColor,
+            foregroundColor: effectiveFgColor,
+            // 3. Явно задаем цвет всплеска при нажатии
+            overlayColor: effectiveFgColor.withOpacity(0.12),
             shadowColor: Colors.transparent,
+            elevation: 0,
+            minimumSize: Size(double.infinity, height ?? 52),
+            padding: padding ?? const EdgeInsets.symmetric(horizontal: 16),
             side: borderColor != null
-                ? BorderSide(color: borderColor!, width: 0.5)
+                ? BorderSide(color: borderColor!, width: 1)
                 : null,
-            backgroundColor: backgroundColor ?? state.directAccentColor,
-            foregroundColor: Theme.of(context).colorScheme.onPrimary,
-            padding: padding ?? const EdgeInsets.symmetric(vertical: 16),
             shape:
                 borderradius ??
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            elevation: 0,
           ),
-          child: SizedBox(
-            width: double.infinity,
-            height: height ?? 30,
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (imagePath != null && imagePath!.isNotEmpty) ...[
-                    Image.asset(
-                      imagePath!,
-                      width: imageWidth,
-                      height: imageHeight,
-                    ),
-                    const SizedBox(width: 12),
-                  ],
-                  Text(
-                    text,
-                    style:
-                        textstyle ??
-                        TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
-                  ),
-                ],
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (imagePath != null && imagePath!.isNotEmpty) ...[
+                Image.asset(imagePath!, width: imageWidth, height: imageHeight),
+                const SizedBox(width: 12),
+              ],
+              Text(
+                text,
+                style:
+                    (textstyle ??
+                            const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ))
+                        .copyWith(color: effectiveFgColor),
               ),
-            ),
+            ],
           ),
         );
       },
