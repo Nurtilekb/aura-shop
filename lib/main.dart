@@ -2,6 +2,7 @@ import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/router/app_router.dart';
 import 'package:aurashop/screens/basket/basket_screen.dart';
 import 'package:aurashop/screens/catalog/categories_screen.dart';
+import 'package:aurashop/screens/favorites/favorites_screen.dart';
 import 'package:aurashop/screens/home/home_screen.dart';
 import 'package:aurashop/screens/profile/progile_screen.dart';
 import 'package:auto_route/auto_route.dart';
@@ -24,8 +25,6 @@ class MyApp extends StatelessWidget {
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
             title: 'AuraShop',
-
-            // 1. Передаем динамические темы из нашего расширения ThemeStateX
             theme: state.buildTheme(Brightness.light),
             darkTheme: state.buildTheme(Brightness.dark),
             themeMode: switch (state.themeMode) {
@@ -57,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(),
     AllCategories(),
     CartScreen(),
-    const SizedBox.shrink(),
+    FavoritesScreen(),
     ProfileScreen(),
   ];
 

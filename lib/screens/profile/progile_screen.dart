@@ -1,3 +1,4 @@
+import 'package:aurashop/screens/favorites/favorites_screen.dart';
 import 'package:aurashop/screens/profile/my_orders_page.dart';
 import 'package:aurashop/screens/profile/settings_screen.dart';
 import 'package:aurashop/widgets/custom_widgets/pressed_button.dart';
@@ -53,7 +54,16 @@ class ProfileScreen extends StatelessWidget {
                   );
                 },
               ),
-              MenuItem(emaji: '♡', title: 'Избранное', onTap: () {}),
+              MenuItem(
+                emaji: '♡',
+                title: 'Избранное',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FavoritesScreen()),
+                  );
+                },
+              ),
               MenuItem(emaji: '📍', title: 'Мои адреса', onTap: () {}),
               MenuItem(
                 emaji: '⚙',

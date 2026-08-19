@@ -9,27 +9,28 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:aurashop/main.dart' as _i4;
-import 'package:aurashop/screens/auth/login_screen.dart' as _i3;
-import 'package:aurashop/screens/auth/registrarion_screen.dart' as _i6;
-import 'package:aurashop/screens/auth/verification_screen.dart' as _i9;
+import 'package:aurashop/main.dart' as _i5;
+import 'package:aurashop/screens/auth/login_screen.dart' as _i4;
+import 'package:aurashop/screens/auth/registrarion_screen.dart' as _i7;
+import 'package:aurashop/screens/auth/verification_screen.dart' as _i10;
 import 'package:aurashop/screens/basket/confirm_orders_screen.dart' as _i1;
-import 'package:aurashop/screens/home/home_screen.dart' as _i2;
-import 'package:aurashop/screens/profile/progile_screen.dart' as _i5;
-import 'package:aurashop/screens/profile/settings_screen.dart' as _i7;
-import 'package:aurashop/screens/splash/splash_screen.dart' as _i8;
-import 'package:auto_route/auto_route.dart' as _i10;
-import 'package:flutter/material.dart' as _i11;
+import 'package:aurashop/screens/favorites/favorites_screen.dart' as _i2;
+import 'package:aurashop/screens/home/home_screen.dart' as _i3;
+import 'package:aurashop/screens/profile/progile_screen.dart' as _i6;
+import 'package:aurashop/screens/profile/settings_screen.dart' as _i8;
+import 'package:aurashop/screens/splash/splash_screen.dart' as _i9;
+import 'package:auto_route/auto_route.dart' as _i11;
+import 'package:flutter/material.dart' as _i12;
 
 /// generated route for
 /// [_i1.ConfirmOrder]
-class ConfirmOrder extends _i10.PageRouteInfo<void> {
-  const ConfirmOrder({List<_i10.PageRouteInfo>? children})
+class ConfirmOrder extends _i11.PageRouteInfo<void> {
+  const ConfirmOrder({List<_i11.PageRouteInfo>? children})
     : super(ConfirmOrder.name, initialChildren: children);
 
   static const String name = 'ConfirmOrder';
 
-  static _i10.PageInfo page = _i10.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
       return const _i1.ConfirmOrder();
@@ -38,124 +39,140 @@ class ConfirmOrder extends _i10.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i2.HomeScreen]
-class HomeRoute extends _i10.PageRouteInfo<void> {
-  const HomeRoute({List<_i10.PageRouteInfo>? children})
+/// [_i2.FavoritesScreen]
+class FavoritesRoute extends _i11.PageRouteInfo<void> {
+  const FavoritesRoute({List<_i11.PageRouteInfo>? children})
+    : super(FavoritesRoute.name, initialChildren: children);
+
+  static const String name = 'FavoritesRoute';
+
+  static _i11.PageInfo page = _i11.PageInfo(
+    name,
+    builder: (data) {
+      return const _i2.FavoritesScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [_i3.HomeScreen]
+class HomeRoute extends _i11.PageRouteInfo<void> {
+  const HomeRoute({List<_i11.PageRouteInfo>? children})
     : super(HomeRoute.name, initialChildren: children);
 
   static const String name = 'HomeRoute';
 
-  static _i10.PageInfo page = _i10.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
-      return const _i2.HomeScreen();
+      return const _i3.HomeScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i3.LoginScreen]
-class LoginRoute extends _i10.PageRouteInfo<void> {
-  const LoginRoute({List<_i10.PageRouteInfo>? children})
+/// [_i4.LoginScreen]
+class LoginRoute extends _i11.PageRouteInfo<void> {
+  const LoginRoute({List<_i11.PageRouteInfo>? children})
     : super(LoginRoute.name, initialChildren: children);
 
   static const String name = 'LoginRoute';
 
-  static _i10.PageInfo page = _i10.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
-      return const _i3.LoginScreen();
+      return const _i4.LoginScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i4.MainScreen]
-class MainRoute extends _i10.PageRouteInfo<void> {
-  const MainRoute({List<_i10.PageRouteInfo>? children})
+/// [_i5.MainScreen]
+class MainRoute extends _i11.PageRouteInfo<void> {
+  const MainRoute({List<_i11.PageRouteInfo>? children})
     : super(MainRoute.name, initialChildren: children);
 
   static const String name = 'MainRoute';
 
-  static _i10.PageInfo page = _i10.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
-      return const _i4.MainScreen();
+      return const _i5.MainScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i5.ProfileScreen]
-class ProfileRoute extends _i10.PageRouteInfo<void> {
-  const ProfileRoute({List<_i10.PageRouteInfo>? children})
+/// [_i6.ProfileScreen]
+class ProfileRoute extends _i11.PageRouteInfo<void> {
+  const ProfileRoute({List<_i11.PageRouteInfo>? children})
     : super(ProfileRoute.name, initialChildren: children);
 
   static const String name = 'ProfileRoute';
 
-  static _i10.PageInfo page = _i10.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
-      return const _i5.ProfileScreen();
+      return const _i6.ProfileScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i6.RegistrationScreen]
-class RegistrationRoute extends _i10.PageRouteInfo<void> {
-  const RegistrationRoute({List<_i10.PageRouteInfo>? children})
+/// [_i7.RegistrationScreen]
+class RegistrationRoute extends _i11.PageRouteInfo<void> {
+  const RegistrationRoute({List<_i11.PageRouteInfo>? children})
     : super(RegistrationRoute.name, initialChildren: children);
 
   static const String name = 'RegistrationRoute';
 
-  static _i10.PageInfo page = _i10.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
-      return const _i6.RegistrationScreen();
+      return const _i7.RegistrationScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i7.SettingsScreen]
-class SettingsRoute extends _i10.PageRouteInfo<void> {
-  const SettingsRoute({List<_i10.PageRouteInfo>? children})
+/// [_i8.SettingsScreen]
+class SettingsRoute extends _i11.PageRouteInfo<void> {
+  const SettingsRoute({List<_i11.PageRouteInfo>? children})
     : super(SettingsRoute.name, initialChildren: children);
 
   static const String name = 'SettingsRoute';
 
-  static _i10.PageInfo page = _i10.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
-      return const _i7.SettingsScreen();
+      return const _i8.SettingsScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i8.SplashScreen]
-class SplashRoute extends _i10.PageRouteInfo<void> {
-  const SplashRoute({List<_i10.PageRouteInfo>? children})
+/// [_i9.SplashScreen]
+class SplashRoute extends _i11.PageRouteInfo<void> {
+  const SplashRoute({List<_i11.PageRouteInfo>? children})
     : super(SplashRoute.name, initialChildren: children);
 
   static const String name = 'SplashRoute';
 
-  static _i10.PageInfo page = _i10.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
-      return const _i8.SplashScreen();
+      return const _i9.SplashScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i9.VerificationScreen]
-class VerificationRoute extends _i10.PageRouteInfo<VerificationRouteArgs> {
+/// [_i10.VerificationScreen]
+class VerificationRoute extends _i11.PageRouteInfo<VerificationRouteArgs> {
   VerificationRoute({
-    _i11.Key? key,
+    _i12.Key? key,
     required String email,
-    List<_i10.PageRouteInfo>? children,
+    List<_i11.PageRouteInfo>? children,
   }) : super(
          VerificationRoute.name,
          args: VerificationRouteArgs(key: key, email: email),
@@ -164,11 +181,11 @@ class VerificationRoute extends _i10.PageRouteInfo<VerificationRouteArgs> {
 
   static const String name = 'VerificationRoute';
 
-  static _i10.PageInfo page = _i10.PageInfo(
+  static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<VerificationRouteArgs>();
-      return _i9.VerificationScreen(key: args.key, email: args.email);
+      return _i10.VerificationScreen(key: args.key, email: args.email);
     },
   );
 }
@@ -176,7 +193,7 @@ class VerificationRoute extends _i10.PageRouteInfo<VerificationRouteArgs> {
 class VerificationRouteArgs {
   const VerificationRouteArgs({this.key, required this.email});
 
-  final _i11.Key? key;
+  final _i12.Key? key;
 
   final String email;
 

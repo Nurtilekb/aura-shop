@@ -15,5 +15,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: MainRoute.page, initial: true),
     AutoRoute(page: ProfileRoute.page),
     AutoRoute(page: ConfirmOrder.page),
+    AutoRoute(page: FavoritesRoute.page),
   ];
 }

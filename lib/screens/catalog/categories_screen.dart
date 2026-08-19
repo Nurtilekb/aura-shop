@@ -1,4 +1,5 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
+import 'package:aurashop/models/product_model.dart';
 import 'package:aurashop/screens/search/search_screen.dart';
 import 'package:aurashop/widgets/custom_widgets/brand_filter_widget.dart';
 import 'package:aurashop/widgets/custom_widgets/slider_widget.dart';
@@ -457,19 +458,4 @@ class AllCategories extends StatelessWidget {
       discount: null,
     ),
   ];
-}
-
-// Модель товара (ваша, не трогаем)
-class Product {
-  final String name;
-  final String price;
-  final double rating;
-  final int? discount;
-
-  const Product({
-    required this.name,
-    required this.price,
-    this.rating = 4.8,
-    this.discount,
-  });
 }

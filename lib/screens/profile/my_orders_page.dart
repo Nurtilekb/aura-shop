@@ -18,7 +18,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Мои заказы')),
+      appBar: AppBar(
+        title: const Text(
+          'Мои заказы',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
       body: _buildBody(colorScheme),
     );
   }
@@ -35,7 +40,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
           subtitle:
               'Оформленные заказы будут появляться здесь вместе со статусом доставки.',
           buttonText: 'Начать покупки',
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         );
 
       case OrdersState.noInternet:
