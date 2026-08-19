@@ -27,13 +27,8 @@ class TransperetContWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 25,
-            child: Center(
-              child: leadWidget ?? Text(icon, style: TextStyle(fontSize: 25)),
-            ),
-          ),
-          const SizedBox(width: 10),
+          leadWidget ?? Text(icon, style: TextStyle(fontSize: 25)),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
