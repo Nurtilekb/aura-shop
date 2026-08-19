@@ -171,13 +171,6 @@ class _BrandFilterWidgetState extends State<BrandFilterWidget> {
     });
     widget.onChanged?.call(_selectedBrands);
   }
-
-  void _clearAll() {
-    setState(() {
-      _selectedBrands = [];
-    });
-    widget.onChanged?.call(_selectedBrands);
-  }
 }
 
 // Модель бренда

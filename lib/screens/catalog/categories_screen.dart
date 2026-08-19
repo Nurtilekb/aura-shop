@@ -4,137 +4,150 @@ import 'package:aurashop/widgets/custom_widgets/brand_filter_widget.dart';
 import 'package:aurashop/widgets/custom_widgets/slider_widget.dart';
 import 'package:aurashop/widgets/production_card_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AllCategories extends StatelessWidget {
-  AllCategories({super.key, this.state});
-  final ThemeState? state;
+  AllCategories({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
-              title: const Text(
-                'Обувь',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              centerTitle: false,
-              floating: true,
-              snap: true,
-
-              elevation: 0,
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SearchScreen()),
-                    );
-                  },
-                ),
-              ],
-              actionsPadding: const EdgeInsets.only(right: 20),
-            ),
-
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  '${_products.length} товаров',
-                  style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: SizedBox(
-                  height: 40,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: _categories.length,
-                    separatorBuilder: (_, _) => const SizedBox(width: 12),
-                    itemBuilder: (context, index) => _buildCategoryChip(
-                      _categories[index],
-                      index == 0,
-                      state!,
+      body: BlocBuilder<ThemeCubit, ThemeState>(
+        builder: (context, state) {
+          return SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black,
+                  title: const Text(
+                    'Обувь',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                   ),
-                ),
-              ),
-            ),
+                  centerTitle: false,
+                  floating: true,
+                  snap: true,
 
-            // Фильтры и сортировка
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    _buildFilterButton(
-                      icon: Icons.sort,
-                      label: 'Сортировка',
-                      onTap: () => _showSortDialog(context),
-                    ),
-                    const SizedBox(width: 12),
-                    _buildFilterButton(
-                      icon: Icons.filter_list,
-                      label: 'Фильтры · 2',
-                      onTap: () {},
-                      isActive: true,
+                  elevation: 0,
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SearchScreen(),
+                          ),
+                        );
+                      },
                     ),
                   ],
+                  actionsPadding: const EdgeInsets.only(right: 20),
                 ),
-              ),
-            ),
 
-            // Сетка товаров с вашим Productcard
-            SliverPadding(
-              padding: const EdgeInsets.all(20),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 20,
-                  childAspectRatio: 0.75,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => Productcard(
-                    indexx: index,
-                    title: _products[index].name,
-                    price: _products[index].price,
-                    rating: _products[index].rating,
-                    onAddToCart: () {
-                      // 👇 Добавляем функционал для кнопки +
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            '${_products[index].name} добавлен в корзину!',
-                          ),
-                          duration: const Duration(seconds: 1),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                    },
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      '${_products.length} товаров',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
                   ),
-                  childCount: _products.length,
                 ),
-              ),
-            ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: SizedBox(
+                      height: 40,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        itemCount: _categories.length,
+                        separatorBuilder: (_, _) => const SizedBox(width: 12),
+                        itemBuilder: (context, index) => _buildCategoryChip(
+                          _categories[index],
+                          index == 0,
+                          state,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
 
-            // Нижний отступ
-            const SliverToBoxAdapter(child: SizedBox(height: 20)),
-          ],
-        ),
+                // Фильтры и сортировка
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      children: [
+                        _buildFilterButton(
+                          state: state,
+                          icon: Icons.sort,
+                          label: 'Сортировка',
+                          onTap: () => _showSortDialog(context, state),
+                        ),
+                        const SizedBox(width: 12),
+                        _buildFilterButton(
+                          state: state,
+                          icon: Icons.filter_list,
+                          label: 'Фильтры · 2',
+                          onTap: () {},
+                          isActive: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Сетка товаров с вашим Productcard
+                SliverPadding(
+                  padding: const EdgeInsets.all(20),
+                  sliver: SliverGrid(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 20,
+                          childAspectRatio: 0.75,
+                        ),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => Productcard(
+                        indexx: index,
+                        title: _products[index].name,
+                        price: _products[index].price,
+                        rating: _products[index].rating,
+                        onAddToCart: () {
+                          // 👇 Добавляем функционал для кнопки +
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '${_products[index].name} добавлен в корзину!',
+                              ),
+                              duration: const Duration(seconds: 1),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        },
+                      ),
+                      childCount: _products.length,
+                    ),
+                  ),
+                ),
+
+                // Нижний отступ
+                const SliverToBoxAdapter(child: SizedBox(height: 20)),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -167,6 +180,7 @@ class AllCategories extends StatelessWidget {
     required String label,
     required VoidCallback onTap,
     bool isActive = false,
+    required ThemeState state,
   }) {
     return Expanded(
       child: GestureDetector(
@@ -177,11 +191,11 @@ class AllCategories extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: isActive
-                ? state!.directAccentColor.withValues(alpha: 0.2)
+                ? state.directAccentColor.withValues(alpha: 0.2)
                 : Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isActive ? state!.directAccentColor : Colors.grey.shade300,
+              color: isActive ? state.directAccentColor : Colors.grey.shade300,
               width: isActive ? 1.5 : 1,
             ),
           ),
@@ -192,7 +206,7 @@ class AllCategories extends StatelessWidget {
                 icon,
                 size: 18,
                 color: isActive
-                    ? state!.directAccentColor
+                    ? state.directAccentColor
                     : Colors.grey.shade700,
               ),
               const SizedBox(width: 6),
@@ -201,7 +215,7 @@ class AllCategories extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13,
                   color: isActive
-                      ? state!.directAccentColor
+                      ? state.directAccentColor
                       : Colors.grey.shade700,
                   fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
                 ),
@@ -213,7 +227,7 @@ class AllCategories extends StatelessWidget {
     );
   }
 
-  void _showSortDialog(BuildContext context) {
+  void _showSortDialog(BuildContext context, ThemeState state) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // 👈 Важно для полного размера
@@ -338,7 +352,7 @@ class AllCategories extends StatelessWidget {
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
-                                foregroundColor: state!.seedColor,
+                                foregroundColor: state.seedColor,
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 16,
                                 ),
@@ -346,7 +360,7 @@ class AllCategories extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 side: BorderSide(
-                                  color: state!.directAccentColor,
+                                  color: state.directAccentColor,
                                   width: 1.5,
                                 ),
                               ),
@@ -370,7 +384,7 @@ class AllCategories extends StatelessWidget {
                                 Navigator.pop(context);
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: state!.directAccentColor,
+                                backgroundColor: state.directAccentColor,
                                 foregroundColor: Colors.white,
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 16,

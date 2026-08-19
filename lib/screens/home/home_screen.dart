@@ -1,5 +1,5 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
-import 'package:aurashop/screens/home/all_categories_screen.dart';
+import 'package:aurashop/screens/catalog/categories_screen.dart';
 import 'package:aurashop/screens/search/search_screen.dart';
 import 'package:aurashop/widgets/app_input_widget.dart';
 import 'package:aurashop/widgets/banner_widget.dart';
@@ -243,8 +243,7 @@ class HomeScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    AllCategories(state: state),
+                                builder: (context) => AllCategories(),
                               ),
                             );
                           },

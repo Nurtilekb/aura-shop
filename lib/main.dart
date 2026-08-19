@@ -1,5 +1,6 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/router/app_router.dart';
+import 'package:aurashop/screens/catalog/categories_screen.dart';
 import 'package:aurashop/screens/home/home_screen.dart';
 import 'package:aurashop/screens/profile/progile_screen.dart';
 import 'package:auto_route/auto_route.dart';
@@ -52,8 +53,8 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    const HomeScreen(),
-    const SizedBox.shrink(),
+    HomeScreen(),
+    AllCategories(),
     const SizedBox.shrink(),
     const SizedBox.shrink(),
     ProfileScreen(),
@@ -61,7 +62,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // 2. Получаем схему цветов из контекста
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -69,12 +69,9 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: Container(
         padding: const EdgeInsets.only(top: 6),
         decoration: BoxDecoration(
-          color: colorScheme.surface, // Авто-цвет фона (белый / тёмный)
+          color: colorScheme.surface,
           border: Border(
-            top: BorderSide(
-              color: colorScheme.outlineVariant, // Адаптивная рамка
-              width: 1,
-            ),
+            top: BorderSide(color: colorScheme.outlineVariant, width: 1),
           ),
         ),
         child: BottomNavigationBar(
@@ -87,9 +84,8 @@ class _MainScreenState extends State<MainScreen> {
           },
           type: BottomNavigationBarType.fixed,
 
-          // Активный пункт использует ваш выбранный directAccentColor
           selectedItemColor: colorScheme.primary,
-          // Неактивные пункты адаптивно серого цвета
+
           unselectedItemColor: colorScheme.onSurfaceVariant,
 
           showUnselectedLabels: true,

@@ -48,8 +48,8 @@ class IconWithBack extends StatelessWidget {
                 emoji ?? '',
                 style: TextStyle(
                   fontSize: emojiSizes ?? 30,
-                  color: _color ?? null,
-                  fontWeight: fontwght ?? null,
+                  color: _color,
+                  fontWeight: fontwght,
                 ),
               ),
             ),
