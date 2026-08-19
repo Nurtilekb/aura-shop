@@ -32,7 +32,7 @@ class OrderSuccessScreen extends StatelessWidget {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer.withOpacity(0.4),
+                  color: colorScheme.primaryContainer.withValues(alpha: 0.4),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -82,7 +82,9 @@ class OrderSuccessScreen extends StatelessWidget {
                   horizontal: 36,
                 ),
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest.withOpacity(0.4),
+                  color: colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.4,
+                  ),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
@@ -153,7 +155,9 @@ class OrderSuccessScreen extends StatelessWidget {
                       onPressed: onContinueShopping,
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
-                          color: colorScheme.outlineVariant.withOpacity(0.6),
+                          color: colorScheme.outlineVariant.withValues(
+                            alpha: 0.6,
+                          ),
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),

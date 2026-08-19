@@ -1,5 +1,5 @@
-import 'package:aurashop/widgets/app_input_widget.dart';
-import 'package:aurashop/widgets/custom_widgets/popular_chips_widget.dart';
+import 'package:aurashop/shared/widgets/app_input_widget.dart';
+import 'package:aurashop/shared/widgets/custom_widgets/popular_chips_widget.dart';
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatefulWidget {

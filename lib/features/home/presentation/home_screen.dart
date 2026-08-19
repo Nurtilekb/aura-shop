@@ -1,10 +1,10 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
-import 'package:aurashop/screens/catalog/categories_screen.dart';
-import 'package:aurashop/screens/search/search_screen.dart';
-import 'package:aurashop/widgets/app_input_widget.dart';
-import 'package:aurashop/widgets/banner_widget.dart';
-import 'package:aurashop/widgets/custom_widgets/iconwith_background_widget.dart';
-import 'package:aurashop/widgets/production_card_widget.dart';
+import 'package:aurashop/features/catalog/presentation/categories_screen.dart';
+import 'package:aurashop/features/search/presentation/search_screen.dart';
+import 'package:aurashop/shared/widgets/app_input_widget.dart';
+import 'package:aurashop/shared/widgets/banner_widget.dart';
+import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
+import 'package:aurashop/shared/widgets/production_card_widget.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final ScrollController scrollController;
+  @override
   void initState() {
     super.initState();
     scrollController = ScrollController();

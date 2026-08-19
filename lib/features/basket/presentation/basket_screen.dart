@@ -1,8 +1,8 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
-import 'package:aurashop/models/cart_model.dart';
-import 'package:aurashop/screens/basket/confirm_orders_screen.dart';
-import 'package:aurashop/widgets/basket_widgets/quantity_counter.dart';
-import 'package:aurashop/widgets/basket_widgets/summary_card_widget.dart';
+import 'package:aurashop/shared/models/cart_model.dart';
+import 'package:aurashop/features/basket/presentation/confirm_orders_screen.dart';
+import 'package:aurashop/shared/widgets/basket_widgets/quantity_counter.dart';
+import 'package:aurashop/shared/widgets/basket_widgets/summary_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

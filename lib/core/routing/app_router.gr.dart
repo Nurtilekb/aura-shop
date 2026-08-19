@@ -10,15 +10,22 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:aurashop/main.dart' as _i5;
-import 'package:aurashop/screens/auth/login_screen.dart' as _i4;
-import 'package:aurashop/screens/auth/registrarion_screen.dart' as _i7;
-import 'package:aurashop/screens/auth/verification_screen.dart' as _i10;
-import 'package:aurashop/screens/basket/confirm_orders_screen.dart' as _i1;
-import 'package:aurashop/screens/favorites/favorites_screen.dart' as _i2;
-import 'package:aurashop/screens/home/home_screen.dart' as _i3;
-import 'package:aurashop/screens/profile/progile_screen.dart' as _i6;
-import 'package:aurashop/screens/profile/settings_screen.dart' as _i8;
-import 'package:aurashop/screens/splash/splash_screen.dart' as _i9;
+import 'package:aurashop/features/auth/presentation/login_screen.dart' as _i4;
+import 'package:aurashop/features/auth/presentation/registrarion_screen.dart'
+    as _i7;
+import 'package:aurashop/features/auth/presentation/verification_screen.dart'
+    as _i10;
+import 'package:aurashop/features/basket/presentation/confirm_orders_screen.dart'
+    as _i1;
+import 'package:aurashop/features/favorites/presentation/favorites_screen.dart'
+    as _i2;
+import 'package:aurashop/features/home/presentation/home_screen.dart' as _i3;
+import 'package:aurashop/features/profile/presentation/progile_screen.dart'
+    as _i6;
+import 'package:aurashop/features/profile/presentation/settings_screen.dart'
+    as _i8;
+import 'package:aurashop/features/splash/presentation/splash_screen.dart'
+    as _i9;
 import 'package:auto_route/auto_route.dart' as _i11;
 import 'package:flutter/material.dart' as _i12;
 

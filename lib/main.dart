@@ -1,10 +1,11 @@
+import 'package:aurashop/core/routing/app_router.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
-import 'package:aurashop/router/app_router.dart';
-import 'package:aurashop/screens/basket/basket_screen.dart';
-import 'package:aurashop/screens/catalog/categories_screen.dart';
-import 'package:aurashop/screens/favorites/favorites_screen.dart';
-import 'package:aurashop/screens/home/home_screen.dart';
-import 'package:aurashop/screens/profile/progile_screen.dart';
+import 'package:aurashop/features/basket/presentation/basket_screen.dart';
+import 'package:aurashop/features/catalog/presentation/categories_screen.dart';
+import 'package:aurashop/features/favorites/presentation/favorites_screen.dart';
+import 'package:aurashop/features/home/presentation/home_screen.dart';
+import 'package:aurashop/features/profile/presentation/progile_screen.dart';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,12 +27,6 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'AuraShop',
             theme: state.buildTheme(Brightness.light),
-            darkTheme: state.buildTheme(Brightness.dark),
-            themeMode: switch (state.themeMode) {
-              ThemeModeStatus.light => ThemeMode.light,
-              ThemeModeStatus.dark => ThemeMode.dark,
-              ThemeModeStatus.system => ThemeMode.system,
-            },
 
             routerConfig: AppRouter().config(),
           );

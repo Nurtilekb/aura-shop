@@ -1,4 +1,4 @@
-import 'package:aurashop/router/app_router.gr.dart';
+import 'package:aurashop/core/routing/app_router.gr.dart';
 
 import 'package:auto_route/auto_route.dart';
 

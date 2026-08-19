@@ -1,5 +1,5 @@
-import 'package:aurashop/models/product_model.dart';
-import 'package:aurashop/widgets/production_card_widget.dart';
+import 'package:aurashop/shared/models/product_model.dart';
+import 'package:aurashop/shared/widgets/production_card_widget.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +9,7 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Product> _products = [
+    final List<Product> products = [
       Product(
         name: 'Aura Run 2.0',
         price: '4 990 ₽',
@@ -47,7 +47,7 @@ class FavoritesScreen extends StatelessWidget {
             padding: const EdgeInsets.only(right: 20.0),
             child: Center(
               child: Text(
-                '${_products.length} товара',
+                '${products.length} товара',
                 style: TextStyle(color: colorScheme.outline, fontSize: 14),
               ),
             ),
@@ -69,15 +69,15 @@ class FavoritesScreen extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => Productcard(
                     indexx: index,
-                    title: _products[index].name,
-                    price: _products[index].price,
-                    rating: _products[index].rating,
+                    title: products[index].name,
+                    price: products[index].price,
+                    rating: products[index].rating,
                     onAddToCart: () {
                       // 👇 Добавляем функционал для кнопки +
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            '${_products[index].name} добавлен в корзину!',
+                            '${products[index].name} добавлен в корзину!',
                           ),
                           duration: const Duration(seconds: 1),
                           backgroundColor: Colors.green,
@@ -85,7 +85,7 @@ class FavoritesScreen extends StatelessWidget {
                       );
                     },
                   ),
-                  childCount: _products.length,
+                  childCount: products.length,
                 ),
               ),
             ),

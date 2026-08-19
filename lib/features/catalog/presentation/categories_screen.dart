@@ -1,9 +1,10 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
-import 'package:aurashop/models/product_model.dart';
-import 'package:aurashop/screens/search/search_screen.dart';
-import 'package:aurashop/widgets/custom_widgets/brand_filter_widget.dart';
-import 'package:aurashop/widgets/custom_widgets/slider_widget.dart';
-import 'package:aurashop/widgets/production_card_widget.dart';
+import 'package:aurashop/features/search/presentation/search_screen.dart';
+import 'package:aurashop/shared/models/product_model.dart';
+import 'package:aurashop/shared/widgets/custom_widgets/brand_filter_widget.dart';
+import 'package:aurashop/shared/widgets/custom_widgets/slider_widget.dart';
+import 'package:aurashop/shared/widgets/production_card_widget.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

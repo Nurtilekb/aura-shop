@@ -1,9 +1,9 @@
-import 'package:aurashop/screens/favorites/favorites_screen.dart';
-import 'package:aurashop/screens/profile/my_orders_page.dart';
-import 'package:aurashop/screens/profile/settings_screen.dart';
-import 'package:aurashop/widgets/custom_widgets/pressed_button.dart';
-import 'package:aurashop/widgets/profile_widgets/menu_item.dart';
-import 'package:aurashop/widgets/profile_widgets/stat_card_widget.dart';
+import 'package:aurashop/features/favorites/presentation/favorites_screen.dart';
+import 'package:aurashop/features/profile/presentation/my_orders_page.dart';
+import 'package:aurashop/features/profile/presentation/settings_screen.dart';
+import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
+import 'package:aurashop/shared/widgets/profile_widgets/menu_item.dart';
+import 'package:aurashop/shared/widgets/profile_widgets/stat_card_widget.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 

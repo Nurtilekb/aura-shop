@@ -1,4 +1,4 @@
-import 'package:aurashop/widgets/profile_widgets/language_changer.dart';
+import 'package:aurashop/shared/widgets/profile_widgets/language_changer.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:flutter/material.dart';
