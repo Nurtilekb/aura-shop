@@ -1,5 +1,6 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/router/app_router.dart';
+import 'package:aurashop/screens/basket/basket_screen.dart';
 import 'package:aurashop/screens/catalog/categories_screen.dart';
 import 'package:aurashop/screens/home/home_screen.dart';
 import 'package:aurashop/screens/profile/progile_screen.dart';
@@ -55,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _screens = [
     HomeScreen(),
     AllCategories(),
-    const SizedBox.shrink(),
+    CartScreen(),
     const SizedBox.shrink(),
     ProfileScreen(),
   ];

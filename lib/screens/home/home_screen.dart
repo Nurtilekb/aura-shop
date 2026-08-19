@@ -10,8 +10,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late final ScrollController scrollController;
+  void initState() {
+    super.initState();
+    scrollController = ScrollController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +57,7 @@ class HomeScreen extends StatelessWidget {
         child: BlocBuilder<ThemeCubit, ThemeState>(
           builder: (context, state) {
             return CustomScrollView(
+              controller: scrollController,
               slivers: [
                 SliverToBoxAdapter(
                   child: Padding(
@@ -107,7 +119,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SliverToBoxAdapter(
+                PinnedHeaderSliver(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
                     child: Container(
