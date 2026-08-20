@@ -140,9 +140,14 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  _CustomTextField(label: 'Город', controller: _cityController),
+                  AppInputWidget(
+                    filledColor: Colors.transparent,
+                    label: 'Город',
+                    controller: _cityController,
+                  ),
                   const SizedBox(height: 16),
-                  _CustomTextField(
+                  AppInputWidget(
+                    filledColor: Colors.transparent,
                     label: 'Улица и дом',
                     controller: _streetController,
                   ),
@@ -150,24 +155,27 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: _CustomTextField(
+                        child: AppInputWidget(
+                          filledColor: Colors.transparent,
                           label: 'Квартира',
                           controller: _flatController,
-                          keyboardType: TextInputType.number,
+                          inputType: TextInputType.number,
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: _CustomTextField(
+                        child: AppInputWidget(
+                          filledColor: Colors.transparent,
                           label: 'Этаж',
                           controller: _floorController,
-                          keyboardType: TextInputType.number,
+                          inputType: TextInputType.number,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  _CustomTextField(
+                  AppInputWidget(
+                    filledColor: Colors.transparent,
                     label: 'Комментарий курьеру',
                     controller: _commentController,
                   ),
@@ -220,48 +228,6 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _CustomTextField extends StatelessWidget {
-  final String label;
-  final TextEditingController controller;
-  final TextInputType keyboardType;
-
-  const _CustomTextField({
-    required this.label,
-    required this.controller,
-    this.keyboardType = TextInputType.text,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            color: colorScheme.outline,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 6),
-
-        AppInputWidget(
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 16,
-          ),
-          controller: controller,
-          filledColor: Theme.of(context).scaffoldBackgroundColor,
-          borderColor: colorScheme.outlineVariant.withOpacity(0.5),
-        ),
-      ],
     );
   }
 }

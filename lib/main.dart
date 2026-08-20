@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         builder: (context, state) {
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
-            title: 'AuraShop',
+
             theme: state.buildTheme(Brightness.light),
 
             routerConfig: AppRouter().config(),
@@ -64,13 +64,13 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: Container(
         padding: const EdgeInsets.only(top: 6),
         decoration: BoxDecoration(
-          color: colorScheme.surface,
+          color: Theme.of(context).scaffoldBackgroundColor,
           border: Border(
             top: BorderSide(color: colorScheme.outlineVariant, width: 1),
           ),
         ),
         child: BottomNavigationBar(
-          backgroundColor: colorScheme.surface,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           currentIndex: _selectedIndex,
           onTap: (index) {
             setState(() {

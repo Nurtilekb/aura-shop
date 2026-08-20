@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         horizontal: 16,
                         vertical: 18,
                       ),
-                      filledColor: Colors.white,
+                      filledColor: Colors.transparent,
                       controller: _emailController,
                       label: 'Email',
                       hintText: 'your@gmail.com',
@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontSize: 16,
                         fontWeight: FontWeight(400),
                       ),
-                      filledColor: Colors.white,
+                      filledColor: Colors.transparent,
                       controller: _passwordController,
                       label: 'Пароль',
 

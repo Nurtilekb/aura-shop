@@ -147,10 +147,10 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: AppInputWidget(
+                      filledColor: Colors.transparent,
                       hintText: 'Сообщение...',
                       controller: _messageController,
 
-                      filledColor: Theme.of(context).scaffoldBackgroundColor,
                       borderColor: colorScheme.outlineVariant.withOpacity(0.5),
                     ),
                   ),

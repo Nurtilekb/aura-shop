@@ -65,7 +65,7 @@ class _SearchScreenState extends State<SearchScreen> {
           });
         },
         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-        filledColor: Colors.white,
+        filledColor: Colors.transparent,
         hintText: 'Поиск товаров...',
         leading: Padding(
           padding: const EdgeInsets.all(8.0),

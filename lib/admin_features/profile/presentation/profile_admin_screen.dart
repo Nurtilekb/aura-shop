@@ -1,0 +1,333 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class AdminProfileScreen extends StatefulWidget {
+  const AdminProfileScreen({super.key});
+
+  @override
+  State<AdminProfileScreen> createState() => _AdminProfileScreenState();
+}
+
+class _AdminProfileScreenState extends State<AdminProfileScreen> {
+  // Состояния переключателей прав доступа
+  bool _manageProducts = true;
+  bool _processOrders = true;
+  bool _manageUsers = false;
+
+  @override
+  Widget build(BuildContext context) {
+    const primaryPurple = Color(0xFF5A49F8);
+    const borderColor = Color(0xFFEFEFEF);
+    const subtextColor = Color(0xFF8E8E93);
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFFAFAFA),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 12),
+
+              // 1. Блок профиля пользователя
+              const Text(
+                'Дмитрий Орлов',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'admin@aura.shop',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: subtextColor,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Плашка роли
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: primaryPurple.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.shield_outlined, size: 16, color: primaryPurple),
+                    SizedBox(width: 6),
+                    Text(
+                      'Роль: Администратор',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: primaryPurple,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 28),
+
+              // 2. Секция: ПРАВА ДОСТУПА
+              const _SectionHeader(title: 'ПРАВА ДОСТУПА'),
+              const SizedBox(height: 10),
+
+              // Карточка переключателей
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: borderColor, width: 1.5),
+                ),
+                child: Column(
+                  children: [
+                    _PermissionSwitchRow(
+                      title: 'Управление товарами',
+                      value: _manageProducts,
+                      onChanged: (val) => setState(() => _manageProducts = val),
+                    ),
+                    const Divider(height: 1, color: borderColor),
+                    _PermissionSwitchRow(
+                      title: 'Обработка заказов',
+                      value: _processOrders,
+                      onChanged: (val) => setState(() => _processOrders = val),
+                    ),
+                    const Divider(height: 1, color: borderColor),
+                    _PermissionSwitchRow(
+                      title: 'Управление пользователями',
+                      value: _manageUsers,
+                      onChanged: (val) => setState(() => _manageUsers = val),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // 3. Секция: УПРАВЛЕНИЕ
+              const _SectionHeader(title: 'УПРАВЛЕНИЕ'),
+              const SizedBox(height: 10),
+
+              // Карточка действий
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: borderColor, width: 1.5),
+                ),
+                child: Column(
+                  children: [
+                    _ManagementTile(
+                      icon: Icons.people_alt_rounded,
+                      iconColor: primaryPurple,
+                      title: 'Команда и роли',
+                      onTap: () {},
+                    ),
+                    const Divider(height: 1, color: borderColor),
+                    _ManagementTile(
+                      icon: Icons.bar_chart_rounded,
+                      iconColor: const Color(0xFF10B981),
+                      title: 'Отчёты',
+                      onTap: () {},
+                    ),
+                    const Divider(height: 1, color: borderColor),
+                    _ManagementTile(
+                      icon: Icons.settings_outlined,
+                      iconColor: const Color(0xFF6B7280),
+                      title: 'Настройки магазина',
+                      onTap: () {},
+                    ),
+                    const Divider(height: 1, color: borderColor),
+                    _ManagementTile(
+                      icon: Icons.chat_bubble_outline_rounded,
+                      iconColor: primaryPurple,
+                      title: 'Чат поддержки\nклиентов',
+                      badgeText: '3 новых',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+              // 4. Кнопка "Выйти из панели"
+              SizedBox(
+                width: double.infinity,
+                height: 52,
+                child: OutlinedButton(
+                  onPressed: () {},
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: borderColor, width: 1.5),
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    'Выйти из панели',
+                    style: TextStyle(
+                      color: Color(0xFFE53E3E),
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Заголовок секций
+class _SectionHeader extends StatelessWidget {
+  final String title;
+
+  const _SectionHeader({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 4.0),
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF9CA3AF),
+            letterSpacing: 0.8,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Строка переключателя прав
+class _PermissionSwitchRow extends StatelessWidget {
+  final String title;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  const _PermissionSwitchRow({
+    required this.title,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
+            ),
+          ),
+          CupertinoSwitch(
+            value: value,
+            activeColor: const Color(0xFF5A49F8),
+            onChanged: onChanged,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Строка действия управления с иконкой и возможным бейджем
+class _ManagementTile extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final String? badgeText;
+  final VoidCallback onTap;
+
+  const _ManagementTile({
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    this.badgeText,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: iconColor),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  height: 1.2,
+                ),
+              ),
+            ),
+            if (badgeText != null) ...[
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF0D6),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  badgeText!,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFD97706),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
+            const Icon(
+              Icons.chevron_right_rounded,
+              size: 18,
+              color: Color(0xFF9CA3AF),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

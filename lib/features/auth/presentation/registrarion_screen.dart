@@ -84,13 +84,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         fontSize: 16,
                         fontWeight: FontWeight(400),
                       ),
-                      filledColor: Colors.white,
+                      filledColor: Colors.transparent,
                       controller: _nameController,
                       label: 'Имя',
                       hintText: 'Анна Соколова',
                     ),
                     const SizedBox(height: 16),
                     AppInputWidget(
+                      filledColor: Colors.transparent,
                       //  validator: Validators.validateEmail,
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -101,13 +102,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         fontSize: 16,
                         fontWeight: FontWeight(400),
                       ),
-                      filledColor: Colors.white,
+
                       controller: _emailController,
                       label: 'Email',
                       hintText: 'anna@mail.ru',
                     ),
                     const SizedBox(height: 16),
                     AppInputWidget(
+                      filledColor: Colors.transparent,
                       // validator: Validators.validatePassword,
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -118,7 +120,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         fontSize: 16,
                         fontWeight: FontWeight(400),
                       ),
-                      filledColor: Colors.white,
+
                       controller: _passwordController,
                       label: 'Пароль',
                       hintText: '••••••',
