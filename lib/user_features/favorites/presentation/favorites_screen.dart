@@ -68,6 +68,7 @@ class FavoritesScreen extends StatelessWidget {
                 ),
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => Productcard(
+                    isFavorite: true,
                     indexx: index,
                     title: products[index].name,
                     price: products[index].price,
