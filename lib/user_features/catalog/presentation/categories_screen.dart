@@ -1,7 +1,7 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/user_features/search/presentation/search_screen.dart';
 import 'package:aurashop/shared/models/product_model.dart';
-import 'package:aurashop/shared/widgets/catalog_category_chip.dart';
+import 'package:aurashop/shared/widgets/chip_list.dart';
 import 'package:aurashop/shared/widgets/catalog_filter_button.dart';
 import 'package:aurashop/shared/widgets/catalog_filters_sheet.dart';
 import 'package:aurashop/shared/widgets/production_card_widget.dart';
@@ -70,16 +70,18 @@ class AllCategories extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: SizedBox(
                       height: 40,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        itemCount: _categories.length,
-                        separatorBuilder: (_, _) => const SizedBox(width: 12),
-                        itemBuilder: (context, index) => CatalogCategoryChip(
-                          label: _categories[index],
-                          isActive: index == 0,
-                          activeColor: state.directAccentColor,
-                        ),
+                      child: ChipList(
+                        borderColor: Colors.grey.shade400,
+                        labels: _categories,
+                        selectedIndex: 0,
+                        activeColor: state.directAccentColor,
+                        inactiveColor: Colors.white,
+                        activeTextColor: Colors.white,
+                        inactiveTextColor: Colors.grey,
+                        spacing: 12,
+                        horizontalPadding: 20,
+                        verticalPadding: 8,
+                        onSelected: (_) {},
                       ),
                     ),
                   ),
