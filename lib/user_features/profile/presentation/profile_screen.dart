@@ -178,7 +178,12 @@ class _UserProfileHeader extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EditProfileScreen()),
+              );
+            },
             icon: const Icon(Icons.edit_outlined, size: 20),
             color: Colors.grey.shade700,
             style: IconButton.styleFrom(
@@ -191,5 +196,14 @@ class _UserProfileHeader extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class EditProfileScreen extends StatelessWidget {
+  const EditProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
