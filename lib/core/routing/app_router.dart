@@ -12,7 +12,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: SettingsRoute.page),
     AutoRoute(page: SplashRoute.page),
     AutoRoute(page: HomeRoute.page),
-    AutoRoute(page: MainRoute.page, initial: true),
+    AutoRoute(page: MainRoute.page),
     AutoRoute(page: ProfileRoute.page),
     AutoRoute(page: ConfirmOrder.page),
     AutoRoute(page: FavoritesRoute.page),
@@ -21,5 +21,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: ProductRouteAdmin.page),
     AutoRoute(page: AddNewProductRoute.page),
     AutoRoute(page: AdminProfileRoute.page),
+    AutoRoute(page: EditProfileRoute.page, initial: true),
   ];
 }

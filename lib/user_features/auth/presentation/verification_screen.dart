@@ -80,9 +80,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(
-                    height: 20,
-                  ), ///////////////////////////////////////////////////////////////////////////////////////
+                  const SizedBox(height: 20),
                   IconWithBack(emoji: '✉️', emojiSizes: 40),
                   const SizedBox(height: 24),
                   const Text(

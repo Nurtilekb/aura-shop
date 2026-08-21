@@ -110,7 +110,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     const SizedBox(height: 16),
                     AppInputWidget(
                       filledColor: Colors.transparent,
-                      // validator: Validators.validatePassword,
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 18,
