@@ -1,6 +1,6 @@
+import 'package:aurashop/admin_features/chat/chatscreen.dart';
 import 'package:aurashop/admin_features/home/dashboard_screen.dart';
 import 'package:aurashop/admin_features/products/presentation/product_screen_admin.dart';
-import 'package:aurashop/admin_features/profile/presentation/profile_admin_screen.dart';
 import 'package:aurashop/user_features/profile/presentation/my_orders_screen.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,7 @@ class _Main2ScreenState extends State<Main2Screen> {
     DashboardScreenAdmin(),
     ProductScreenAdmin(),
     OrdersScreen(foradminAppbar: "Заказы", isItAdmin: true),
-    AdminProfileScreen(),
+    SupportChatsScreen(),
   ];
 
   @override
@@ -62,8 +62,8 @@ class _Main2ScreenState extends State<Main2Screen> {
             ),
             BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Заказы'),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_4_outlined),
-              label: 'Профиль',
+              icon: Icon(Icons.message_outlined),
+              label: 'Чаты',
             ),
           ],
         ),
