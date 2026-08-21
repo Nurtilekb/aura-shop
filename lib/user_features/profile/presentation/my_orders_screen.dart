@@ -1,8 +1,10 @@
 import 'package:aurashop/shared/models/order_model.dart';
-import 'package:aurashop/shared/widgets/catalog_category_chip.dart';
+import 'package:aurashop/shared/models/order_status.dart';
 import 'package:aurashop/shared/widgets/orders/empty_state_widget.dart';
-import 'package:aurashop/shared/widgets/orders/order_card.dart';
 import 'package:aurashop/shared/widgets/orders/orders_offline_banner.dart';
+import 'package:aurashop/shared/widgets/orders/order_status_filter.dart';
+import 'package:aurashop/shared/widgets/orders/orders_header.dart';
+import 'package:aurashop/shared/widgets/orders/orders_list.dart';
 import 'package:flutter/material.dart';
 
 enum OrdersState { empty, noInternet, success, foradmin }
@@ -101,9 +103,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 }
 
-class MyOrders extends StatelessWidget {
+class MyOrders extends StatefulWidget {
   const MyOrders({super.key});
 
+  @override
+  State<MyOrders> createState() => _MyOrdersState();
+}
+
+class _MyOrdersState extends State<MyOrders> {
   static const List<OrderItem> orders = [
     OrderItem(
       id: 'ORD-001',
@@ -128,66 +135,48 @@ class MyOrders extends StatelessWidget {
     ),
   ];
 
+  int _selectedStatusIndex = 0;
+
+  List<OrderItem> get _filteredOrders {
+    final selectedStatus =
+        OrderStatusPalette.filterLabels[_selectedStatusIndex];
+    if (selectedStatus == OrderStatusPalette.allLabel) {
+      return orders;
+    }
+
+    return orders.where((order) => order.status == selectedStatus).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.only(bottom: 100),
-        children: [
-          if (orders.isEmpty) _buildEmptyState() else _buildOrdersList(),
-        ],
+        children: [_buildOrdersContent()],
       ),
     );
   }
 
-  Widget _buildEmptyState() {
-    return const Padding(
-      padding: EdgeInsets.only(top: 100),
-      child: EmptyStateWidget(
-        image: CircleAvatar(
-          radius: 40,
-          backgroundColor: Color(0xFFE5E5EA),
-          child: Icon(
-            Icons.shopping_bag_outlined,
-            size: 40,
-            color: Color(0xFF8E8E93),
-          ),
-        ),
-        title: 'Заказов пока нет',
-        subtitle: 'Оформите первый заказ в корзине',
-        buttonText: 'Перейти в корзину',
-        onPressed: _noop,
-      ),
-    );
-  }
-
-  Widget _buildOrdersList() {
+  Widget _buildOrdersContent() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 40,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: const [
-                CatalogCategoryChip(
-                  label: 'В пути',
-                  isActive: true,
-                  activeColor: Colors.pink,
-                ),
-              ],
-            ),
+          OrdersHeader(count: orders.length),
+          const SizedBox(height: 12),
+          OrderStatusFilter(
+            selectedIndex: _selectedStatusIndex,
+            onSelected: (index) {
+              setState(() {
+                _selectedStatusIndex = index;
+              });
+            },
           ),
-          const SizedBox(height: 10),
-          for (int index = 0; index < orders.length; index++) ...[
-            OrderCard(order: orders[index]),
-            if (index < orders.length - 1) const SizedBox(height: 10),
-          ],
+          const SizedBox(height: 16),
+          OrdersList(orders: _filteredOrders),
         ],
       ),
     );
   }
-
-  static void _noop() {}
 }
