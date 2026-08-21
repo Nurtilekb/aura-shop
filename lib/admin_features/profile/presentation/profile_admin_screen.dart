@@ -1,6 +1,9 @@
+import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+@RoutePage()
 class AdminProfileScreen extends StatefulWidget {
   const AdminProfileScreen({super.key});
 
@@ -9,7 +12,6 @@ class AdminProfileScreen extends StatefulWidget {
 }
 
 class _AdminProfileScreenState extends State<AdminProfileScreen> {
-  // Состояния переключателей прав доступа
   bool _manageProducts = true;
   bool _processOrders = true;
   bool _manageUsers = false;
@@ -28,9 +30,14 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              IconWithBack(
+                backroundcolor: Colors.black,
+                emoji: 'A',
+                emojiSizes: 40,
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontwght: FontWeight.bold,
+              ),
               const SizedBox(height: 12),
-
-              // 1. Блок профиля пользователя
               const Text(
                 'Дмитрий Орлов',
                 style: TextStyle(
@@ -49,8 +56,6 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-
-              // Плашка роли
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 14,
@@ -76,14 +81,9 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                   ],
                 ),
               ),
-
               const SizedBox(height: 28),
-
-              // 2. Секция: ПРАВА ДОСТУПА
               const _SectionHeader(title: 'ПРАВА ДОСТУПА'),
               const SizedBox(height: 10),
-
-              // Карточка переключателей
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -112,14 +112,9 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                   ],
                 ),
               ),
-
               const SizedBox(height: 24),
-
-              // 3. Секция: УПРАВЛЕНИЕ
               const _SectionHeader(title: 'УПРАВЛЕНИЕ'),
               const SizedBox(height: 10),
-
-              // Карточка действий
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -159,10 +154,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                   ],
                 ),
               ),
-
               const SizedBox(height: 32),
-
-              // 4. Кнопка "Выйти из панели"
               SizedBox(
                 width: double.infinity,
                 height: 52,
@@ -195,7 +187,6 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
   }
 }
 
-/// Заголовок секций
 class _SectionHeader extends StatelessWidget {
   final String title;
 
@@ -221,7 +212,6 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-/// Строка переключателя прав
 class _PermissionSwitchRow extends StatelessWidget {
   final String title;
   final bool value;
@@ -261,7 +251,6 @@ class _PermissionSwitchRow extends StatelessWidget {
   }
 }
 
-/// Строка действия управления с иконкой и возможным бейджем
 class _ManagementTile extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
