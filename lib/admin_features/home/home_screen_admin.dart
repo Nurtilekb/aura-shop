@@ -1,7 +1,7 @@
 import 'package:aurashop/admin_features/home/dashboard_screen.dart';
 import 'package:aurashop/admin_features/products/presentation/product_screen_admin.dart';
 import 'package:aurashop/admin_features/profile/presentation/profile_admin_screen.dart';
-import 'package:aurashop/features/profile/presentation/my_orders_screen.dart';
+import 'package:aurashop/user_features/profile/presentation/my_orders_screen.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +19,7 @@ class _Main2ScreenState extends State<Main2Screen> {
   final List<Widget> _screens = [
     DashboardScreenAdmin(),
     ProductScreenAdmin(),
-    OrdersScreen(),
+    OrdersScreen(foradminAppbar: "Заказы", isItAdmin: true),
     AdminProfileScreen(),
   ];
 

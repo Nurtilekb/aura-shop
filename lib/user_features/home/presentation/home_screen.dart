@@ -1,6 +1,6 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
-import 'package:aurashop/features/catalog/presentation/categories_screen.dart';
-import 'package:aurashop/features/search/presentation/search_screen.dart';
+import 'package:aurashop/user_features/catalog/presentation/categories_screen.dart';
+import 'package:aurashop/user_features/search/presentation/search_screen.dart';
 import 'package:aurashop/shared/widgets/app_input_widget.dart';
 import 'package:aurashop/shared/widgets/banner_widget.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';

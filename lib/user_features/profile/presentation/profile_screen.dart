@@ -1,8 +1,8 @@
-import 'package:aurashop/features/favorites/presentation/favorites_screen.dart';
-import 'package:aurashop/features/profile/presentation/my_adresses_screen.dart';
-import 'package:aurashop/features/profile/presentation/my_orders_screen.dart';
-import 'package:aurashop/features/profile/presentation/settings_screen.dart';
-import 'package:aurashop/features/profile/presentation/support_chat_screen.dart';
+import 'package:aurashop/user_features/favorites/presentation/favorites_screen.dart';
+import 'package:aurashop/user_features/profile/presentation/my_adresses_screen.dart';
+import 'package:aurashop/user_features/profile/presentation/my_orders_screen.dart';
+import 'package:aurashop/user_features/profile/presentation/settings_screen.dart';
+import 'package:aurashop/user_features/profile/presentation/support_chat_screen.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
 import 'package:aurashop/shared/widgets/profile_widgets/menu_item.dart';
 import 'package:aurashop/shared/widgets/profile_widgets/stat_card_widget.dart';
