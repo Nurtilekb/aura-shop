@@ -1,5 +1,10 @@
+import 'package:aurashop/shared/models/chat_items_model.dart';
+import 'package:aurashop/shared/widgets/app_input_widget.dart';
+import 'package:aurashop/shared/widgets/chip_list.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+@RoutePage()
 class SupportChatsScreen extends StatefulWidget {
   const SupportChatsScreen({super.key});
 
@@ -9,12 +14,17 @@ class SupportChatsScreen extends StatefulWidget {
 
 class _SupportChatsScreenState extends State<SupportChatsScreen> {
   int _selectedFilterIndex = 0;
-  int _currentBottomNavIndex = 3; // Чаты (активная вкладка)
+  final _textController = TextEditingController();
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
 
   final List<String> _filters = ['Все', 'Открытые · 3', 'Закрытые'];
 
-  final List<_ChatItemData> _chats = const [
-    _ChatItemData(
+  final List<ChatItemData> _chats = const [
+    ChatItemData(
       initials: 'АС',
       avatarBgColor: Color(0xFF5A49F8),
       isOnline: true,
@@ -23,7 +33,43 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
       lastMessage: 'Где мой заказ #AU-24815?',
       unreadCount: 2,
     ),
-    _ChatItemData(
+    ChatItemData(
+      initials: 'АС',
+      avatarBgColor: Color(0xFF5A49F8),
+      isOnline: true,
+      name: 'Анна Соколова',
+      time: '2 мин',
+      lastMessage: 'Где мой заказ #AU-24815?',
+      unreadCount: 2,
+    ),
+    ChatItemData(
+      initials: 'АС',
+      avatarBgColor: Color(0xFF5A49F8),
+      isOnline: true,
+      name: 'Анна Соколова',
+      time: '2 мин',
+      lastMessage: 'Где мой заказ #AU-24815?',
+      unreadCount: 2,
+    ),
+    ChatItemData(
+      initials: 'АС',
+      avatarBgColor: Color(0xFF5A49F8),
+      isOnline: true,
+      name: 'Анна Соколова',
+      time: '2 мин',
+      lastMessage: 'Где мой заказ #AU-24815?',
+      unreadCount: 2,
+    ),
+    ChatItemData(
+      initials: 'АС',
+      avatarBgColor: Color(0xFF5A49F8),
+      isOnline: true,
+      name: 'Анна Соколова',
+      time: '2 мин',
+      lastMessage: 'Где мой заказ #AU-24815?',
+      unreadCount: 2,
+    ),
+    ChatItemData(
       initials: 'ИП',
       avatarBgColor: Color(0xFF4A6FA5),
       isOnline: false,
@@ -32,7 +78,7 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
       lastMessage: 'Можно вернуть худи, не подо...',
       unreadCount: 1,
     ),
-    _ChatItemData(
+    ChatItemData(
       initials: 'МК',
       avatarBgColor: Color(0xFF387B5B),
       isOnline: false,
@@ -41,7 +87,7 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
       lastMessage: 'Спасибо, всё пришло вовремя!',
       unreadCount: 0,
     ),
-    _ChatItemData(
+    ChatItemData(
       initials: 'ДВ',
       avatarBgColor: Color(0xFFC25E38),
       isOnline: false,
@@ -50,7 +96,7 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
       lastMessage: 'Когда будет доставка в Казань?',
       unreadCount: 1,
     ),
-    _ChatItemData(
+    ChatItemData(
       initials: 'ОК',
       avatarBgColor: Color(0xFFE2E2DF),
       avatarTextColor: Color(0xFF6B7280),
@@ -67,7 +113,6 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
   Widget build(BuildContext context) {
     const primaryPurple = Color(0xFF5A49F8);
     const borderColor = Color(0xFFEFEFEF);
-    const subtextColor = Color(0xFF8E8E93);
 
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
@@ -76,78 +121,38 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 16.0,
-                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 8),
-
-                    // 1. Заголовок и плашка "3 новых"
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Чаты поддержки',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: primaryPurple,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: const Text(
-                            '3 новых',
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Чаты поддержки',
                             style: TextStyle(
-                              fontSize: 13,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // 2. Поле поиска
-                    Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: borderColor, width: 1.5),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        children: const [
-                          Icon(
-                            Icons.search_rounded,
-                            color: Color(0xFF00B2FF),
-                            size: 22,
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: 'Поиск по диалогам',
-                                hintStyle: TextStyle(
-                                  color: subtextColor,
-                                  fontSize: 15,
-                                ),
-                                border: InputBorder.none,
-                                isDense: true,
-                                contentPadding: EdgeInsets.zero,
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: primaryPurple,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Text(
+                              '3 новых',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -156,51 +161,39 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
                     ),
 
                     const SizedBox(height: 16),
-
-                    // 3. Фильтры (Чипы)
-                    Row(
-                      children: List.generate(_filters.length, (index) {
-                        final isSelected = _selectedFilterIndex == index;
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                _selectedFilterIndex = index;
-                              });
-                            },
-                            borderRadius: BorderRadius.circular(20),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 180),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 18,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? const Color(0xFF1C1C1E)
-                                    : const Color(0xFFF2F1ED),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                _filters[index],
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: isSelected
-                                      ? Colors.white
-                                      : Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: AppInputWidget(
+                        controller: _textController,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 12,
+                        ),
+                        filledColor: Colors.transparent,
+                        leading: Icon(
+                          Icons.search_rounded,
+                          color: Color(0xFF00B2FF),
+                          size: 22,
+                        ),
+                        hintText: 'Поиск по диалогам',
+                      ),
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: ChipList(
+                        labels: _filters,
+                        selectedIndex: _selectedFilterIndex,
+                        onSelected: (index) {
+                          setState(() {
+                            _selectedFilterIndex = index;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 15),
 
-                    // 4. Список чатов
                     ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -216,44 +209,6 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
                 ),
               ),
             ),
-
-            // 5. Нижняя панель навигации (Bottom Navigation)
-            Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                border: Border(top: BorderSide(color: borderColor, width: 1.0)),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _BottomNavItem(
-                    icon: Icons.grid_view_rounded,
-                    label: 'Дашборд',
-                    isSelected: _currentBottomNavIndex == 0,
-                    onTap: () => setState(() => _currentBottomNavIndex = 0),
-                  ),
-                  _BottomNavItem(
-                    icon: Icons.widgets_outlined,
-                    label: 'Товары',
-                    isSelected: _currentBottomNavIndex == 1,
-                    onTap: () => setState(() => _currentBottomNavIndex = 1),
-                  ),
-                  _BottomNavItem(
-                    icon: Icons.segment_rounded,
-                    label: 'Заказы',
-                    isSelected: _currentBottomNavIndex == 2,
-                    onTap: () => setState(() => _currentBottomNavIndex = 2),
-                  ),
-                  _BottomNavItem(
-                    icon: Icons.chat_bubble_outline_rounded,
-                    label: 'Чаты',
-                    isSelected: _currentBottomNavIndex == 3,
-                    onTap: () => setState(() => _currentBottomNavIndex = 3),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
@@ -261,34 +216,8 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
   }
 }
 
-/// Модель данных чата
-class _ChatItemData {
-  final String initials;
-  final Color avatarBgColor;
-  final Color avatarTextColor;
-  final bool isOnline;
-  final String name;
-  final String time;
-  final String lastMessage;
-  final int unreadCount;
-  final bool isClosed;
-
-  const _ChatItemData({
-    required this.initials,
-    required this.avatarBgColor,
-    this.avatarTextColor = Colors.white,
-    required this.isOnline,
-    required this.name,
-    required this.time,
-    required this.lastMessage,
-    required this.unreadCount,
-    this.isClosed = false,
-  });
-}
-
-/// DRY Виджет элемента списка чата
 class _ChatTile extends StatelessWidget {
-  final _ChatItemData chat;
+  final ChatItemData chat;
 
   const _ChatTile({required this.chat});
 
@@ -298,11 +227,11 @@ class _ChatTile extends StatelessWidget {
 
     return InkWell(
       onTap: () {},
-      child: Padding(
+      child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14.0),
+        margin: EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           children: [
-            // Аватар с индикатором
             Stack(
               children: [
                 CircleAvatar(
@@ -334,8 +263,6 @@ class _ChatTile extends StatelessWidget {
               ],
             ),
             const SizedBox(width: 14),
-
-            // Текстовый блок (Имя и Сообщение)
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -365,8 +292,6 @@ class _ChatTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-
-            // Время и Бейдж непрочитанных
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -399,54 +324,6 @@ class _ChatTile extends StatelessWidget {
                 else
                   const SizedBox(height: 22),
               ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Элемент нижней панели навигации
-class _BottomNavItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _BottomNavItem({
-    required this.icon,
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final activeColor = const Color(0xFF5A49F8);
-    final inactiveColor = const Color(0xFF8E8E93);
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              color: isSelected ? activeColor : inactiveColor,
-              size: 24,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected ? activeColor : inactiveColor,
-              ),
             ),
           ],
         ),
