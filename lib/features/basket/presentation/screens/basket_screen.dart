@@ -65,32 +65,20 @@ class _CartScreenState extends State<CartScreen> {
         },
       ),
       bottomNavigationBar: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                //                    <--- top side
-                color: Colors.grey,
-                width: 2.0,
-              ),
-            ),
-          ),
-
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: SizedBox(
-              height: 56.0,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ConfirmOrder()),
-                  );
-                },
-                child: const Text(
-                  'Оформить заказ',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: SizedBox(
+            height: 56.0,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ConfirmOrder()),
+                );
+              },
+              child: const Text(
+                'Оформить заказ',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ),
