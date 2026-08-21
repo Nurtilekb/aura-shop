@@ -1,4 +1,5 @@
 import 'package:aurashop/user_features/favorites/presentation/favorites_screen.dart';
+import 'package:aurashop/user_features/profile/presentation/edit_profile_screen.dart';
 import 'package:aurashop/user_features/profile/presentation/my_adresses_screen.dart';
 import 'package:aurashop/user_features/profile/presentation/my_orders_screen.dart';
 import 'package:aurashop/user_features/profile/presentation/settings_screen.dart';
@@ -19,33 +20,42 @@ class ProfileScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
           child: Column(
             children: [
-              const _UserProfileHeader(
-                name: 'Анна Соколова',
-                email: 'anna@mail.ru',
-                initials: 'АС',
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 4,
+                ),
+                child: const UserProfileHeader(
+                  name: 'Анна Соколова',
+                  email: 'anna@mail.ru',
+                  initials: 'АС',
+                ),
               ),
               const SizedBox(height: 24),
-              const Row(
-                children: [
-                  Expanded(
-                    child: StatCard(value: '12', label: 'Заказов'),
-                  ),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: StatCard(value: '6', label: 'Избранное'),
-                  ),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: StatCard(value: '340', label: 'Бонусы'),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 4,
+                ),
+                child: const Row(
+                  children: [
+                    Expanded(
+                      child: StatCard(value: '12', label: 'Заказов'),
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: StatCard(value: '6', label: 'Избранное'),
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: StatCard(value: '340', label: 'Бонусы'),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 24),
-
-              // Список пунктов меню
               MenuItem(
                 emaji: '📦',
                 title: 'Мои заказы',
@@ -100,19 +110,25 @@ class ProfileScreen extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: PressedButton(
-                  height: 60,
-                  onPressed: () {},
-                  backgroundColor: Colors.white,
-                  borderColor: Colors.grey,
-                  text: 'Выйти',
-                  textstyle: TextStyle(
-                    color: Colors.redAccent,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 4,
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: PressedButton(
+                    height: 60,
+                    onPressed: () {},
+                    backgroundColor: Colors.white,
+                    borderColor: Colors.grey,
+                    text: 'Выйти',
+                    textstyle: TextStyle(
+                      color: Colors.redAccent,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
@@ -124,12 +140,12 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-class _UserProfileHeader extends StatelessWidget {
+class UserProfileHeader extends StatelessWidget {
   final String name;
   final String email;
   final String initials;
 
-  const _UserProfileHeader({
+  const UserProfileHeader({
     required this.name,
     required this.email,
     required this.initials,
@@ -140,7 +156,7 @@ class _UserProfileHeader extends StatelessWidget {
     return Row(
       children: [
         CircleAvatar(
-          radius: 46,
+          radius: 40,
           backgroundColor: const Color(0xFF6C5CE7),
           child: Text(
             initials,
@@ -196,14 +212,5 @@ class _UserProfileHeader extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class EditProfileScreen extends StatelessWidget {
-  const EditProfileScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }
