@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class TransperetContWidget extends StatelessWidget {
   const TransperetContWidget({
@@ -58,7 +58,7 @@ class TransperetContWidget extends StatelessWidget {
           isIncenterWidget ??
               TextButton(
                 child: Text(
-                  'Изм.',
+                  'РР·Рј.',
                   style: TextStyle(color: colorScheme.primary),
                 ),
 

@@ -1,4 +1,4 @@
-import 'package:aurashop/bloc/theme/theme_bloc.dart';
+﻿import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/brand_filter_widget.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/slider_widget.dart';
 import 'package:flutter/material.dart';

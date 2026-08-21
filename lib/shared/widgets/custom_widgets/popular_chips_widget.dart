@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class PopularChips extends StatefulWidget {
   const PopularChips({super.key, required this.query});

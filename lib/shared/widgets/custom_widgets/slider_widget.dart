@@ -1,4 +1,4 @@
-import 'package:aurashop/bloc/theme/theme_bloc.dart';
+﻿import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:flutter/material.dart';
 
 class CustomRangeSlider extends StatefulWidget {
@@ -45,9 +45,9 @@ class _CustomRangeSliderState extends State<CustomRangeSlider> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Заголовок
+          // Р—Р°РіРѕР»РѕРІРѕРє
           const Text(
-            'Цена',
+            'Р¦РµРЅР°',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -97,7 +97,7 @@ class _CustomRangeSliderState extends State<CustomRangeSlider> {
         border: Border.all(color: Colors.grey.shade200, width: 1),
       ),
       child: Text(
-        '${value.toStringAsFixed(0)} ₽',
+        '${value.toStringAsFixed(0)} в‚Ѕ',
         style: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,

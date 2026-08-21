@@ -1,4 +1,4 @@
-// 1. Простая модель данных
+﻿// 1. Простая модель данных
 class CartItem {
   final String id;
   final String title;

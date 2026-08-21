@@ -1,4 +1,4 @@
-class OrderItem {
+﻿class OrderItem {
   const OrderItem({
     required this.id,
     required this.status,

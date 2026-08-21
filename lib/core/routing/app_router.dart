@@ -1,4 +1,4 @@
-import 'package:aurashop/core/routing/app_router.gr.dart';
+﻿import 'package:aurashop/core/routing/app_router.gr.dart';
 
 import 'package:auto_route/auto_route.dart';
 
@@ -10,7 +10,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: RegistrationRoute.page),
     AutoRoute(page: VerificationRoute.page),
     AutoRoute(page: SettingsRoute.page),
-    AutoRoute(page: SplashRoute.page),
+    AutoRoute(page: SplashRoute.page, initial: true),
     AutoRoute(page: HomeRoute.page),
     AutoRoute(page: MainRoute.page),
     AutoRoute(page: ProfileRoute.page),
@@ -21,6 +21,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: ProductRouteAdmin.page),
     AutoRoute(page: AddNewProductRoute.page),
     AutoRoute(page: AdminProfileRoute.page),
-    AutoRoute(page: EditProfileRoute.page, initial: true),
+    AutoRoute(page: EditProfileRoute.page),
   ];
 }

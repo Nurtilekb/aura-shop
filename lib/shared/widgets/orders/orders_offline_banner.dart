@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class OrdersOfflineBanner extends StatelessWidget {
   const OrdersOfflineBanner({super.key});
@@ -24,7 +24,7 @@ class OrdersOfflineBanner extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                'Firestore: не удалось получить данные (offline)',
+                'Firestore: РЅРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ РґР°РЅРЅС‹Рµ (offline)',
                 style: TextStyle(
                   color: Colors.red.shade700,
                   fontSize: 13,

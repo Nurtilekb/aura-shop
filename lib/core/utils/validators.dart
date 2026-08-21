@@ -1,4 +1,4 @@
-class Validators {
+﻿class Validators {
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your email';
@@ -33,6 +33,5 @@ class Validators {
     if (value == null || value == false) {
       return 'Please accept the contain';
     }
-    return null;
   }
 }

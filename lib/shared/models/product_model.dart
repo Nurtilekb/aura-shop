@@ -1,4 +1,4 @@
-class Product {
+﻿class Product {
   final String name;
   final String price;
   final double rating;

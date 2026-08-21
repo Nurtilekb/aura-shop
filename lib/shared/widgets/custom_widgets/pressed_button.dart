@@ -1,4 +1,4 @@
-import 'package:aurashop/bloc/theme/theme_bloc.dart';
+﻿import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,10 +34,8 @@ class PressedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, state) {
-        // 1. Вычисляем цвет фона
         final effectiveBgColor = backgroundColor ?? state.directAccentColor;
 
-        // 2. Автоматически определяем цвет текста/иконок и эффекта нажатия для контраста
         final isDarkBg =
             ThemeData.estimateBrightnessForColor(effectiveBgColor) ==
             Brightness.dark;
@@ -49,7 +47,6 @@ class PressedButton extends StatelessWidget {
           style: FilledButton.styleFrom(
             backgroundColor: effectiveBgColor,
             foregroundColor: effectiveFgColor,
-            // 3. Явно задаем цвет всплеска при нажатии
             overlayColor: effectiveFgColor.withOpacity(0.12),
             shadowColor: Colors.transparent,
             elevation: 0,

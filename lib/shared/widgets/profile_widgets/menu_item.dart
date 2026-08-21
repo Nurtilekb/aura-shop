@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-/// Элемент списка меню с иконкой, заголовком и опциональным бэйджем
+/// Р­Р»РµРјРµРЅС‚ СЃРїРёСЃРєР° РјРµРЅСЋ СЃ РёРєРѕРЅРєРѕР№, Р·Р°РіРѕР»РѕРІРєРѕРј Рё РѕРїС†РёРѕРЅР°Р»СЊРЅС‹Рј Р±СЌР№РґР¶РµРј
 class MenuItem extends StatelessWidget {
   final String emaji;
 
