@@ -1,24 +1,28 @@
 import 'package:aurashop/shared/models/order_model.dart';
+import 'package:aurashop/shared/models/order_status.dart';
 import 'package:flutter/material.dart';
 
-class OrderCard extends StatelessWidget {
-  const OrderCard({super.key, required this.order});
+class OrderCard extends StatefulWidget {
+  const OrderCard({super.key, required this.order, this.onStatusChanged});
 
   final OrderItem order;
+  final ValueChanged<String>? onStatusChanged;
+
+  @override
+  State<OrderCard> createState() => _OrderCardState();
+}
+
+class _OrderCardState extends State<OrderCard> {
+  late String _status;
+
+  @override
+  void initState() {
+    super.initState();
+    _status = widget.order.status;
+  }
 
   Color _statusColor(String status) {
-    switch (status) {
-      case 'Доставлен':
-        return const Color(0xFF34C759);
-      case 'В пути':
-        return const Color(0xFFFF9500);
-      case 'Новый':
-        return const Color(0xFF007AFF);
-      case 'Отменён':
-        return const Color(0xFFFF3B30);
-      default:
-        return const Color(0xFF8E8E93);
-    }
+    return OrderStatusPalette.textColor(status);
   }
 
   @override
@@ -40,7 +44,7 @@ class OrderCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    order.id,
+                    widget.order.id,
                     style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
@@ -48,7 +52,7 @@ class OrderCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${order.total} ₽',
+                    '${widget.order.total} ₽',
                     style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 18,
@@ -59,7 +63,7 @@ class OrderCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                order.items.join(' • '),
+                widget.order.items.join(' • '),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -83,7 +87,9 @@ class OrderCard extends StatelessWidget {
                       color: Theme.of(context).scaffoldBackgroundColor,
                       borderRadius: BorderRadius.circular(12),
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          _selectStatus(context);
+                        },
                         borderRadius: BorderRadius.circular(12),
                         child: Container(
                           height: 50,
@@ -99,9 +105,9 @@ class OrderCard extends StatelessWidget {
                             children: [
                               const SizedBox(width: 10),
                               Text(
-                                order.status,
+                                _status,
                                 style: TextStyle(
-                                  color: _statusColor(order.status),
+                                  color: _statusColor(_status),
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -121,5 +127,52 @@ class OrderCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _selectStatus(BuildContext context) async {
+    final selectedStatus = await showModalBottomSheet<String>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 4, 20, 12),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Статус заказа',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              for (final status in OrderStatusPalette.labels)
+                ListTile(
+                  leading: Icon(
+                    status == _status
+                        ? Icons.radio_button_checked
+                        : Icons.radio_button_unchecked,
+                    color: _statusColor(status),
+                  ),
+                  title: Text(status),
+                  onTap: () => Navigator.pop(context, status),
+                ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (selectedStatus == null || selectedStatus == _status || !mounted) {
+      return;
+    }
+
+    setState(() {
+      _status = selectedStatus;
+    });
+    widget.onStatusChanged?.call(selectedStatus);
   }
 }

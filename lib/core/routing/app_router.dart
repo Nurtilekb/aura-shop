@@ -12,13 +12,14 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: SettingsRoute.page),
     AutoRoute(page: SplashRoute.page),
     AutoRoute(page: HomeRoute.page),
-    AutoRoute(page: MainRoute.page),
+    AutoRoute(page: MainRoute.page, initial: true),
     AutoRoute(page: ProfileRoute.page),
     AutoRoute(page: ConfirmOrder.page),
     AutoRoute(page: FavoritesRoute.page),
     AutoRoute(page: MyAdressesRoute.page),
-    AutoRoute(page: Main2Route.page, initial: true),
+    AutoRoute(page: Main2Route.page),
     AutoRoute(page: ProductRouteAdmin.page),
     AutoRoute(page: AddNewProductRoute.page),
+    AutoRoute(page: AdminProfileRoute.page),
   ];
 }

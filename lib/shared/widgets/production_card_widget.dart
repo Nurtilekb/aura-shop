@@ -10,6 +10,7 @@ class Productcard extends StatelessWidget {
     this.price = '2 499 ₽',
     this.rating = 4.8,
     this.onAddToCart,
+    this.isFavorite,
   });
 
   final int indexx;
@@ -17,6 +18,7 @@ class Productcard extends StatelessWidget {
   final String price;
   final double rating;
   final VoidCallback? onAddToCart;
+  final bool? isFavorite;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,6 @@ class Productcard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Верхняя часть с иконкой
                   Expanded(
                     child: Container(
                       height: 180,
@@ -60,14 +61,12 @@ class Productcard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Нижняя часть с информацией
                   Padding(
                     padding: const EdgeInsets.fromLTRB(12, 8, 15, 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Название товара
                         Text(
                           title,
                           maxLines: 1,
@@ -78,11 +77,9 @@ class Productcard extends StatelessWidget {
                             color: Colors.black,
                           ),
                         ),
-                        // Цена и кнопка
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Цена
                             Text(
                               price,
                               style: TextStyle(
@@ -90,7 +87,7 @@ class Productcard extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            _buildAddToCartButton(8, Icons.add, state),
+                            _buildAddToCartButton(8, Icons.add, state, null),
                           ],
                         ),
                       ],
@@ -102,7 +99,12 @@ class Productcard extends StatelessWidget {
             Positioned(
               top: 12,
               right: 12,
-              child: _buildAddToCartButton(20, Icons.favorite, state),
+              child: _buildAddToCartButton(
+                20,
+                Icons.favorite,
+                state,
+                isFavorite,
+              ),
             ),
           ],
         );
@@ -114,6 +116,7 @@ class Productcard extends StatelessWidget {
     double forborder,
     IconData icon,
     ThemeState state,
+    bool? isfav,
   ) {
     return GestureDetector(
       onTap: onAddToCart ?? () {},
@@ -123,7 +126,11 @@ class Productcard extends StatelessWidget {
           color: state.directAccentColor,
           borderRadius: BorderRadius.circular(forborder),
         ),
-        child: Icon(icon, color: Colors.white, size: 16),
+        child: Icon(
+          icon,
+          color: isfav != null ? Colors.red : Colors.white,
+          size: 16,
+        ),
       ),
     );
   }
