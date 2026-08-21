@@ -6,8 +6,20 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
-class ProductScreenAdmin extends StatelessWidget {
+class ProductScreenAdmin extends StatefulWidget {
   const ProductScreenAdmin({super.key});
+
+  @override
+  State<ProductScreenAdmin> createState() => _ProductScreenAdminState();
+}
+
+class _ProductScreenAdminState extends State<ProductScreenAdmin> {
+  final _searchController = TextEditingController();
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +52,8 @@ class ProductScreenAdmin extends StatelessWidget {
                 children: [
                   Expanded(
                     child: AppInputWidget(
-                      filledColor: theme.scaffoldBackgroundColor,
+                      controller: _searchController,
+                      filledColor: Colors.transparent,
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 12,
