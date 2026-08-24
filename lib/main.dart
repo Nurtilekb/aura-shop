@@ -1,4 +1,4 @@
-﻿import 'package:aurashop/core/routing/app_router.dart';
+import 'package:aurashop/core/routing/app_router.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/features/basket/presentation/screens/basket_screen.dart';
 import 'package:aurashop/features/catalog/presentation/screens/categories_screen.dart';
@@ -11,11 +11,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +27,14 @@ class MyApp extends StatelessWidget {
         builder: (context, state) {
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
-
             theme: state.buildTheme(Brightness.light),
-
-            routerConfig: AppRouter().config(),
+            darkTheme: state.buildTheme(Brightness.dark),
+            themeMode: state.themeMode == ThemeModeStatus.light
+                ? ThemeMode.light
+                : state.themeMode == ThemeModeStatus.dark
+                ? ThemeMode.dark
+                : ThemeMode.system,
+            routerConfig: _appRouter.config(),
           );
         },
       ),
@@ -47,9 +53,9 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [
+  final List<Widget> _screens = const [
     HomeScreen(),
-    AllCategories(),
+    AllCategoriesScreen(),
     CartScreen(),
     FavoritesScreen(),
     ProfileScreen(),
@@ -78,11 +84,8 @@ class _MainScreenState extends State<MainScreen> {
             });
           },
           type: BottomNavigationBarType.fixed,
-
           selectedItemColor: colorScheme.primary,
-
           unselectedItemColor: colorScheme.onSurfaceVariant,
-
           showUnselectedLabels: true,
           items: const [
             BottomNavigationBarItem(
@@ -94,7 +97,7 @@ class _MainScreenState extends State<MainScreen> {
               label: 'Каталог',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.delete_outline_outlined),
+              icon: Icon(Icons.shopping_bag_outlined),
               label: 'Корзина',
             ),
             BottomNavigationBarItem(

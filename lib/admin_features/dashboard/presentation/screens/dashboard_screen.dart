@@ -1,10 +1,12 @@
-﻿import 'package:aurashop/admin_features/dashboard/presentation/screens/profile_admin_screen.dart';
+import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
 import 'package:aurashop/shared/widgets/admin/dashboard_metric_card.dart';
 import 'package:aurashop/shared/widgets/admin/dashboard_order_tile.dart';
 import 'package:aurashop/shared/widgets/admin/weekly_sales_card.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+@RoutePage()
 class DashboardScreenAdmin extends StatelessWidget {
   const DashboardScreenAdmin({super.key});
 
@@ -16,10 +18,7 @@ class DashboardScreenAdmin extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AdminProfileScreen()),
-              );
+              context.router.push(const AdminProfileRoute());
             },
             child: Row(
               children: [

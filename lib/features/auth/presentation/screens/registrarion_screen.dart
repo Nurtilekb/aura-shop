@@ -1,4 +1,5 @@
-﻿import 'package:aurashop/core/routing/app_router.gr.dart';
+import 'package:aurashop/core/routing/app_router.gr.dart';
+import 'package:aurashop/core/constants/app_constants.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:auto_route/auto_route.dart';
 
@@ -6,6 +7,7 @@ import 'package:aurashop/shared/widgets/app_input_widget.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class RegistrationScreen extends StatefulWidget {
@@ -211,22 +213,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     const SizedBox(height: 20),
                     PressedButton(
                       borderColor: Colors.black,
-                      onPressed: () {
-                        context.replaceRoute(SettingsRoute());
-                      },
+                      onPressed: _completeSignIn,
                       imagePath: "assets/icons/google.png",
 
-                      padding: EdgeInsets.only(top: 1),
+                      padding: const EdgeInsets.only(top: 1),
                       text: 'Регистрация через Google',
                       backgroundColor: Colors.white,
                       height: 45,
-                      textstyle: TextStyle(
+                      textstyle: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),
                       borderradius: RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(25),
+                        borderRadius: BorderRadius.circular(25),
                       ),
                     ),
 
@@ -242,7 +242,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            context.router.maybePop();
+                          },
                           child: Text(
                             'Войти',
                             style: TextStyle(
@@ -265,8 +267,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
+  Future<void> _completeSignIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(AppConstants.authTokenKey, 'signed-in');
+    if (!mounted) return;
+    context.router.replaceAll([const MainRoute()]);
+  }
+
   void _handleLogin() {
     if (_formKey2.currentState?.validate() ?? false) {
+      if (!_isAgreed) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Пожалуйста, примите условия использования'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
       context.router.push(VerificationRoute(email: _emailController.text));
     }
   }

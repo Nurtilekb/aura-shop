@@ -1,4 +1,5 @@
-﻿import 'package:aurashop/bloc/theme/theme_bloc.dart';
+import 'package:aurashop/bloc/theme/theme_bloc.dart';
+import 'package:aurashop/core/constants/app_constants.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
@@ -25,11 +26,12 @@ class _SplasScreenState extends State<SplashScreen> {
 
   Future<void> _checkAuthStatus() async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('auth_token');
+    final token = prefs.getString(AppConstants.authTokenKey);
 
+    if (!mounted) return;
     if (token != null) {
-      context.replaceRoute(MainRoute()); // Авторизован → Home
-    } else {}
+      context.router.replace(const MainRoute()); // Авторизован → Home
+    }
   }
 
   final PageController _pageController = PageController();

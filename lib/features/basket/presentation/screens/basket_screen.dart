@@ -1,11 +1,13 @@
 ﻿import 'package:aurashop/bloc/theme/theme_bloc.dart';
+import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/shared/models/cart_model.dart';
-import 'package:aurashop/features/basket/presentation/screens/confirm_orders_screen.dart';
 import 'package:aurashop/shared/widgets/basket_widgets/quantity_counter.dart';
 import 'package:aurashop/shared/widgets/basket_widgets/summary_card_widget.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+@RoutePage()
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
@@ -15,15 +17,17 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   final List<CartItem> _items = [
-    CartItem(
-      id: '1',
-      title: 'Aura Run 2.0 saaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-      price: 4990,
-      quantity: 1,
-    ),
+    CartItem(id: '1', title: 'Aura Run 2.0', price: 4990, quantity: 1),
     CartItem(id: '2', title: 'Худи Oversize', price: 3490, quantity: 2),
-    CartItem(id: '2', title: 'Худи Oversize', price: 3490, quantity: 2),
+    CartItem(id: '3', title: 'Ботинки Trek Pro', price: 7990, quantity: 1),
   ];
+
+  int get _totalItemsPrice =>
+      _items.fold(0, (sum, item) => sum + (item.price * item.quantity));
+  int get _discount => _totalItemsPrice > 5000 ? 1500 : 0;
+  int get _totalPrice =>
+      (_totalItemsPrice - _discount).clamp(0, double.infinity).toInt();
+  int get _itemsCount => _items.fold(0, (sum, item) => sum + item.quantity);
 
   @override
   Widget build(BuildContext context) {
@@ -40,50 +44,83 @@ class _CartScreenState extends State<CartScreen> {
             padding: const EdgeInsets.only(right: 16.0),
             child: Center(
               child: Text(
-                '${_items.length} товара',
+                '$_itemsCount ${_itemsCount == 1
+                    ? "товар"
+                    : _itemsCount < 5
+                    ? "товара"
+                    : "товаров"}',
                 style: TextStyle(color: colorScheme.outline, fontSize: 14),
               ),
             ),
           ),
         ],
       ),
-      body: BlocBuilder<ThemeCubit, ThemeState>(
-        builder: (context, state) {
-          return ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              ..._items.map((item) => _buildCartTile(item)),
-              const SizedBox(height: 12),
-              const SummaryCard(
-                itemsCount: 3,
-                totalItemsPrice: 11970,
-                discount: 1500,
-                totalPrice: 10470,
+      body: _items.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.shopping_cart_outlined,
+                    size: 64,
+                    color: colorScheme.outlineVariant,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Корзина пуста',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Добавьте товары из каталога',
+                    style: TextStyle(color: colorScheme.outline),
+                  ),
+                ],
               ),
-            ],
-          );
-        },
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: SizedBox(
-            height: 56.0,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ConfirmOrder()),
+            )
+          : BlocBuilder<ThemeCubit, ThemeState>(
+              builder: (context, state) {
+                return ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    ..._items.map((item) => _buildCartTile(item)),
+                    const SizedBox(height: 12),
+                    SummaryCard(
+                      itemsCount: _itemsCount,
+                      totalItemsPrice: _totalItemsPrice,
+                      discount: _discount,
+                      totalPrice: _totalPrice,
+                    ),
+                  ],
                 );
               },
-              child: const Text(
-                'Оформить заказ',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+      bottomNavigationBar: _items.isEmpty
+          ? null
+          : SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: SizedBox(
+                  height: 56.0,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context.router.push(const ConfirmOrderRoute());
+                    },
+                    child: const Text(
+                      'Оформить заказ',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 

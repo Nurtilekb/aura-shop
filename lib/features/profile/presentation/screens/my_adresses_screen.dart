@@ -1,4 +1,4 @@
-﻿import 'package:aurashop/shared/widgets/app_input_widget.dart';
+import 'package:aurashop/shared/widgets/app_input_widget.dart';
 import 'package:aurashop/shared/widgets/basket_widgets/transperet_cont_widget.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
 import 'package:auto_route/auto_route.dart';
@@ -214,7 +214,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         decoration: BoxDecoration(
           color: isSelected
               ? colorScheme.primary
-              : colorScheme.surfaceContainerHighest.withOpacity(0.5),
+              : colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(

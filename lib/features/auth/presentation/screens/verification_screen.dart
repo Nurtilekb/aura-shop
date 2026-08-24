@@ -1,9 +1,12 @@
-﻿import 'package:aurashop/bloc/theme/theme_bloc.dart';
+import 'package:aurashop/bloc/theme/theme_bloc.dart';
+import 'package:aurashop/core/routing/app_router.gr.dart';
+import 'package:aurashop/core/constants/app_constants.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class VerificationScreen extends StatefulWidget {
@@ -158,8 +161,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     height: 56,
                     child: PressedButton(
                       text: "Подтвердить",
+                      onPressed: _completeSignIn,
                       textstyle: null,
-                      backgroundColor: Color(0xFF5D50FE),
+                      backgroundColor: const Color(0xFF5D50FE),
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -207,6 +211,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
         },
       ),
     );
+  }
+
+  Future<void> _completeSignIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(AppConstants.authTokenKey, 'signed-in');
+    if (!mounted) return;
+    context.router.replaceAll([const MainRoute()]);
   }
 
   String _formatTime(int seconds) {

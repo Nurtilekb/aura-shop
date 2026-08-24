@@ -1,6 +1,6 @@
-﻿import 'package:aurashop/bloc/theme/theme_bloc.dart';
-import 'package:aurashop/features/catalog/presentation/screens/categories_screen.dart';
-import 'package:aurashop/features/search/presentation/screens/search_screen.dart';
+import 'package:aurashop/bloc/theme/theme_bloc.dart';
+import 'package:aurashop/core/routing/app_router.gr.dart';
+import 'package:aurashop/shared/models/product_model.dart';
 import 'package:aurashop/shared/widgets/app_input_widget.dart';
 import 'package:aurashop/shared/widgets/banner_widget.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
@@ -50,6 +50,30 @@ class _HomeScreenState extends State<HomeScreen> {
         'Заказать',
       ],
     ];
+    final popularProducts = const [
+      Product(
+        name: 'Aura Run 2.0',
+        price: '4 990 ₽',
+        rating: 4.8,
+        discount: 30,
+        description:
+            'Легкие беговые кроссовки нового поколения с амортизирующей подошвой и дышащей сеткой.',
+      ),
+      Product(
+        name: 'Кеды Classic White',
+        price: '3 290 ₽',
+        rating: 4.6,
+        description:
+            'Универсальные кожаные кеды в минималистичном стиле, подходящие к любому повседневному образу.',
+      ),
+      Product(
+        name: 'Ботинки Trek Pro',
+        price: '7 990 ₽',
+        rating: 4.9,
+        description:
+            'Прочные всепогодные ботинки с водонепроницаемой мембраной и усиленной поддержкой стопы.',
+      ),
+    ];
     final imagesPath1 = ["👕", "👟", "📱", "🏠"];
     final categoryNames = ["Одежда", "Обувь", "Гаджеты", "Дом"];
     return Scaffold(
@@ -89,15 +113,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                        Spacer(),
+                        const Spacer(),
                         IconWithBack(
                           ontap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SearchScreen(),
-                              ),
-                            );
+                            context.router.push(const SearchRoute());
                           },
                           backroundcolor: Colors.white,
                           forborder: Border.all(width: 0.5, color: Colors.grey),
@@ -106,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           emojiSizes: 25,
                           sizes: 50,
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         IconWithBack(
                           ontap: () {},
                           backroundcolor: Colors.white,
@@ -128,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.grey.shade200,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: AppInputWidget(
+                      child: const AppInputWidget(
                         isBorder: false,
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 12,
@@ -137,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         filledColor: Colors.transparent,
                         hintText: 'Поиск товаров...',
                         leading: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: Text('🔍', style: TextStyle(fontSize: 20)),
                         ),
                         trailing: Icon(Icons.settings, size: 15),
@@ -186,7 +205,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.router.push(const AllCategoriesRoute());
+                          },
                           child: Text(
                             'Все',
                             style: TextStyle(
@@ -206,23 +227,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: SizedBox(
                       height: 100,
                       child: ListView.separated(
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         scrollDirection: Axis.horizontal,
-
                         itemCount: 4,
-                        separatorBuilder: (_, _) => SizedBox(width: 30),
+                        separatorBuilder: (_, _) => const SizedBox(width: 30),
                         itemBuilder: (context, index) {
                           return Column(
                             children: [
                               IconWithBack(
-                                ontap: () {},
+                                ontap: () {
+                                  context.router.push(
+                                    const AllCategoriesRoute(),
+                                  );
+                                },
                                 backroundcolor: Colors.grey.shade200,
                                 emojiSizes: 30,
                                 bordRadius: BorderRadius.circular(18),
                                 emoji: imagesPath1[index],
                                 sizes: 70,
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Text(
                                 categoryNames[index],
                                 style: TextStyle(
@@ -253,12 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AllCategories(),
-                              ),
-                            );
+                            context.router.push(const AllCategoriesRoute());
                           },
                           child: Text(
                             'Смотреть все',
@@ -281,11 +300,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: ListView.separated(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) =>
-                            Productcard(indexx: index),
+                        itemBuilder: (context, index) => Productcard(
+                          indexx: index,
+                          product: popularProducts[index],
+                        ),
                         separatorBuilder: (context, index) =>
-                            SizedBox(width: 20),
-                        itemCount: 2,
+                            const SizedBox(width: 20),
+                        itemCount: popularProducts.length,
                       ),
                     ),
                   ),

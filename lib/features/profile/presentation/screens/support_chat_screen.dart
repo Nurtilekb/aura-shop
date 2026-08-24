@@ -1,6 +1,8 @@
-﻿import 'package:aurashop/shared/widgets/app_input_widget.dart';
+import 'package:aurashop/shared/widgets/app_input_widget.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+@RoutePage()
 class SupportChatScreen extends StatefulWidget {
   const SupportChatScreen({super.key});
 
@@ -51,7 +53,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundColor: colorScheme.primary.withOpacity(0.8),
+                  backgroundColor: colorScheme.primary.withValues(alpha: 0.8),
                   child: const Text(
                     'S',
                     style: TextStyle(
@@ -112,8 +114,8 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                       ),
                       margin: const EdgeInsets.only(bottom: 16),
                       decoration: BoxDecoration(
-                        color: colorScheme.surfaceContainerHighest.withOpacity(
-                          0.5,
+                        color: colorScheme.surfaceContainerHighest.withValues(
+                          alpha: 0.5,
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -139,7 +141,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                     onPressed: () {},
                     style: IconButton.styleFrom(
                       backgroundColor: colorScheme.surfaceContainerHighest
-                          .withOpacity(0.5),
+                          .withValues(alpha: 0.5),
                       shape: const CircleBorder(),
                     ),
                     icon: Icon(Icons.add, color: colorScheme.onSurfaceVariant),
@@ -151,7 +153,9 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                       hintText: 'Сообщение...',
                       controller: _messageController,
 
-                      borderColor: colorScheme.outlineVariant.withOpacity(0.5),
+                      borderColor: colorScheme.outlineVariant.withValues(
+                        alpha: 0.5,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -213,7 +217,7 @@ class _ChatBubble extends StatelessWidget {
           boxShadow: [
             if (!message.isMe)
               BoxShadow(
-                color: Colors.black.withOpacity(0.02),
+                color: Colors.black.withValues(alpha: 0.02),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -247,7 +251,7 @@ class _ChatBubble extends StatelessWidget {
               width: 6,
               height: 6,
               decoration: BoxDecoration(
-                color: colorScheme.outline.withOpacity(0.6),
+                color: colorScheme.outline.withValues(alpha: 0.6),
                 shape: BoxShape.circle,
               ),
             ),
@@ -260,7 +264,9 @@ class _ChatBubble extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withOpacity(0.4),
+                color: colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.4,
+                ),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Text('📦', style: TextStyle(fontSize: 20)),

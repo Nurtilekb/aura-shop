@@ -1,22 +1,22 @@
-﻿import 'package:aurashop/main.dart';
-import 'package:aurashop/features/basket/presentation/screens/orderSuccess_screen.dart';
+import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/shared/widgets/basket_widgets/summary_card_widget.dart';
 import 'package:aurashop/shared/widgets/basket_widgets/transperet_cont_widget.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
-class ConfirmOrder extends StatefulWidget {
-  const ConfirmOrder({super.key});
+class ConfirmOrderScreen extends StatefulWidget {
+  const ConfirmOrderScreen({super.key});
 
   @override
-  State<ConfirmOrder> createState() => _ConfirmOrderState();
+  State<ConfirmOrderScreen> createState() => _ConfirmOrderScreenState();
 }
 
-class _ConfirmOrderState extends State<ConfirmOrder> {
+class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> {
+  int _deliveryMethod = 0; // 0: Courier, 1: Pickup
+
   @override
   Widget build(BuildContext context) {
-    bool isSelected = true;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -27,109 +27,105 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          Text(
-            'Адресс доставки',
-            style: TextStyle(fontWeight: FontWeight(700), fontSize: 16),
+          const Text(
+            'Адрес доставки',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          TransperetContWidget(
+          const TransperetContWidget(
             label: 'Дом · Москва',
             value: 'ул. Тверская, 12, кв. 45 +7 999 123-45-67',
             icon: "📍",
           ),
-
-          Text(
+          const SizedBox(height: 12),
+          const Text(
             'Способ доставки',
-            style: TextStyle(fontWeight: FontWeight(700), fontSize: 16),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          TransperetContWidget(
-            label: 'Курьер · завтра',
-            value: '10:00 – 22:00',
-            icon: '♡',
-            leadWidget: Radio<bool>(
-              value: true,
-              groupValue: isSelected,
-              onChanged: (value) {
-                setState(() {
-                  isSelected = value!;
-                });
-              },
-            ),
-            isIncenterWidget: Column(
+          RadioGroup<int>(
+            groupValue: _deliveryMethod,
+            onChanged: (value) {
+              if (value != null) {
+                setState(() => _deliveryMethod = value);
+              }
+            },
+            child: Column(
               children: [
-                SizedBox(height: 10),
-                Center(
-                  child: Text(
-                    'Бесплатно',
-                    style: TextStyle(
-                      fontWeight: FontWeight(600),
-                      fontSize: 16,
-                      color: Colors.green,
-                    ),
+                TransperetContWidget(
+                  label: 'Курьер · завтра',
+                  value: '10:00 – 22:00',
+                  icon: '🚚',
+                  leadWidget: const Radio<int>(value: 0),
+                  isIncenterWidget: const Column(
+                    children: [
+                      SizedBox(height: 10),
+                      Center(
+                        child: Text(
+                          'Бесплатно',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                TransperetContWidget(
+                  label: 'Пункт выдачи',
+                  value: '3–4 дня',
+                  icon: '📦',
+                  leadWidget: const Radio<int>(value: 1),
+                  isIncenterWidget: const Column(
+                    children: [
+                      SizedBox(height: 10),
+                      Center(
+                        child: Text(
+                          '99 ₽',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
-          TransperetContWidget(
-            label: 'Пункт выдачи',
-            value: '3–4 дня',
-            icon: '♡',
-            leadWidget: Radio<bool>(
-              value: true,
-              onChanged: (value) {
-                setState(() {
-                  isSelected = value!;
-                });
-              },
-            ),
-            isIncenterWidget: Column(
-              children: [
-                SizedBox(height: 10),
-                Center(
-                  child: Text(
-                    '99 ₽',
-                    style: TextStyle(fontWeight: FontWeight(600), fontSize: 16),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           SummaryCard(
             totalItemsPrice: 11970,
             discount: 1500,
-            totalPrice: 10470,
+            totalPrice: 10470 + (_deliveryMethod == 1 ? 99 : 0),
           ),
         ],
       ),
-
       bottomNavigationBar: SafeArea(
         child: Container(
           decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: Colors.grey, width: 2.0)),
+            border: Border(
+              top: BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant,
+                width: 1.0,
+              ),
+            ),
           ),
-
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: SizedBox(
               height: 56.0,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => OrderSuccessScreen(
-                        onTrackOrder: () {},
-                        onContinueShopping: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MainScreen(),
-                            ),
-                            ModalRoute.withName('/'),
-                          );
-                        },
-                      ),
+                  context.router.push(
+                    OrderSuccessRoute(
+                      onTrackOrder: () {
+                        context.router.push(OrdersRoute());
+                      },
+                      onContinueShopping: () {
+                        context.router.replaceAll([const MainRoute()]);
+                      },
                     ),
                   );
                 },
@@ -145,3 +141,5 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
     );
   }
 }
+
+typedef ConfirmOrder = ConfirmOrderScreen;

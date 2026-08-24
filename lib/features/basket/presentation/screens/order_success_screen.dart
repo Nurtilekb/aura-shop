@@ -1,17 +1,19 @@
-﻿import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
 
+@RoutePage()
 class OrderSuccessScreen extends StatelessWidget {
   final String orderNumber;
   final String deliveryTime;
-  final VoidCallback onTrackOrder;
-  final VoidCallback onContinueShopping;
+  final VoidCallback? onTrackOrder;
+  final VoidCallback? onContinueShopping;
 
   const OrderSuccessScreen({
     super.key,
     this.orderNumber = '#AU-24815',
     this.deliveryTime = 'завтра, 10:00–22:00',
-    required this.onTrackOrder,
-    required this.onContinueShopping,
+    this.onTrackOrder,
+    this.onContinueShopping,
   });
 
   @override
@@ -138,7 +140,8 @@ class OrderSuccessScreen extends StatelessWidget {
                   SizedBox(
                     height: 56,
                     child: ElevatedButton(
-                      onPressed: onTrackOrder,
+                      onPressed:
+                          onTrackOrder ?? () => context.router.maybePop(),
                       child: const Text(
                         'Отследить заказ',
                         style: TextStyle(
@@ -152,7 +155,8 @@ class OrderSuccessScreen extends StatelessWidget {
                   SizedBox(
                     height: 56,
                     child: OutlinedButton(
-                      onPressed: onContinueShopping,
+                      onPressed:
+                          onContinueShopping ?? () => context.router.maybePop(),
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
                           color: colorScheme.outlineVariant.withValues(

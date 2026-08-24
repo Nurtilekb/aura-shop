@@ -1,4 +1,5 @@
-﻿import 'package:aurashop/core/routing/app_router.gr.dart';
+import 'package:aurashop/core/routing/app_router.gr.dart';
+import 'package:aurashop/core/constants/app_constants.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
 import 'package:auto_route/auto_route.dart';
@@ -7,6 +8,7 @@ import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
 import 'package:flutter/material.dart';
 import 'package:aurashop/core/utils/validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class LoginScreen extends StatefulWidget {
@@ -139,30 +141,32 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 20),
                     PressedButton(
                       backgroundColor: Colors.white,
-                      onPressed: () {},
+                      onPressed: () {
+                        _completeSignIn();
+                      },
                       imagePath: "assets/icons/google.png",
                       borderColor: Colors.grey,
-                      padding: EdgeInsets.only(top: 1),
-                      text: 'Регистрация через Google',
+                      padding: const EdgeInsets.only(top: 1),
+                      text: 'Войти через Google',
 
                       height: 56,
-                      textstyle: TextStyle(
+                      textstyle: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),
                       borderradius: null,
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'Нет аккаунта? ',
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 18,
-                            fontWeight: FontWeight(300),
+                            fontWeight: FontWeight.w300,
                           ),
                         ),
                         _forLogin(state),
@@ -194,9 +198,28 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Future<void> _completeSignIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(AppConstants.authTokenKey, 'signed-in');
+    if (!mounted) return;
+    context.router.replaceAll([const MainRoute()]);
+  }
+
   void _handleLogin() {
     if (_formKey.currentState?.validate() ?? false) {
-      _emailController.text.trim();
+      final email = _emailController.text.trim().toLowerCase();
+      if (email.contains('admin')) {
+        _completeAdminSignIn();
+      } else {
+        _completeSignIn();
+      }
     }
+  }
+
+  Future<void> _completeAdminSignIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(AppConstants.authTokenKey, 'signed-in');
+    if (!mounted) return;
+    context.router.replaceAll([const Main2Route()]);
   }
 }

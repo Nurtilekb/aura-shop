@@ -1,4 +1,4 @@
-﻿import 'package:aurashop/bloc/theme/theme_bloc.dart';
+import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,7 +47,7 @@ class PressedButton extends StatelessWidget {
           style: FilledButton.styleFrom(
             backgroundColor: effectiveBgColor,
             foregroundColor: effectiveFgColor,
-            overlayColor: effectiveFgColor.withOpacity(0.12),
+            overlayColor: effectiveFgColor.withValues(alpha: 0.12),
             shadowColor: Colors.transparent,
             elevation: 0,
             minimumSize: Size(double.infinity, height ?? 52),

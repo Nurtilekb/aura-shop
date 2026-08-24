@@ -1,34 +1,47 @@
-﻿import 'package:aurashop/bloc/theme/theme_bloc.dart';
+import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/brand_filter_widget.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/slider_widget.dart';
 import 'package:flutter/material.dart';
 
-class CatalogFiltersSheet extends StatelessWidget {
+class CatalogFiltersSheet extends StatefulWidget {
   const CatalogFiltersSheet({super.key, required this.state});
 
   final ThemeState state;
 
   @override
+  State<CatalogFiltersSheet> createState() => _CatalogFiltersSheetState();
+}
+
+class _CatalogFiltersSheetState extends State<CatalogFiltersSheet> {
+  double _startPrice = 1000;
+  double _endPrice = 9000;
+  List<String> _selectedBrands = [];
+  bool _onlyInStock = true;
+
+  @override
   Widget build(BuildContext context) {
+    final activeColor = widget.state.directAccentColor;
+
     return SafeArea(
       top: false,
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.7,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        height: MediaQuery.of(context).size.height * 0.75,
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
         child: Scaffold(
+          backgroundColor: Colors.transparent,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: _buildActions(context),
+          floatingActionButton: _buildActions(context, activeColor),
           body: Column(
             children: [
               _buildHandle(),
-              _buildHeader(),
-              const Divider(height: 20, thickness: 1),
-              Expanded(child: _buildContent()),
+              _buildHeader(activeColor),
+              const Divider(height: 16, thickness: 1),
+              Expanded(child: _buildContent(activeColor)),
             ],
           ),
         ),
@@ -50,7 +63,7 @@ class CatalogFiltersSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(Color activeColor) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -59,13 +72,13 @@ class CatalogFiltersSheet extends StatelessWidget {
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         TextButton(
-          onPressed: () {},
-          child: const Text(
+          onPressed: _resetFilters,
+          child: Text(
             'Сбросить',
             style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade600,
             ),
           ),
         ),
@@ -73,91 +86,132 @@ class CatalogFiltersSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(Color activeColor) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: SizedBox(
-              height: 90,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Заголовок',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(12),
+          // 1. Диапазон цен
+          CustomRangeSlider(
+            state: widget.state,
+            minValue: 0,
+            maxValue: 15000,
+            startValue: _startPrice,
+            endValue: _endPrice,
+            onChanged: (start, end) {
+              setState(() {
+                _startPrice = start;
+                _endPrice = end;
+              });
+            },
+          ),
+          const SizedBox(height: 12),
+
+          // 2. Бренды
+          BrandFilterWidget(
+            activeColor: activeColor,
+            initialSelected: _selectedBrands,
+            onChanged: (selected) {
+              setState(() {
+                _selectedBrands = selected;
+              });
+            },
+          ),
+          const SizedBox(height: 12),
+
+          // 3. Только в наличии
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Row(
+                  children: [
+                    Icon(Icons.check_circle_outline, size: 20),
+                    SizedBox(width: 10),
+                    Text(
+                      'Только в наличии',
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                     ),
-                    child: const Text(
-                      'Этот контент займет все свободное  ',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+                Switch.adaptive(
+                  value: _onlyInStock,
+                  activeTrackColor: activeColor,
+                  onChanged: (val) {
+                    setState(() {
+                      _onlyInStock = val;
+                    });
+                  },
+                ),
+              ],
             ),
           ),
-          CustomRangeSlider(
-            state: state,
-            minValue: 0,
-            maxValue: 10000,
-            startValue: 2000,
-            endValue: 8000,
-            onChanged: (start, end) {},
-          ),
-          BrandFilterWidget(onChanged: (selected) {}),
-          const SizedBox(height: 32),
+          const SizedBox(height: 80),
         ],
       ),
     );
   }
 
-  Widget _buildActions(BuildContext context) {
+  Widget _buildActions(BuildContext context, Color activeColor) {
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Row(
         children: [
           Expanded(
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: state.seedColor,
+            child: OutlinedButton(
+              onPressed: _resetFilters,
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.grey.shade800,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                 ),
-                side: BorderSide(color: state.directAccentColor, width: 1.5),
+                side: BorderSide(color: Colors.grey.shade300),
               ),
-              child: const Text('Сбросить'),
+              child: const Text(
+                'Сбросить',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
+            flex: 2,
             child: ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: state.directAccentColor,
+                backgroundColor: activeColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                 ),
+                elevation: 0,
               ),
-              child: const Text('Применить'),
+              child: const Text(
+                'Применить',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],
       ),
     );
   }
+
+  void _resetFilters() {
+    setState(() {
+      _startPrice = 0;
+      _endPrice = 15000;
+      _selectedBrands.clear();
+      _onlyInStock = false;
+    });
+  }
 }
+

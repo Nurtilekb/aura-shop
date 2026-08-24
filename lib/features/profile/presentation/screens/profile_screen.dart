@@ -1,9 +1,4 @@
-﻿import 'package:aurashop/features/favorites/presentation/screens/favorites_screen.dart';
-import 'package:aurashop/features/profile/presentation/screens/edit_profile_screen.dart';
-import 'package:aurashop/features/profile/presentation/screens/my_adresses_screen.dart';
-import 'package:aurashop/features/profile/presentation/screens/my_orders_screen.dart';
-import 'package:aurashop/features/profile/presentation/screens/settings_screen.dart';
-import 'package:aurashop/features/profile/presentation/screens/support_chat_screen.dart';
+import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
 import 'package:aurashop/shared/widgets/profile_widgets/menu_item.dart';
 import 'package:aurashop/shared/widgets/profile_widgets/stat_card_widget.dart';
@@ -22,24 +17,18 @@ class ProfileScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 4,
-                ),
-                child: const UserProfileHeader(
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
+                child: UserProfileHeader(
                   name: 'Анна Соколова',
                   email: 'anna@mail.ru',
                   initials: 'АС',
                 ),
               ),
               const SizedBox(height: 24),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 4,
-                ),
-                child: const Row(
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
+                child: Row(
                   children: [
                     Expanded(
                       child: StatCard(value: '12', label: 'Заказов'),
@@ -60,40 +49,28 @@ class ProfileScreen extends StatelessWidget {
                 emaji: '📦',
                 title: 'Мои заказы',
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => OrdersScreen()),
-                  );
+                  context.router.push(OrdersRoute());
                 },
               ),
               MenuItem(
                 emaji: '♡',
                 title: 'Избранное',
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => FavoritesScreen()),
-                  );
+                  context.router.push(const FavoritesRoute());
                 },
               ),
               MenuItem(
                 emaji: '📍',
                 title: 'Мои адреса',
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyAdressesScreen()),
-                  );
+                  context.router.push(const MyAdressesRoute());
                 },
               ),
               MenuItem(
                 emaji: '⚙',
                 title: 'Настройки',
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SettingsScreen()),
-                  );
+                  context.router.push(const SettingsRoute());
                 },
               ),
               MenuItem(
@@ -101,12 +78,7 @@ class ProfileScreen extends StatelessWidget {
                 title: 'Поддержка',
                 badgeText: 'Онлайн',
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SupportChatScreen(),
-                    ),
-                  );
+                  context.router.push(const SupportChatRoute());
                 },
               ),
               const SizedBox(height: 24),
@@ -120,11 +92,13 @@ class ProfileScreen extends StatelessWidget {
                   height: 52,
                   child: PressedButton(
                     height: 60,
-                    onPressed: () {},
+                    onPressed: () {
+                      context.router.replaceAll([const LoginRoute()]);
+                    },
                     backgroundColor: Colors.white,
                     borderColor: Colors.grey,
                     text: 'Выйти',
-                    textstyle: TextStyle(
+                    textstyle: const TextStyle(
                       color: Colors.redAccent,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -146,6 +120,7 @@ class UserProfileHeader extends StatelessWidget {
   final String initials;
 
   const UserProfileHeader({
+    super.key,
     required this.name,
     required this.email,
     required this.initials,
@@ -195,10 +170,7 @@ class UserProfileHeader extends StatelessWidget {
           ),
           child: IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => EditProfileScreen()),
-              );
+              context.router.push(const EditProfileRoute());
             },
             icon: const Icon(Icons.edit_outlined, size: 20),
             color: Colors.grey.shade700,

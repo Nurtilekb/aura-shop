@@ -1,14 +1,16 @@
-﻿import 'package:aurashop/shared/models/order_model.dart';
+import 'package:aurashop/shared/models/order_model.dart';
 import 'package:aurashop/shared/models/order_status.dart';
 import 'package:aurashop/shared/widgets/orders/empty_state_widget.dart';
 import 'package:aurashop/shared/widgets/orders/orders_offline_banner.dart';
 import 'package:aurashop/shared/widgets/orders/order_status_filter.dart';
 import 'package:aurashop/shared/widgets/orders/orders_header.dart';
 import 'package:aurashop/shared/widgets/orders/orders_list.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 enum OrdersState { empty, noInternet, success, foradmin }
 
+@RoutePage()
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key, this.foradminAppbar, this.isItAdmin});
 

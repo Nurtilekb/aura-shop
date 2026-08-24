@@ -1,7 +1,9 @@
-﻿import 'package:aurashop/shared/widgets/app_input_widget.dart';
+import 'package:aurashop/shared/widgets/app_input_widget.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/popular_chips_widget.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+@RoutePage()
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 

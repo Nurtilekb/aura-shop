@@ -1,4 +1,4 @@
-﻿import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
+import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +62,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: primaryPurple.withOpacity(0.08),
+                  color: primaryPurple.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -242,7 +242,7 @@ class _PermissionSwitchRow extends StatelessWidget {
           ),
           CupertinoSwitch(
             value: value,
-            activeColor: const Color(0xFF5A49F8),
+            activeTrackColor: const Color(0xFF5A49F8),
             onChanged: onChanged,
           ),
         ],
