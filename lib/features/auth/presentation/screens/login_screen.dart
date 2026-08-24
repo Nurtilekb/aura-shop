@@ -1,5 +1,7 @@
 import 'package:aurashop/core/routing/app_router.gr.dart';
-import 'package:aurashop/core/constants/app_constants.dart';
+import 'package:aurashop/bloc/auth/auth_bloc.dart';
+import 'package:aurashop/bloc/auth/auth_event.dart';
+import 'package:aurashop/bloc/auth/auth_state.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
 import 'package:auto_route/auto_route.dart';
@@ -8,7 +10,6 @@ import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
 import 'package:flutter/material.dart';
 import 'package:aurashop/core/utils/validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class LoginScreen extends StatefulWidget {
@@ -34,150 +35,172 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: BlocBuilder<ThemeCubit, ThemeState>(
-        builder: (context, state) {
-          return SafeArea(
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              padding: EdgeInsets.fromLTRB(
-                24,
-                20,
-                24,
-                MediaQuery.of(context).viewInsets.bottom,
-              ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 40),
-                    IconWithBack(
-                      emoji: 'A',
-                      color: Colors.white,
-                      emojiSizes: 50,
-                      fontwght: FontWeight(800),
-                    ),
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, authState) {
+        if (authState is AuthAuthenticated) {
+          final isAdmin = authState.user.isAdmin;
+          context.router.replaceAll([
+            isAdmin ? const Main2Route() : const MainRoute(),
+          ]);
+        } else if (authState is AuthError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(authState.message)));
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: BlocBuilder<ThemeCubit, ThemeState>(
+          builder: (context, state) {
+            return SafeArea(
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                padding: EdgeInsets.fromLTRB(
+                  24,
+                  20,
+                  24,
+                  MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 40),
+                      IconWithBack(
+                        emoji: 'A',
+                        color: Colors.white,
+                        emojiSizes: 50,
+                        fontwght: FontWeight(800),
+                      ),
 
-                    SizedBox(height: 40),
-                    Text(
-                      "С возвращением!",
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight(700),
-                      ),
-                    ),
-                    Text(
-                      "Войдите, чтобы продолжить покупки",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    const SizedBox(height: 20),
-                    AppInputWidget(
-                      validator: Validators.validateEmail,
-
-                      labelStyle: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
-                        fontWeight: FontWeight(400),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 18,
-                      ),
-                      filledColor: Colors.transparent,
-                      controller: _emailController,
-                      label: 'Email',
-                      hintText: 'your@gmail.com',
-                      inputType: TextInputType.emailAddress,
-                    ),
-                    const SizedBox(height: 16),
-                    AppInputWidget(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 18,
-                      ),
-                      labelStyle: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
-                        fontWeight: FontWeight(400),
-                      ),
-                      filledColor: Colors.transparent,
-                      controller: _passwordController,
-                      label: 'Пароль',
-
-                      hintText: "Напишите ваш пароль",
-                      isPasswordField: true,
-                      validator: Validators.validatePassword,
-                    ),
-                    const SizedBox(height: 40),
-                    PressedButton(
-                      height: 56,
-                      onPressed: _handleLogin,
-                      text: 'Войти',
-
-                      textstyle: null,
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        const Expanded(
-                          child: Divider(height: 1, color: Colors.grey),
+                      SizedBox(height: 40),
+                      Text(
+                        "С возвращением!",
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight(700),
                         ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 15),
-                          child: const Text(
-                            'or',
-                            style: TextStyle(color: Colors.grey),
+                      ),
+                      Text(
+                        "Войдите, чтобы продолжить покупки",
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const SizedBox(height: 20),
+                      AppInputWidget(
+                        validator: Validators.validateEmail,
+
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight(400),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 18,
+                        ),
+                        filledColor: Colors.transparent,
+                        controller: _emailController,
+                        label: 'Email',
+                        hintText: 'your@gmail.com',
+                        inputType: TextInputType.emailAddress,
+                      ),
+                      const SizedBox(height: 16),
+                      AppInputWidget(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 18,
+                        ),
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight(400),
+                        ),
+                        filledColor: Colors.transparent,
+                        controller: _passwordController,
+                        label: 'Пароль',
+
+                        hintText: "Напишите ваш пароль",
+                        isPasswordField: true,
+                        validator: Validators.validatePassword,
+                      ),
+                      const SizedBox(height: 40),
+                      BlocBuilder<AuthBloc, AuthState>(
+                        builder: (context, authState) {
+                          return PressedButton(
+                            height: 56,
+                            onPressed: authState is AuthLoading
+                                ? null
+                                : _handleLogin,
+                            text: authState is AuthLoading
+                                ? 'Выполняется вход...'
+                                : 'Войти',
+
+                            textstyle: null,
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: Divider(height: 1, color: Colors.grey),
                           ),
-                        ),
-                        const Expanded(
-                          child: Divider(height: 1, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    PressedButton(
-                      backgroundColor: Colors.white,
-                      onPressed: () {
-                        _completeSignIn();
-                      },
-                      imagePath: "assets/icons/google.png",
-                      borderColor: Colors.grey,
-                      padding: const EdgeInsets.only(top: 1),
-                      text: 'Войти через Google',
-
-                      height: 56,
-                      textstyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
-                      borderradius: null,
-                    ),
-                    const SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Нет аккаунта? ',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w300,
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 15),
+                            child: const Text(
+                              'or',
+                              style: TextStyle(color: Colors.grey),
+                            ),
                           ),
+                          const Expanded(
+                            child: Divider(height: 1, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      PressedButton(
+                        backgroundColor: Colors.white,
+                        onPressed: () =>
+                            context.read<AuthBloc>().add(AuthGoogleRequested()),
+                        imagePath: "assets/icons/google.png",
+                        borderColor: Colors.grey,
+                        padding: const EdgeInsets.only(top: 1),
+                        text: 'Войти через Google',
+
+                        height: 56,
+                        textstyle: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
                         ),
-                        _forLogin(state),
-                      ],
-                    ),
-                  ],
+                        borderradius: null,
+                      ),
+                      const SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Нет аккаунта? ',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          _forLogin(state),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -198,28 +221,14 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<void> _completeSignIn() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(AppConstants.authTokenKey, 'signed-in');
-    if (!mounted) return;
-    context.router.replaceAll([const MainRoute()]);
-  }
-
   void _handleLogin() {
     if (_formKey.currentState?.validate() ?? false) {
-      final email = _emailController.text.trim().toLowerCase();
-      if (email.contains('admin')) {
-        _completeAdminSignIn();
-      } else {
-        _completeSignIn();
-      }
+      context.read<AuthBloc>().add(
+        AuthLoginRequested(
+          email: _emailController.text.trim().toLowerCase(),
+          password: _passwordController.text,
+        ),
+      );
     }
-  }
-
-  Future<void> _completeAdminSignIn() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(AppConstants.authTokenKey, 'signed-in');
-    if (!mounted) return;
-    context.router.replaceAll([const Main2Route()]);
   }
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "497949764516",
+    "project_id": "aura-shop-a72a8",
+    "storage_bucket": "aura-shop-a72a8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497949764516:android:7e87894c7d1dbc3500af31",
+        "android_client_info": {
+          "package_name": "com.example.aurashop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "497949764516-reg7ji98t5ft0b9eqfbrfi9b50tbvqt2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYA3rERPMSrPgt9ZVUy0wv8clLYCsgdEk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "497949764516-reg7ji98t5ft0b9eqfbrfi9b50tbvqt2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

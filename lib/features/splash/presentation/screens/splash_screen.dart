@@ -1,5 +1,7 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
-import 'package:aurashop/core/constants/app_constants.dart';
+import 'package:aurashop/bloc/auth/auth_bloc.dart';
+import 'package:aurashop/bloc/auth/auth_event.dart';
+import 'package:aurashop/bloc/auth/auth_state.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
@@ -7,7 +9,6 @@ import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class SplashScreen extends StatefulWidget {
@@ -21,17 +22,7 @@ class _SplasScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _checkAuthStatus();
-  }
-
-  Future<void> _checkAuthStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(AppConstants.authTokenKey);
-
-    if (!mounted) return;
-    if (token != null) {
-      context.router.replace(const MainRoute()); // Авторизован → Home
-    }
+    context.read<AuthBloc>().add(AuthRestoreRequested());
   }
 
   final PageController _pageController = PageController();
@@ -81,116 +72,125 @@ class _SplasScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: BlocBuilder<ThemeCubit, ThemeState>(
-        builder: (context, state) {
-          return SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 16,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: _navigateToLogin,
-                        child: Text(
-                          'Пропустить',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: state.directAccentColor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: PageView.builder(
-                    controller: _pageController,
-                    onPageChanged: (int index) {
-                      setState(() {
-                        _currentPage = index;
-                      });
-                    },
-                    itemCount: _pages.length,
-                    itemBuilder: (context, index) {
-                      return OnboardingPage(item: _pages[index]);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 32,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          _pages.length,
-                          (index) => AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            width: _currentPage == index ? 24 : 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: _currentPage == index
-                                  ? state.directAccentColor
-                                  : Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 56,
-                        child: PressedButton(
-                          text: _currentPage == _pages.length - 1
-                              ? 'Начать'
-                              : 'Далее',
-                          onPressed: _nextPage,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Уже есть аккаунт? ',
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, authState) {
+        if (authState is AuthAuthenticated) {
+          context.router.replace(
+            authState.user.isAdmin ? const Main2Route() : const MainRoute(),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: BlocBuilder<ThemeCubit, ThemeState>(
+          builder: (context, state) {
+            return SafeArea(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          onTap: _navigateToLogin,
+                          child: Text(
+                            'Пропустить',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.grey.shade600,
+                              color: state.directAccentColor,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                          GestureDetector(
-                            onTap: _navigateToLogin,
-                            child: Text(
-                              'Войти',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: state.directAccentColor,
-                                fontWeight: FontWeight.w600,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: PageView.builder(
+                      controller: _pageController,
+                      onPageChanged: (int index) {
+                        setState(() {
+                          _currentPage = index;
+                        });
+                      },
+                      itemCount: _pages.length,
+                      itemBuilder: (context, index) {
+                        return OnboardingPage(item: _pages[index]);
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 32,
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            _pages.length,
+                            (index) => AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              width: _currentPage == index ? 24 : 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: _currentPage == index
+                                    ? state.directAccentColor
+                                    : Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(4),
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        const SizedBox(height: 24),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 56,
+                          child: PressedButton(
+                            text: _currentPage == _pages.length - 1
+                                ? 'Начать'
+                                : 'Далее',
+                            onPressed: _nextPage,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Уже есть аккаунт? ',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: _navigateToLogin,
+                              child: Text(
+                                'Войти',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: state.directAccentColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

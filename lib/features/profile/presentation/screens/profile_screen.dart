@@ -1,9 +1,14 @@
+import 'package:aurashop/bloc/auth/auth_state.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
+import 'package:aurashop/bloc/auth/auth_bloc.dart';
+import 'package:aurashop/bloc/auth/auth_event.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
 import 'package:aurashop/shared/widgets/profile_widgets/menu_item.dart';
 import 'package:aurashop/shared/widgets/profile_widgets/stat_card_widget.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class ProfileScreen extends StatelessWidget {
@@ -11,105 +16,128 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
-                child: UserProfileHeader(
-                  name: 'Анна Соколова',
-                  email: 'anna@mail.ru',
-                  initials: 'АС',
-                ),
-              ),
-              const SizedBox(height: 24),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: StatCard(value: '12', label: 'Заказов'),
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        final firebaseUser = FirebaseAuth.instance.currentUser;
+        final authUser = state is AuthAuthenticated ? state.user : null;
+        final name = authUser?.name.isNotEmpty == true
+            ? authUser!.name
+            : firebaseUser?.displayName ?? 'Пользователь';
+        final email = authUser?.email.isNotEmpty == true
+            ? authUser!.email
+            : firebaseUser?.email ?? '';
+        final initials =
+            authUser?.initials ??
+            (name.isNotEmpty ? name[0].toUpperCase() : '?');
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 4,
                     ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: StatCard(value: '6', label: 'Избранное'),
-                    ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: StatCard(value: '340', label: 'Бонусы'),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              MenuItem(
-                emaji: '📦',
-                title: 'Мои заказы',
-                onTap: () {
-                  context.router.push(OrdersRoute());
-                },
-              ),
-              MenuItem(
-                emaji: '♡',
-                title: 'Избранное',
-                onTap: () {
-                  context.router.push(const FavoritesRoute());
-                },
-              ),
-              MenuItem(
-                emaji: '📍',
-                title: 'Мои адреса',
-                onTap: () {
-                  context.router.push(const MyAdressesRoute());
-                },
-              ),
-              MenuItem(
-                emaji: '⚙',
-                title: 'Настройки',
-                onTap: () {
-                  context.router.push(const SettingsRoute());
-                },
-              ),
-              MenuItem(
-                emaji: '💬',
-                title: 'Поддержка',
-                badgeText: 'Онлайн',
-                onTap: () {
-                  context.router.push(const SupportChatRoute());
-                },
-              ),
-              const SizedBox(height: 24),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 4,
-                ),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: PressedButton(
-                    height: 60,
-                    onPressed: () {
-                      context.router.replaceAll([const LoginRoute()]);
-                    },
-                    backgroundColor: Colors.white,
-                    borderColor: Colors.grey,
-                    text: 'Выйти',
-                    textstyle: const TextStyle(
-                      color: Colors.redAccent,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                    child: UserProfileHeader(
+                      name: name,
+                      email: email,
+                      userId: firebaseUser?.uid,
+                      initials: initials,
                     ),
                   ),
-                ),
+                  const SizedBox(height: 24),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 4,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: StatCard(value: '12', label: 'Заказов'),
+                        ),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: StatCard(value: '6', label: 'Избранное'),
+                        ),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: StatCard(value: '340', label: 'Бонусы'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  MenuItem(
+                    emaji: '📦',
+                    title: 'Мои заказы',
+                    onTap: () {
+                      context.router.push(OrdersRoute());
+                    },
+                  ),
+                  MenuItem(
+                    emaji: '♡',
+                    title: 'Избранное',
+                    onTap: () {
+                      context.router.push(const FavoritesRoute());
+                    },
+                  ),
+                  MenuItem(
+                    emaji: '📍',
+                    title: 'Мои адреса',
+                    onTap: () {
+                      context.router.push(const MyAdressesRoute());
+                    },
+                  ),
+                  MenuItem(
+                    emaji: '⚙',
+                    title: 'Настройки',
+                    onTap: () {
+                      context.router.push(const SettingsRoute());
+                    },
+                  ),
+                  MenuItem(
+                    emaji: '💬',
+                    title: 'Поддержка',
+                    badgeText: 'Онлайн',
+                    onTap: () {
+                      context.router.push(const SupportChatRoute());
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 4,
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: PressedButton(
+                        height: 60,
+                        onPressed: () {
+                          context.read<AuthBloc>().add(AuthLogoutRequested());
+                          context.router.replaceAll([const LoginRoute()]);
+                        },
+                        backgroundColor: Colors.white,
+                        borderColor: Colors.grey,
+                        text: 'Выйти',
+                        textstyle: const TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -117,6 +145,7 @@ class ProfileScreen extends StatelessWidget {
 class UserProfileHeader extends StatelessWidget {
   final String name;
   final String email;
+  final String? userId;
   final String initials;
 
   const UserProfileHeader({
@@ -124,6 +153,7 @@ class UserProfileHeader extends StatelessWidget {
     required this.name,
     required this.email,
     required this.initials,
+    this.userId,
   });
 
   @override
@@ -170,7 +200,14 @@ class UserProfileHeader extends StatelessWidget {
           ),
           child: IconButton(
             onPressed: () {
-              context.router.push(const EditProfileRoute());
+              context.router.push(
+                EditProfileRoute(
+                  currentEmail: email,
+                  currentName: name,
+                  currentId: userId,
+                  initials: initials,
+                ),
+              );
             },
             icon: const Icon(Icons.edit_outlined, size: 20),
             color: Colors.grey.shade700,

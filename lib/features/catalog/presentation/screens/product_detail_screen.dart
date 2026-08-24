@@ -9,10 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
 
-  const ProductDetailScreen({
-    super.key,
-    required this.product,
-  });
+  const ProductDetailScreen({super.key, required this.product});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -80,13 +77,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 1. Изображение товара
                 Container(
                   height: 280,
                   width: double.infinity,
-                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                    color: colorScheme.surfaceContainerHighest.withValues(
+                      alpha: 0.5,
+                    ),
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Stack(
@@ -136,11 +137,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.photo_library_outlined, color: Colors.white, size: 14),
+                              Icon(
+                                Icons.photo_library_outlined,
+                                color: Colors.white,
+                                size: 14,
+                              ),
                               SizedBox(width: 6),
                               Text(
                                 '1 / 4',
-                                style: TextStyle(color: Colors.white, fontSize: 12),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
                               ),
                             ],
                           ),
@@ -152,7 +160,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                 // 2. Основная информация
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -170,14 +181,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF10B981).withValues(alpha: 0.12),
+                              color: const Color(
+                                0xFF10B981,
+                              ).withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: const Row(
                               children: [
-                                Icon(Icons.check_circle, size: 14, color: Color(0xFF10B981)),
+                                Icon(
+                                  Icons.check_circle,
+                                  size: 14,
+                                  color: Color(0xFF10B981),
+                                ),
                                 SizedBox(width: 4),
                                 Text(
                                   'В наличии',
@@ -207,7 +227,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       // Рейтинг и отзывы
                       Row(
                         children: [
-                          const Icon(Icons.star_rounded, color: Color(0xFFFFB800), size: 20),
+                          const Icon(
+                            Icons.star_rounded,
+                            color: Color(0xFFFFB800),
+                            size: 20,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             product.rating.toString(),
@@ -258,21 +282,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       // 3. Выбор цвета
                       const Text(
                         'Цвет',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       Row(
                         children: List.generate(
                           product.colors.length,
                           (index) => GestureDetector(
-                            onTap: () => setState(() => _selectedColorIndex = index),
+                            onTap: () =>
+                                setState(() => _selectedColorIndex = index),
                             child: Container(
                               margin: const EdgeInsets.only(right: 12),
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10,
+                              ),
                               decoration: BoxDecoration(
                                 color: _selectedColorIndex == index
-                                    ? themeState.directAccentColor.withValues(alpha: 0.12)
-                                    : colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                                    ? themeState.directAccentColor.withValues(
+                                        alpha: 0.12,
+                                      )
+                                    : colorScheme.surfaceContainerHighest
+                                          .withValues(alpha: 0.5),
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
                                   color: _selectedColorIndex == index
@@ -304,7 +338,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         children: [
                           const Text(
                             'Размер (EU)',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           TextButton(
                             onPressed: () {
@@ -335,22 +372,28 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           itemBuilder: (context, index) {
                             final isSelected = _selectedSizeIndex == index;
                             return GestureDetector(
-                              onTap: () => setState(() => _selectedSizeIndex = index),
+                              onTap: () =>
+                                  setState(() => _selectedSizeIndex = index),
                               child: AnimatedContainer(
                                 duration: const Duration(milliseconds: 200),
                                 width: 48,
                                 decoration: BoxDecoration(
                                   color: isSelected
                                       ? themeState.directAccentColor
-                                      : colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                                      : colorScheme.surfaceContainerHighest
+                                            .withValues(alpha: 0.5),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Center(
                                   child: Text(
                                     product.sizes[index],
                                     style: TextStyle(
-                                      color: isSelected ? Colors.white : colorScheme.onSurface,
-                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                      color: isSelected
+                                          ? Colors.white
+                                          : colorScheme.onSurface,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.w500,
                                       fontSize: 15,
                                     ),
                                   ),
@@ -368,7 +411,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         children: [
                           const Text(
                             'Количество',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           Row(
                             children: [
@@ -379,7 +425,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 icon: const Icon(Icons.remove, size: 18),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                ),
                                 child: Text(
                                   '$_quantity',
                                   style: const TextStyle(
@@ -401,7 +449,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       // 5. Описание
                       const Text(
                         'Описание',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -417,12 +468,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       // 6. Характеристики
                       const Text(
                         'Характеристики',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       _buildSpecRow('Бренд', 'AURA Original', colorScheme),
-                      _buildSpecRow('Материал верха', 'Текстиль, экокожа', colorScheme),
-                      _buildSpecRow('Материал подошвы', 'EVA, резина', colorScheme),
+                      _buildSpecRow(
+                        'Материал верха',
+                        'Текстиль, экокожа',
+                        colorScheme,
+                      ),
+                      _buildSpecRow(
+                        'Материал подошвы',
+                        'EVA, резина',
+                        colorScheme,
+                      ),
                       _buildSpecRow('Сезон', 'Всесезонный', colorScheme),
                       _buildSpecRow('Гарантия', '30 дней', colorScheme),
 
@@ -458,7 +520,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('${product.name} добавлен в корзину!'),
+                              content: Text(
+                                '${product.name} добавлен в корзину!',
+                              ),
                               backgroundColor: Colors.green,
                               duration: const Duration(seconds: 1),
                             ),
@@ -470,7 +534,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: themeState.directAccentColor, width: 1.5),
+                          side: BorderSide(
+                            color: themeState.directAccentColor,
+                            width: 1.5,
+                          ),
                           foregroundColor: themeState.directAccentColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
@@ -500,7 +567,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                         child: const Text(
                           'Купить сейчас',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),

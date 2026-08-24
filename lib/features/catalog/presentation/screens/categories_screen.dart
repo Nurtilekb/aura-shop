@@ -31,6 +31,15 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
   int _selectedCategoryIndex = 0;
   ProductSortOption _selectedSort = ProductSortOption.popular;
   bool _isFilterActive = false;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future<void>.delayed(const Duration(milliseconds: 700), () {
+      if (mounted) setState(() => _isLoading = false);
+    });
+  }
 
   static const List<String> _categories = [
     'Все',
@@ -255,7 +264,25 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
                   ),
                 ),
 
-                if (products.isEmpty)
+                if (_isLoading)
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
+                    sliver: SliverGrid(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 20,
+                            childAspectRatio: 0.75,
+                          ),
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) =>
+                            const Productcard(indexx: 0, isLoading: true),
+                        childCount: 6,
+                      ),
+                    ),
+                  )
+                else if (products.isEmpty)
                   SliverFillRemaining(
                     hasScrollBody: false,
                     child: Center(

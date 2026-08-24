@@ -6,7 +6,7 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
     // 1. Initial Flow
-    AutoRoute(page: SplashRoute.page),
+    AutoRoute(page: SplashRoute.page, initial: true),
     AutoRoute(page: LoginRoute.page),
     AutoRoute(page: RegistrationRoute.page),
     AutoRoute(page: VerificationRoute.page),
@@ -31,7 +31,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: SupportChatRoute.page),
 
     // 4. Admin Panel Flow
-    AutoRoute(page: Main2Route.page, initial: true),
+    AutoRoute(page: Main2Route.page),
     AutoRoute(page: DashboardRouteAdmin.page),
     AutoRoute(page: ProductRouteAdmin.page),
     AutoRoute(page: AddNewProductRoute.page),

@@ -17,11 +17,11 @@ class OrderStatusFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChipList(
-      borderColor: Theme.of(context).dividerColor.withOpacity(0.5),
+      borderColor: Theme.of(context).dividerColor.withValues(alpha: 0.5),
       labels: OrderStatusPalette.filterLabels,
       selectedIndex: selectedIndex,
       activeColor: activeColor!,
-      inactiveColor: Theme.of(context).dividerColor.withOpacity(0.1),
+      inactiveColor: Theme.of(context).dividerColor.withValues(alpha: 0.1),
       inactiveTextColor: Colors.grey.shade700,
       spacing: 8,
       onSelected: onSelected,

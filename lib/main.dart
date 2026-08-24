@@ -1,5 +1,8 @@
 import 'package:aurashop/core/routing/app_router.dart';
+import 'package:aurashop/bloc/auth/auth_bloc.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
+import 'package:aurashop/firebase_options.dart';
+import 'package:aurashop/repositories/auth_repository.dart';
 import 'package:aurashop/features/basket/presentation/screens/basket_screen.dart';
 import 'package:aurashop/features/catalog/presentation/screens/categories_screen.dart';
 import 'package:aurashop/features/favorites/presentation/screens/favorites_screen.dart';
@@ -9,8 +12,11 @@ import 'package:aurashop/features/profile/presentation/screens/profile_screen.da
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
@@ -21,8 +27,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ThemeCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => ThemeCubit()),
+        BlocProvider(
+          create: (_) => AuthBloc(
+            authRepository: AuthRepository(
+              googleServerClientId:
+                  '497949764516-g2cuenbqpci4dupgs4dhk5muhrujvg38.apps.googleusercontent.com',
+            ),
+          ),
+        ),
+      ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, state) {
           return MaterialApp.router(

@@ -178,18 +178,95 @@ class DashboardRouteAdmin extends _i27.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i8.EditProfileScreen]
-class EditProfileRoute extends _i27.PageRouteInfo<void> {
-  const EditProfileRoute({List<_i27.PageRouteInfo>? children})
-    : super(EditProfileRoute.name, initialChildren: children);
+class EditProfileRoute extends _i27.PageRouteInfo<EditProfileRouteArgs> {
+  EditProfileRoute({
+    _i28.Key? key,
+    String? currentName,
+    String? currentId,
+    String? birthday,
+    String? currentEmail,
+    String? initials,
+    List<_i27.PageRouteInfo>? children,
+  }) : super(
+         EditProfileRoute.name,
+         args: EditProfileRouteArgs(
+           key: key,
+           currentName: currentName,
+           currentId: currentId,
+           birthday: birthday,
+           currentEmail: currentEmail,
+           initials: initials,
+         ),
+         initialChildren: children,
+       );
 
   static const String name = 'EditProfileRoute';
 
   static _i27.PageInfo page = _i27.PageInfo(
     name,
     builder: (data) {
-      return const _i8.EditProfileScreen();
+      final args = data.argsAs<EditProfileRouteArgs>(
+        orElse: () => const EditProfileRouteArgs(),
+      );
+      return _i8.EditProfileScreen(
+        key: args.key,
+        currentName: args.currentName,
+        currentId: args.currentId,
+        birthday: args.birthday,
+        currentEmail: args.currentEmail,
+        initials: args.initials,
+      );
     },
   );
+}
+
+class EditProfileRouteArgs {
+  const EditProfileRouteArgs({
+    this.key,
+    this.currentName,
+    this.currentId,
+    this.birthday,
+    this.currentEmail,
+    this.initials,
+  });
+
+  final _i28.Key? key;
+
+  final String? currentName;
+
+  final String? currentId;
+
+  final String? birthday;
+
+  final String? currentEmail;
+
+  final String? initials;
+
+  @override
+  String toString() {
+    return 'EditProfileRouteArgs{key: $key, currentName: $currentName, currentId: $currentId, birthday: $birthday, currentEmail: $currentEmail, initials: $initials}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! EditProfileRouteArgs) return false;
+    return key == other.key &&
+        currentName == other.currentName &&
+        currentId == other.currentId &&
+        birthday == other.birthday &&
+        currentEmail == other.currentEmail &&
+        initials == other.initials;
+  }
+
+  @override
+  int get hashCode =>
+      key.hashCode ^
+      currentName.hashCode ^
+      currentId.hashCode ^
+      birthday.hashCode ^
+      currentEmail.hashCode ^
+      initials.hashCode;
 }
 
 /// generated route for
