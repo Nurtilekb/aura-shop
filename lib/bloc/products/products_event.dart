@@ -8,13 +8,6 @@ sealed class ProductsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AddProduct extends ProductsEvent {
-  final String? prId;
-  final String? prName;
-
-  AddProduct({this.prId, this.prName});
-}
-
 class LoadProducts extends ProductsEvent {}
 
 class AddProductEvent extends ProductsEvent {

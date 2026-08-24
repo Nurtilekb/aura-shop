@@ -4,12 +4,12 @@ import 'package:aurashop/bloc/auth/auth_bloc.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/firebase_options.dart';
 import 'package:aurashop/repositories/auth_repository.dart';
+import 'package:aurashop/repositories/product_repository.dart';
 import 'package:aurashop/features/basket/presentation/screens/basket_screen.dart';
 import 'package:aurashop/features/catalog/presentation/screens/categories_screen.dart';
 import 'package:aurashop/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:aurashop/features/home/presentation/screens/home_screen.dart';
 import 'package:aurashop/features/profile/presentation/screens/profile_screen.dart';
-import 'package:aurashop/shared/models/product_model.dart';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +31,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => ProductsBloc()),
+        BlocProvider(
+          create: (_) => ProductsBloc(productRepository: ProductRepository()),
+        ),
         BlocProvider(create: (_) => ThemeCubit()),
         BlocProvider(
           create: (_) => AuthBloc(

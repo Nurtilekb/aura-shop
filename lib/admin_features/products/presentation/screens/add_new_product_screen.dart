@@ -1,18 +1,26 @@
 ﻿import 'package:aurashop/admin_features/products/presentation/widgets/mini_container.dart';
+import 'package:aurashop/bloc/products/products_bloc.dart';
+import 'package:aurashop/bloc/products/products_event.dart';
+import 'package:aurashop/shared/models/product_model.dart';
 import 'package:aurashop/shared/widgets/app_input_widget.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class AddNewProductScreen extends StatefulWidget {
-  const AddNewProductScreen({super.key});
+  const AddNewProductScreen({super.key, this.product2});
+
+  final Product? product2;
 
   @override
   State<AddNewProductScreen> createState() => _AddNewProductScreenState();
 }
 
 class _AddNewProductScreenState extends State<AddNewProductScreen> {
+  bool _manageProducts = false;
   late final TextEditingController _nameController;
   late final TextEditingController _descriptionController;
   late final TextEditingController _priceController;
@@ -22,13 +30,18 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: 'Кроссовки Aura Run 2.0');
+    final _product2 = widget.product2;
+    _nameController = TextEditingController(text: _product2?.name ?? '');
     _descriptionController = TextEditingController(
-      text: 'Лёгкие беговые кроссовки с амортизацией Aura Foam…',
+      text: _product2?.description ?? '',
     );
-    _priceController = TextEditingController(text: '4990');
-    _stockController = TextEditingController(text: '42');
-    _categoryController = TextEditingController(text: 'Обувь');
+    _priceController = TextEditingController(text: _product2?.price ?? '');
+    _stockController = TextEditingController(
+      text: _product2?.stock == true ? '1' : '0',
+    );
+    _categoryController = TextEditingController(
+      text: _product2?.category ?? 'Обувь',
+    );
   }
 
   @override
@@ -131,8 +144,8 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                   controller: _descriptionController,
                   filledColor: Colors.transparent,
                   minLines: 5,
-                  maxLines: null,
-                  textInputAction: TextInputAction.newline,
+
+                  maxLines: 5,
                 ),
               ),
               const SizedBox(height: 16),
@@ -172,14 +185,23 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                 trailing: const Icon(Icons.arrow_drop_down),
               ),
               const SizedBox(height: 16),
-              const Row(
+              Row(
                 children: [
-                  Text(
+                  const Text(
                     'В наличии',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
-                  Spacer(),
-                  Switch(value: true, onChanged: null),
+                  const Spacer(),
+
+                  CupertinoSwitch(
+                    value: _manageProducts,
+                    activeTrackColor: const Color(0xFF5A49F8),
+                    onChanged: (value) {
+                      setState(() {
+                        _manageProducts = value;
+                      });
+                    },
+                  ),
                 ],
               ),
               const SizedBox(height: 32),
@@ -194,7 +216,33 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
             height: 56,
             text: "Save",
             backgroundColor: Theme.of(context).colorScheme.primary,
-            onPressed: () {},
+            onPressed: () {
+              final product = Product(
+                name: _nameController.text.trim(),
+                price: _priceController.text.trim(),
+                description: _descriptionController.text.trim(),
+                category: _categoryController.text.trim(),
+                stock: _manageProducts,
+              );
+              if (widget.product2 == null) {
+                context.read<ProductsBloc>().add(
+                  AddProductEvent(product: product),
+                );
+              } else {
+                final updatedProduct = widget.product2!.copyWith(
+                  name: _nameController.text.trim(),
+                  price: _priceController.text.trim(),
+                  description: _descriptionController.text.trim(),
+                  category: _categoryController.text.trim(),
+                  stock: _manageProducts,
+                );
+                context.read<ProductsBloc>().add(
+                  UpdateProductEvent(product: updatedProduct),
+                );
+              }
+
+              context.router.maybePop();
+            },
           ),
         ),
       ),

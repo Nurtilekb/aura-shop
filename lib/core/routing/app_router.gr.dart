@@ -62,22 +62,56 @@ import 'package:aurashop/features/splash/presentation/screens/splash_screen.dart
 import 'package:aurashop/main.dart' as _i13;
 import 'package:aurashop/shared/models/product_model.dart' as _i29;
 import 'package:auto_route/auto_route.dart' as _i27;
-import 'package:flutter/material.dart' as _i28;
+import 'package:flutter/cupertino.dart' as _i28;
+import 'package:flutter/material.dart' as _i30;
 
 /// generated route for
 /// [_i1.AddNewProductScreen]
-class AddNewProductRoute extends _i27.PageRouteInfo<void> {
-  const AddNewProductRoute({List<_i27.PageRouteInfo>? children})
-    : super(AddNewProductRoute.name, initialChildren: children);
+class AddNewProductRoute extends _i27.PageRouteInfo<AddNewProductRouteArgs> {
+  AddNewProductRoute({
+    _i28.Key? key,
+    _i29.Product? product2,
+    List<_i27.PageRouteInfo>? children,
+  }) : super(
+         AddNewProductRoute.name,
+         args: AddNewProductRouteArgs(key: key, product2: product2),
+         initialChildren: children,
+       );
 
   static const String name = 'AddNewProductRoute';
 
   static _i27.PageInfo page = _i27.PageInfo(
     name,
     builder: (data) {
-      return const _i1.AddNewProductScreen();
+      final args = data.argsAs<AddNewProductRouteArgs>(
+        orElse: () => const AddNewProductRouteArgs(),
+      );
+      return _i1.AddNewProductScreen(key: args.key, product2: args.product2);
     },
   );
+}
+
+class AddNewProductRouteArgs {
+  const AddNewProductRouteArgs({this.key, this.product2});
+
+  final _i28.Key? key;
+
+  final _i29.Product? product2;
+
+  @override
+  String toString() {
+    return 'AddNewProductRouteArgs{key: $key, product2: $product2}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! AddNewProductRouteArgs) return false;
+    return key == other.key && product2 == other.product2;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ product2.hashCode;
 }
 
 /// generated route for
@@ -180,7 +214,7 @@ class DashboardRouteAdmin extends _i27.PageRouteInfo<void> {
 /// [_i8.EditProfileScreen]
 class EditProfileRoute extends _i27.PageRouteInfo<EditProfileRouteArgs> {
   EditProfileRoute({
-    _i28.Key? key,
+    _i30.Key? key,
     String? currentName,
     String? currentId,
     String? birthday,
@@ -230,7 +264,7 @@ class EditProfileRouteArgs {
     this.initials,
   });
 
-  final _i28.Key? key;
+  final _i30.Key? key;
 
   final String? currentName;
 
@@ -369,11 +403,11 @@ class MyAdressesRoute extends _i27.PageRouteInfo<void> {
 /// [_i15.OrderSuccessScreen]
 class OrderSuccessRoute extends _i27.PageRouteInfo<OrderSuccessRouteArgs> {
   OrderSuccessRoute({
-    _i28.Key? key,
+    _i30.Key? key,
     String orderNumber = '#AU-24815',
     String deliveryTime = 'завтра, 10:00–22:00',
-    _i28.VoidCallback? onTrackOrder,
-    _i28.VoidCallback? onContinueShopping,
+    _i30.VoidCallback? onTrackOrder,
+    _i30.VoidCallback? onContinueShopping,
     List<_i27.PageRouteInfo>? children,
   }) : super(
          OrderSuccessRoute.name,
@@ -415,15 +449,15 @@ class OrderSuccessRouteArgs {
     this.onContinueShopping,
   });
 
-  final _i28.Key? key;
+  final _i30.Key? key;
 
   final String orderNumber;
 
   final String deliveryTime;
 
-  final _i28.VoidCallback? onTrackOrder;
+  final _i30.VoidCallback? onTrackOrder;
 
-  final _i28.VoidCallback? onContinueShopping;
+  final _i30.VoidCallback? onContinueShopping;
 
   @override
   String toString() {
@@ -454,7 +488,7 @@ class OrderSuccessRouteArgs {
 /// [_i16.OrdersScreen]
 class OrdersRoute extends _i27.PageRouteInfo<OrdersRouteArgs> {
   OrdersRoute({
-    _i28.Key? key,
+    _i30.Key? key,
     String? foradminAppbar,
     bool? isItAdmin,
     List<_i27.PageRouteInfo>? children,
@@ -488,7 +522,7 @@ class OrdersRoute extends _i27.PageRouteInfo<OrdersRouteArgs> {
 class OrdersRouteArgs {
   const OrdersRouteArgs({this.key, this.foradminAppbar, this.isItAdmin});
 
-  final _i28.Key? key;
+  final _i30.Key? key;
 
   final String? foradminAppbar;
 
@@ -517,7 +551,7 @@ class OrdersRouteArgs {
 /// [_i17.ProductDetailScreen]
 class ProductDetailRoute extends _i27.PageRouteInfo<ProductDetailRouteArgs> {
   ProductDetailRoute({
-    _i28.Key? key,
+    _i30.Key? key,
     required _i29.Product product,
     List<_i27.PageRouteInfo>? children,
   }) : super(
@@ -540,7 +574,7 @@ class ProductDetailRoute extends _i27.PageRouteInfo<ProductDetailRouteArgs> {
 class ProductDetailRouteArgs {
   const ProductDetailRouteArgs({this.key, required this.product});
 
-  final _i28.Key? key;
+  final _i30.Key? key;
 
   final _i29.Product product;
 
@@ -692,7 +726,7 @@ class SupportChatsRoute extends _i27.PageRouteInfo<void> {
 /// [_i26.VerificationScreen]
 class VerificationRoute extends _i27.PageRouteInfo<VerificationRouteArgs> {
   VerificationRoute({
-    _i28.Key? key,
+    _i30.Key? key,
     required String email,
     List<_i27.PageRouteInfo>? children,
   }) : super(
@@ -715,7 +749,7 @@ class VerificationRoute extends _i27.PageRouteInfo<VerificationRouteArgs> {
 class VerificationRouteArgs {
   const VerificationRouteArgs({this.key, required this.email});
 
-  final _i28.Key? key;
+  final _i30.Key? key;
 
   final String email;
 
