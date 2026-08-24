@@ -34,47 +34,44 @@ class ChipList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: horizontalPadding),
-      child: SizedBox(
-        height: height,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          padding: contentPadding,
-          itemCount: labels.length,
-          separatorBuilder: (_, _) => SizedBox(width: spacing),
-          itemBuilder: (context, index) {
-            final isSelected = selectedIndex == index;
+    return SizedBox(
+      height: height,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: contentPadding,
+        itemCount: labels.length,
+        separatorBuilder: (_, _) => SizedBox(width: spacing),
+        itemBuilder: (context, index) {
+          final isSelected = selectedIndex == index;
 
-            return InkWell(
-              onTap: () => onSelected(index),
-              borderRadius: BorderRadius.circular(20),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 180),
-                padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                  vertical: verticalPadding,
+          return InkWell(
+            onTap: () => onSelected(index),
+            borderRadius: BorderRadius.circular(20),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding,
+                vertical: verticalPadding,
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: borderColor != null ? 0.5 : 0,
+                  color: borderColor ?? Colors.transparent,
                 ),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: borderColor != null ? 0.5 : 0,
-                    color: borderColor ?? Colors.transparent,
-                  ),
-                  color: isSelected ? activeColor : inactiveColor,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  labels[index],
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: isSelected ? activeTextColor : inactiveTextColor,
-                  ),
+                color: isSelected ? activeColor : inactiveColor,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                labels[index],
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isSelected ? activeTextColor : inactiveTextColor,
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

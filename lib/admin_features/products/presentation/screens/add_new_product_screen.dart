@@ -22,13 +22,13 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: '╨Ъ╤А╨╛╤Б╤Б╨╛╨▓╨║╨╕ Aura Run 2.0');
+    _nameController = TextEditingController(text: 'Кроссовки Aura Run 2.0');
     _descriptionController = TextEditingController(
-      text: '╨Ы╤С╨│╨║╨╕╨╡ ╨▒╨╡╨│╨╛╨▓╤Л╨╡ ╨║╤А╨╛╤Б╤Б╨╛╨▓╨║╨╕ ╤Б ╨░╨╝╨╛╤А╤В╨╕╨╖╨░╤Ж╨╕╨╡╨╣ Aura FoamтАж',
+      text: 'Лёгкие беговые кроссовки с амортизацией Aura Foam…',
     );
     _priceController = TextEditingController(text: '4990');
     _stockController = TextEditingController(text: '42');
-    _categoryController = TextEditingController(text: '╨Ю╨▒╤Г╨▓╤М');
+    _categoryController = TextEditingController(text: 'Обувь');
   }
 
   @override
@@ -50,7 +50,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '╨Э╨╛╨▓╤Л╨╣ ╤В╨╛╨▓╨░╤А',
+          'Новый товар',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
@@ -93,7 +93,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                         Row(
                           children: [
                             Text(
-                              '╨Ч╨░╨│╤А╤Г╨╖╨║╨░ ╨▓ Firebase StorageтАж',
+                              'Загрузка в Firebase Storage',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -120,14 +120,14 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
               const SizedBox(height: 20),
               AppInputWidget(
                 filledColor: Colors.transparent,
-                label: '╨Э╨░╨╖╨▓╨░╨╜╨╕╨╡ ╤В╨╛╨▓╨░╤А╨░',
+                label: 'Название',
                 controller: _nameController,
               ),
               const SizedBox(height: 16),
               SizedBox(
                 height: 160,
                 child: AppInputWidget(
-                  label: '╨Ю╨┐╨╕╤Б╨░╨╜╨╕╨╡',
+                  label: 'Описание',
                   controller: _descriptionController,
                   filledColor: Colors.transparent,
                   minLines: 5,
@@ -141,7 +141,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                   Expanded(
                     child: AppInputWidget(
                       filledColor: Colors.transparent,
-                      label: '╨ж╨╡╨╜╨░',
+                      label: 'Цена, ₽',
                       controller: _priceController,
                       inputType: TextInputType.number,
                     ),
@@ -150,23 +150,24 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                   Expanded(
                     child: AppInputWidget(
                       filledColor: Colors.transparent,
-                      label: '╨Ю╤Б╤В╨░╤В╨╛╨║',
+                      label: 'Остаток',
                       controller: _stockController,
                       inputType: TextInputType.number,
                     ),
                   ),
                 ],
               ),
+              SizedBox(height: 20),
               AppInputWidget(
                 isReadOnly: true,
                 onTap: () {
                   showAboutDialog(
                     context: context,
-                    children: const [Text('╨Т╤Л╨▒╨╡╤А╨╕╤В╨╡ ╨║╨░╤В╨╡╨│╨╛╤А╨╕╤О ╤В╨╛╨▓╨░╤А╨░')],
+                    children: const [Text('Категория')],
                   );
                 },
                 filledColor: Colors.transparent,
-                label: '╨Ъ╨░╤В╨╡╨│╨╛╤А╨╕╤П',
+                label: 'Категория',
                 controller: _categoryController,
                 trailing: const Icon(Icons.arrow_drop_down),
               ),
@@ -174,28 +175,26 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
               const Row(
                 children: [
                   Text(
-                    '╨Т ╨╜╨░╨╗╨╕╤З╨╕╨╕',
+                    'В наличии',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   Spacer(),
                   Switch(value: true, onChanged: null),
                 ],
               ),
-              const SizedBox(height: 62),
+              const SizedBox(height: 32),
             ],
           ),
         ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.only(right: 20.0, left: 20),
           child: PressedButton(
             height: 56,
             text: "Save",
             backgroundColor: Theme.of(context).colorScheme.primary,
-            onPressed: () {
-              // Handle save action
-            },
+            onPressed: () {},
           ),
         ),
       ),

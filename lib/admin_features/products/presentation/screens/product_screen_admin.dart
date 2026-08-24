@@ -28,7 +28,7 @@ class _ProductScreenAdminState extends State<ProductScreenAdmin> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '╨в╨╛╨▓╨░╤А╤Л',
+          'Товары',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         actions: const [
@@ -61,10 +61,10 @@ class _ProductScreenAdminState extends State<ProductScreenAdmin> {
                       leading: const SizedBox(
                         width: 48,
                         child: Center(
-                          child: Text('ЁЯФН', style: TextStyle(fontSize: 20)),
+                          child: Text('🔍', style: TextStyle(fontSize: 20)),
                         ),
                       ),
-                      hintText: '╨Я╨╛╨╕╤Б╨║ ╤В╨╛╨▓╨░╤А╨░',
+                      hintText: 'Поиск товара',
                       onChanged: (value) {},
                     ),
                   ),

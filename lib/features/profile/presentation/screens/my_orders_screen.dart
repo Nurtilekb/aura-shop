@@ -165,9 +165,9 @@ class _MyOrdersState extends State<MyOrders> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          OrdersHeader(count: orders.length),
           const SizedBox(height: 12),
           OrderStatusFilter(
+            activeColor: Theme.of(context).primaryColor,
             selectedIndex: _selectedStatusIndex,
             onSelected: (index) {
               setState(() {

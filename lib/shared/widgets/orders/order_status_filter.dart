@@ -7,20 +7,21 @@ class OrderStatusFilter extends StatelessWidget {
     super.key,
     required this.selectedIndex,
     required this.onSelected,
-    this.activeColor = Colors.pink,
+    this.activeColor,
   });
 
   final int selectedIndex;
   final ValueChanged<int> onSelected;
-  final Color activeColor;
+  final Color? activeColor;
 
   @override
   Widget build(BuildContext context) {
     return ChipList(
+      borderColor: Theme.of(context).dividerColor.withOpacity(0.5),
       labels: OrderStatusPalette.filterLabels,
       selectedIndex: selectedIndex,
-      activeColor: activeColor,
-      inactiveColor: Colors.white,
+      activeColor: activeColor!,
+      inactiveColor: Theme.of(context).dividerColor.withOpacity(0.1),
       inactiveTextColor: Colors.grey.shade700,
       spacing: 8,
       onSelected: onSelected,
