@@ -290,7 +290,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       const SizedBox(height: 12),
                       Row(
                         children: List.generate(
-                          product.colors.length,
+                          product.id.length,
                           (index) => GestureDetector(
                             onTap: () =>
                                 setState(() => _selectedColorIndex = index),
@@ -316,7 +316,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 ),
                               ),
                               child: Text(
-                                product.colors[index],
+                                product.id[index],
                                 style: TextStyle(
                                   fontWeight: _selectedColorIndex == index
                                       ? FontWeight.bold
@@ -367,7 +367,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         height: 48,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
-                          itemCount: product.sizes.length,
+                          itemCount: product.name.length,
                           separatorBuilder: (_, _) => const SizedBox(width: 10),
                           itemBuilder: (context, index) {
                             final isSelected = _selectedSizeIndex == index;
@@ -386,7 +386,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    product.sizes[index],
+                                    product.name[index],
                                     style: TextStyle(
                                       color: isSelected
                                           ? Colors.white
