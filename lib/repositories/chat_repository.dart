@@ -16,6 +16,11 @@ class ChatRepository {
        _auth = auth ?? FirebaseAuth.instance,
        _userRepository = userRepository ?? UserRepository();
 
+  static String chatIdForParticipants(String firstUid, String secondUid) {
+    final participants = [firstUid, secondUid]..sort();
+    return participants.join('_');
+  }
+
   Stream<List<Chat>> streamChats() {
     final currentUserId = _auth.currentUser?.uid;
     if (currentUserId == null) return Stream.value([]);
@@ -23,12 +28,12 @@ class ChatRepository {
     return _firestore
         .collection('chats')
         .where('participantIds', arrayContains: currentUserId)
-        .orderBy('updatedAt', descending: true)
         .snapshots()
         .asyncMap((snap) async {
           final chats = <Chat>[];
           for (final doc in snap.docs) {
             final chat = Chat.fromFirestore(doc.data(), doc.id, currentUserId);
+            if (chat.otherUserId.isEmpty) continue;
             if (chat.name.isEmpty || chat.name == chat.otherUserId) {
               final otherUserName = await _userRepository.getUserName(
                 chat.otherUserId,
@@ -42,6 +47,7 @@ class ChatRepository {
               chats.add(chat);
             }
           }
+          chats.sort((first, second) => second.time.compareTo(first.time));
           return chats;
         });
   }

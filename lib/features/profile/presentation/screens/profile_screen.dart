@@ -2,6 +2,7 @@ import 'package:aurashop/bloc/auth/auth_state.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/bloc/auth/auth_bloc.dart';
 import 'package:aurashop/bloc/auth/auth_event.dart';
+import 'package:aurashop/core/constants/app_constants.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
 import 'package:aurashop/shared/widgets/diolog.dart';
 import 'package:aurashop/shared/widgets/profile_widgets/menu_item.dart';
@@ -19,6 +20,9 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
+        if (state is AuthLogoutRequested) {
+          return Center(child: CircularProgressIndicator());
+        }
         final firebaseUser = FirebaseAuth.instance.currentUser;
         final authUser = state is AuthAuthenticated ? state.user : null;
         final name = authUser?.name.isNotEmpty == true
@@ -109,7 +113,7 @@ class ProfileScreen extends StatelessWidget {
                           numName: 'Поддержка',
                           isOnline: true,
                           imageAvatar: '',
-                          userId: 'pNX5msSrrpfFg5kvPARiC2t3ZFf1',
+                          userId: AppConstants.supportAdminUid,
                         ),
                       );
                     },

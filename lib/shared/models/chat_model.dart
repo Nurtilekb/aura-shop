@@ -61,7 +61,11 @@ class Chat extends Equatable {
   ) {
     final participantIds = <String>[];
     if (data['participantIds'] is List) {
-      participantIds.addAll(List<String>.from(data['participantIds']));
+      participantIds.addAll(
+        (data['participantIds'] as List).whereType<String>().where(
+          (id) => id.isNotEmpty,
+        ),
+      );
     }
 
     String otherId = '';

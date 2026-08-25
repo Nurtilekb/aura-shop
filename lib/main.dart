@@ -7,7 +7,7 @@ import 'package:aurashop/bloc/auth/auth_state.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/firebase_options.dart';
 import 'package:aurashop/repositories/auth_repository.dart';
-import 'package:aurashop/repositories/chat_repository.dart';
+
 import 'package:aurashop/repositories/product_repository.dart';
 import 'package:aurashop/features/basket/presentation/screens/basket_screen.dart';
 import 'package:aurashop/features/catalog/presentation/screens/categories_screen.dart';

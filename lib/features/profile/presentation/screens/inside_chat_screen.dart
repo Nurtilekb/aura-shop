@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aurashop/bloc/messages/messages_bloc.dart';
 import 'package:aurashop/bloc/messages/messages_event.dart';
 import 'package:aurashop/bloc/messages/messages_state.dart';
+import 'package:aurashop/repositories/chat_repository.dart';
 import 'package:aurashop/repositories/message_repository.dart';
 import 'package:aurashop/shared/widgets/chat_message_list.dart';
 import 'package:auto_route/auto_route.dart';
@@ -92,9 +93,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
         SubscribeMessages(chatId: _chatDocId(widget.userId, currentUserId)),
       );
       Future.delayed(const Duration(milliseconds: 300), () {
-        _markChatAsRead().catchError((e) {
-          print('markChatAsRead error: $e');
-        });
+        _markChatAsRead();
       });
     }
   }
@@ -107,14 +106,13 @@ class _ChatsScreenState extends State<ChatsScreen> {
 
     _isMarkingAsRead = true;
     try {
-      // await resetUnreadCountForChat(
-      //   _chatDocId(widget.userId, currentUserId),
-      //   currentUserId,
-      // );
-      // print(
-      //   'Chat ${_chatDocId(widget.userId, currentUserId)} marked read for $currentUserId',
-      // );
-      // _hasMarkedAsRead = true;
+      _messagesBloc.add(
+        MarkChatRead(
+          chatId: _chatDocId(widget.userId, currentUserId),
+          currentUserId: currentUserId,
+        ),
+      );
+      _hasMarkedAsRead = true;
     } finally {
       _isMarkingAsRead = false;
     }
@@ -128,7 +126,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
   }
 
   String _chatDocId(String userId1, String userId2) {
-    return 'sd';
+    return ChatRepository.chatIdForParticipants(userId1, userId2);
   }
 
   void _scrollToBottom() {
@@ -218,7 +216,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
   ) {
     return Expanded(
       child: ColoredBox(
-        color: Colors.transparent,
+        color: const Color.fromARGB(85, 235, 208, 187),
         child: ChatMessageList(
           docs: docs,
 
@@ -288,40 +286,5 @@ class _ChatsScreenState extends State<ChatsScreen> {
       chatId: _chatDocId(widget.userId, currentUserId!),
       currentUserId: currentUserId,
     );
-  }
-
-  // Future<void> _showDeleteDialog() async {
-  //   final confirmed = await showConfirmDialog(
-  //     context,
-  //     title: 'confirmdeleting'.tr(),
-  //     content: 'descriptdeleting'.tr(),
-  //     cancelText: 'cancel'.tr(),
-  //     confirmText: 'delete'.tr(),
-  //   );
-
-  //   if (confirmed == true) {
-  //     final currentUserId = _currentUserId;
-  //     if (currentUserId == null) return;
-  //     final chatId = _chatDocId(widget.userId, currentUserId);
-  //     _messagesBloc.add(
-  //       DeleteMessages(chatId: chatId, messageIds: selectedMessageIds.toList()),
-  //     );
-  //     if (mounted) {
-  //       setState(() {
-  //         selectedMessageIds.clear();
-  //       });
-  //     }
-  //   }
-  // }
-
-  String getInitials(String fullName) {
-    if (fullName.isEmpty) return '';
-
-    final parts = fullName.trim().split(' ');
-    if (parts.length == 1) {
-      return parts[0][0].toUpperCase();
-    }
-
-    return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
   }
 }
