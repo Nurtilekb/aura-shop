@@ -34,26 +34,6 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
       lastMessage: 'Где мой заказ #AU-24815?',
       unreadCount: 2,
     ),
-
-    ChatItemData(
-      initials: 'АС',
-      avatarBgColor: Color(0xFF5A49F8),
-      isOnline: true,
-      name: 'Анна Соколова',
-      time: '2 мин',
-      lastMessage: 'Где мой заказ #AU-24815?',
-      unreadCount: 2,
-    ),
-
-    ChatItemData(
-      initials: 'МК',
-      avatarBgColor: Color(0xFF387B5B),
-      isOnline: false,
-      name: 'Мария Кузнецова',
-      time: '1 ч',
-      lastMessage: 'Спасибо, всё пришло вовремя!',
-      unreadCount: 0,
-    ),
   ];
 
   @override
@@ -174,7 +154,14 @@ class _ChatTile extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        context.router.push(InsidechatRoute());
+        context.router.push(
+          ChatsRoute(
+            numName: '"13@gm.com"',
+            isOnline: true,
+            imageAvatar: '',
+            userId: 'WZuUw1HQw9c3PIT5gCWjaqSpBJb2',
+          ),
+        );
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14.0),

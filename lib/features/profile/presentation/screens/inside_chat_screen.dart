@@ -1,329 +1,327 @@
-import 'package:aurashop/shared/widgets/app_input_widget.dart';
+import 'dart:async';
+
+import 'package:aurashop/bloc/messages/messages_bloc.dart';
+import 'package:aurashop/bloc/messages/messages_event.dart';
+import 'package:aurashop/bloc/messages/messages_state.dart';
+import 'package:aurashop/repositories/message_repository.dart';
+import 'package:aurashop/shared/widgets/chat_message_list.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
-class InsideChatScreen extends StatefulWidget {
-  const InsideChatScreen({super.key, this.userId, this.chatId});
-  final String? userId;
-  final String? chatId;
+class ChatsScreen extends StatefulWidget {
+  final String numName;
+  final bool isOnline;
+  final String imageAvatar;
+  final String userId;
+
+  const ChatsScreen({
+    super.key,
+    required this.numName,
+    required this.isOnline,
+    required this.imageAvatar,
+    required this.userId,
+  });
+
   @override
-  State<InsideChatScreen> createState() => _InsideChatScreenState();
+  State<ChatsScreen> createState() => _ChatsScreenState();
 }
 
-class _InsideChatScreenState extends State<InsideChatScreen> {
-  final TextEditingController _messageController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
-  bool _isTyping = false;
-  final List<_MessageItem> _messages = [
-    _MessageItem.text(
-      text: 'Здравствуйте, Анна! 👋 Чем можем помочь?',
-      isMe: false,
-    ),
-    _MessageItem.text(
-      text: 'Здравствуйте! Где мой заказ #AU-24815?',
-      isMe: true,
-    ),
-    _MessageItem.text(
-      text: 'Заказ уже в пути 🚚 Курьер доставит завтра с 10:00 до 22:00.',
-      isMe: false,
-    ),
-    _MessageItem.order(orderNumber: '#AU-24815'),
-    _MessageItem.text(text: 'Спасибо! 🙏', isMe: true),
-    _MessageItem.typing(),
-  ];
+class _ChatsScreenState extends State<ChatsScreen> {
+  final _messageController = TextEditingController();
+  final _scrollController = ScrollController();
+  final Set<String> selectedMessageIds = {};
+  int _lastMessageCount = 0;
+  bool _hasMarkedAsRead = false;
+  bool _isMarkingAsRead = false;
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> _lastDocs = [];
+  late final MessagesBloc _messagesBloc;
+  late final MessageRepository _messageRepository;
+  String? get _currentUserId => FirebaseAuth.instance.currentUser?.uid;
+  bool get _isSelectionMode => selectedMessageIds.isNotEmpty;
 
   @override
   void dispose() {
     _messageController.dispose();
+    _scrollController.dispose();
+    final currentUserId = _currentUserId;
+    if (currentUserId != null) {
+      _messagesBloc.add(
+        UnsubscribeMessages(chatId: _chatDocId(widget.userId, currentUserId)),
+      );
+    }
+    _messagesBloc.close();
+
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Scaffold(
-      backgroundColor: colorScheme.surfaceContainerLowest,
-      appBar: AppBar(
-        backgroundColor: colorScheme.surface,
-        elevation: 0,
-        titleSpacing: 0,
-        title: Row(
-          children: [
-            Stack(
-              children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: colorScheme.primary.withValues(alpha: 0.8),
-                  child: const Text(
-                    'S',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF10B981),
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Поддержка AURA',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  'онлайн · отвечаем за минуту',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: const Color(0xFF10B981),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  Center(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 6,
-                      ),
-                      margin: const EdgeInsets.only(bottom: 16),
-                      decoration: BoxDecoration(
-                        color: colorScheme.surfaceContainerHighest.withValues(
-                          alpha: 0.5,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Text(
-                        'Сегодня',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: colorScheme.outline,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                  ..._messages.map((msg) => _ChatBubble(message: msg)),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                children: [
-                  IconButton.filledTonal(
-                    onPressed: () {},
-                    style: IconButton.styleFrom(
-                      backgroundColor: colorScheme.surfaceContainerHighest
-                          .withValues(alpha: 0.5),
-                      shape: const CircleBorder(),
-                    ),
-                    icon: Icon(Icons.add, color: colorScheme.onSurfaceVariant),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: AppInputWidget(
-                      filledColor: Colors.transparent,
-                      hintText: 'Сообщение...',
-                      controller: _messageController,
-
-                      borderColor: colorScheme.outlineVariant.withValues(
-                        alpha: 0.5,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton.filled(
-                    onPressed: () {
-                      final text = _messageController.text.trim();
-                      if (text.isNotEmpty) {
-                        setState(() {
-                          _messages.add(
-                            _MessageItem.text(text: text, isMe: true),
-                          );
-                          _messageController.clear();
-                        });
-                      }
-                    },
-                    style: IconButton.styleFrom(
-                      backgroundColor: colorScheme.primary,
-                      shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(12),
-                    ),
-                    icon: const Icon(
-                      Icons.send_rounded,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  void didUpdateWidget(covariant ChatsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.userId != widget.userId) {
+      final currentUserId = _currentUserId;
+      if (currentUserId != null) {
+        _messagesBloc.add(
+          UnsubscribeMessages(
+            chatId: _chatDocId(oldWidget.userId, currentUserId),
+          ),
+        );
+        _messagesBloc.add(
+          SubscribeMessages(chatId: _chatDocId(widget.userId, currentUserId)),
+        );
+        _markChatAsRead();
+      }
+      _resetChatState();
+    }
   }
-}
 
-class _ChatBubble extends StatelessWidget {
-  final _MessageItem message;
+  @override
+  void initState() {
+    super.initState();
+    _messageRepository = MessageRepository();
+    _messagesBloc = MessagesBloc(repository: _messageRepository);
+    final currentUserId = _currentUserId;
+    if (currentUserId != null) {
+      _messagesBloc.add(
+        SubscribeMessages(chatId: _chatDocId(widget.userId, currentUserId)),
+      );
+      Future.delayed(const Duration(milliseconds: 300), () {
+        _markChatAsRead().catchError((e) {
+          print('markChatAsRead error: $e');
+        });
+      });
+    }
+  }
 
-  const _ChatBubble({required this.message});
+  Future<void> _markChatAsRead() async {
+    if (_hasMarkedAsRead || _isMarkingAsRead) return;
+
+    final currentUserId = _currentUserId;
+    if (currentUserId == null) return;
+
+    _isMarkingAsRead = true;
+    try {
+      // await resetUnreadCountForChat(
+      //   _chatDocId(widget.userId, currentUserId),
+      //   currentUserId,
+      // );
+      // print(
+      //   'Chat ${_chatDocId(widget.userId, currentUserId)} marked read for $currentUserId',
+      // );
+      // _hasMarkedAsRead = true;
+    } finally {
+      _isMarkingAsRead = false;
+    }
+  }
+
+  void _resetChatState() {
+    _lastMessageCount = 0;
+    selectedMessageIds.clear();
+    _lastDocs = [];
+    _hasMarkedAsRead = false;
+  }
+
+  String _chatDocId(String userId1, String userId2) {
+    return 'sd';
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        final maxScrollExtent = _scrollController.position.maxScrollExtent;
+        if (maxScrollExtent <= 0) return;
+
+        _scrollController.animateTo(
+          maxScrollExtent,
+          duration: const Duration(milliseconds: 1),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  void _toggleSelection(String id) {
+    setState(() {
+      selectedMessageIds.contains(id)
+          ? selectedMessageIds.remove(id)
+          : selectedMessageIds.add(id);
+    });
+  }
+
+  void _clearSelection() {
+    setState(() {
+      selectedMessageIds.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final currentUserId = _currentUserId;
 
-    return Align(
-      alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.75,
-        ),
-        padding: message.type == _MessageType.order
-            ? const EdgeInsets.all(12)
-            : const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: message.isMe ? colorScheme.primary : colorScheme.surface,
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            if (!message.isMe)
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.02),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
+    return BlocProvider.value(
+      value: _messagesBloc,
+      child: BlocBuilder<MessagesBloc, MessagesState>(
+        builder: (context, state) {
+          if (state is MessagesLoadInProgress) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          if (state is MessageError) {
+            return Scaffold(
+              body: Center(
+                child: Text('Ошибка загрузки сообщений: ${state.message}'),
               ),
-          ],
-        ),
-        child: _buildContent(context),
+            );
+          }
+          if (state is MessagesLoadSuccess) {
+            _lastDocs = state.docs;
+          }
+          final docs = _lastDocs;
+          if (docs.isNotEmpty && currentUserId != null && !_hasMarkedAsRead) {
+            unawaited(_markChatAsRead());
+          }
+          if (docs.isNotEmpty && currentUserId != null) {
+            _lastMessageCount = docs.length;
+            if (_shouldScrollToBottom(docs.length)) {
+              _scrollToBottom();
+            }
+          }
+          return Scaffold(
+            appBar: _isSelectionMode
+                ? _buildSelectionAppBar()
+                : _buildChatAppBar(),
+            body: SafeArea(
+              child: Column(
+                children: [
+                  _buildMessageArea(currentUserId, docs),
+                  _buildComposer(),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+  Widget _buildMessageArea(
+    String? currentUserId,
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> docs,
+  ) {
+    return Expanded(
+      child: ColoredBox(
+        color: Colors.transparent,
+        child: ChatMessageList(
+          docs: docs,
 
-    switch (message.type) {
-      case _MessageType.text:
-        return Text(
-          message.text ?? '',
-          style: TextStyle(
-            fontSize: 15,
-            height: 1.35,
-            color: message.isMe ? colorScheme.onPrimary : colorScheme.onSurface,
-          ),
-        );
-      case _MessageType.typing:
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(
-            3,
-            (index) => Container(
-              margin: const EdgeInsets.symmetric(horizontal: 2),
-              width: 6,
-              height: 6,
-              decoration: BoxDecoration(
-                color: colorScheme.outline.withValues(alpha: 0.6),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-        );
-      case _MessageType.order:
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withValues(
-                  alpha: 0.4,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Text('📦', style: TextStyle(fontSize: 20)),
-            ),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Заказ ${message.orderNumber}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                InkWell(
-                  onTap: () {},
-                  child: Text(
-                    'Отследить →',
-                    style: TextStyle(
-                      color: colorScheme.primary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        );
-    }
+          currentUserId: currentUserId,
+          selectedMessageIds: selectedMessageIds,
+          isSelectionMode: _isSelectionMode,
+          scrollController: _scrollController,
+          onToggleSelection: _toggleSelection,
+        ),
+      ),
+    );
   }
-}
 
-enum _MessageType { text, typing, order }
+  Future<void> copySelectedMessages() async {
+    final selectedMessages = _lastDocs
+        .where((doc) => selectedMessageIds.contains(doc.id))
+        .map((doc) => doc.data())
+        .toList();
 
-class _MessageItem {
-  final String? text;
-  final String? orderNumber;
-  final bool isMe;
-  final _MessageType type;
+    final text = selectedMessages
+        .map((message) => message['text'] ?? '')
+        .join('\n');
 
-  _MessageItem.text({required this.text, required this.isMe})
-    : orderNumber = null,
-      type = _MessageType.text;
+    await Clipboard.setData(ClipboardData(text: text));
+    _clearSelection();
+  }
 
-  _MessageItem.typing()
-    : text = null,
-      orderNumber = null,
-      isMe = false,
-      type = _MessageType.typing;
+  Widget _buildComposer() {
+    if (_isSelectionMode) return const SizedBox();
 
-  _MessageItem.order({required this.orderNumber})
-    : text = null,
-      isMe = false,
-      type = _MessageType.order;
+    return ChatComposer(
+      controller: _messageController,
+      onSend: (text) {
+        final currentUserId = _currentUserId;
+        if (currentUserId == null) return;
+        _messagesBloc.add(
+          SendMessage(
+            chatId: _chatDocId(widget.userId, currentUserId),
+            recipientId: widget.userId,
+            text: text,
+          ),
+        );
+        _scrollToBottom();
+      },
+    );
+  }
+
+  PreferredSizeWidget _buildSelectionAppBar() {
+    return ChatSelectionAppBar(
+      onCopy: copySelectedMessages,
+      selectedCount: selectedMessageIds.length,
+      onClose: _clearSelection,
+      onDelete: () {},
+    );
+  }
+
+  bool _shouldScrollToBottom(int currentLength) {
+    return currentLength > _lastMessageCount || _lastMessageCount == 0;
+  }
+
+  PreferredSizeWidget _buildChatAppBar() {
+    final currentUserId = _currentUserId;
+    return ChatAppBar(
+      userName: widget.numName,
+      isOnline: widget.isOnline,
+      avatarUrl: widget.imageAvatar,
+      chatId: _chatDocId(widget.userId, currentUserId!),
+      currentUserId: currentUserId,
+    );
+  }
+
+  // Future<void> _showDeleteDialog() async {
+  //   final confirmed = await showConfirmDialog(
+  //     context,
+  //     title: 'confirmdeleting'.tr(),
+  //     content: 'descriptdeleting'.tr(),
+  //     cancelText: 'cancel'.tr(),
+  //     confirmText: 'delete'.tr(),
+  //   );
+
+  //   if (confirmed == true) {
+  //     final currentUserId = _currentUserId;
+  //     if (currentUserId == null) return;
+  //     final chatId = _chatDocId(widget.userId, currentUserId);
+  //     _messagesBloc.add(
+  //       DeleteMessages(chatId: chatId, messageIds: selectedMessageIds.toList()),
+  //     );
+  //     if (mounted) {
+  //       setState(() {
+  //         selectedMessageIds.clear();
+  //       });
+  //     }
+  //   }
+  // }
+
+  String getInitials(String fullName) {
+    if (fullName.isEmpty) return '';
+
+    final parts = fullName.trim().split(' ');
+    if (parts.length == 1) {
+      return parts[0][0].toUpperCase();
+    }
+
+    return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+  }
 }

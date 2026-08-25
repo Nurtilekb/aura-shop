@@ -1,167 +1,137 @@
-// lib/features/chat/models/chat_message.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-enum MessageType { text, order, typing, system }
+enum ChatStatus { active, archived, deleted }
 
-class ChatMessage extends Equatable {
-  final String id;
-  final String text;
-  final String senderId;
-  final String? orderNumber;
-  final DateTime timestamp;
-  final MessageType type;
-  final bool isRead;
-  final String? imageUrl;
-
-  const ChatMessage({
-    required this.id,
-    required this.text,
-    required this.senderId,
-    this.orderNumber,
-    required this.timestamp,
-    this.type = MessageType.text,
-    this.isRead = false,
-    this.imageUrl,
-  });
-
-  factory ChatMessage.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return ChatMessage(
-      id: doc.id,
-      text: data['text'] ?? '',
-      senderId: data['senderId'] ?? '',
-      orderNumber: data['orderNumber'],
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
-      type: MessageType.values.firstWhere(
-        (e) => e.toString() == data['type'],
-        orElse: () => MessageType.text,
-      ),
-      isRead: data['isRead'] ?? false,
-      imageUrl: data['imageUrl'],
-    );
-  }
-
-  Map<String, dynamic> toFirestore() {
-    return {
-      'text': text,
-      'senderId': senderId,
-      'orderNumber': orderNumber,
-      'timestamp': FieldValue.serverTimestamp(),
-      'type': type.toString(),
-      'isRead': isRead,
-      'imageUrl': imageUrl,
-    };
-  }
-
-  ChatMessage copyWith({
-    String? id,
-    String? text,
-    String? senderId,
-    String? orderNumber,
-    DateTime? timestamp,
-    MessageType? type,
-    bool? isRead,
-    String? imageUrl,
-  }) {
-    return ChatMessage(
-      id: id ?? this.id,
-      text: text ?? this.text,
-      senderId: senderId ?? this.senderId,
-      orderNumber: orderNumber ?? this.orderNumber,
-      timestamp: timestamp ?? this.timestamp,
-      type: type ?? this.type,
-      isRead: isRead ?? this.isRead,
-      imageUrl: imageUrl ?? this.imageUrl,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-    id,
-    text,
-    senderId,
-    orderNumber,
-    timestamp,
-    type,
-    isRead,
-    imageUrl,
-  ];
-}
-
-// lib/features/chat/models/chat.dart
 class Chat extends Equatable {
-  final String id;
-  final String userId;
-  final String? adminId;
-  final List<String> participantIds;
-  final ChatStatus status;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String? lastMessage;
-  final DateTime? lastMessageTime;
+  final String chatID;
+  final String name;
+  final String lastMessage;
+  final DateTime time;
+  final String avatarUrl;
   final int unreadCount;
+  final List<String> participantIds;
+  final String otherUserId;
+  final bool isSelected;
+  final ChatStatus status;
 
   const Chat({
-    required this.id,
-    required this.userId,
-    this.adminId,
-    required this.participantIds,
-    this.status = ChatStatus.active,
-    required this.createdAt,
-    required this.updatedAt,
-    this.lastMessage,
-    this.lastMessageTime,
+    required this.chatID,
+    required this.name,
+    required this.lastMessage,
+    required this.time,
+    this.avatarUrl = '',
     this.unreadCount = 0,
+    this.participantIds = const [],
+    this.otherUserId = '',
+    this.isSelected = false,
+    this.status = ChatStatus.active,
   });
 
-  factory Chat.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  Chat copyWith({
+    String? chatID,
+    String? name,
+    String? lastMessage,
+    DateTime? time,
+    String? avatarUrl,
+    int? unreadCount,
+    List<String>? participantIds,
+    String? otherUserId,
+    bool? isSelected,
+    ChatStatus? status,
+  }) {
     return Chat(
-      id: doc.id,
-      userId: data['userId'] ?? '',
-      adminId: data['adminId'],
-      participantIds: List<String>.from(data['participantIds'] ?? []),
-      status: ChatStatus.values.firstWhere(
-        (e) => e.toString() == data['status'],
-        orElse: () => ChatStatus.active,
-      ),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      lastMessage: data['lastMessage'],
-      lastMessageTime: data['lastMessageTime'] != null
-          ? (data['lastMessageTime'] as Timestamp).toDate()
-          : null,
-      unreadCount: data['unreadCount'] ?? 0,
+      chatID: chatID ?? this.chatID,
+      name: name ?? this.name,
+      lastMessage: lastMessage ?? this.lastMessage,
+      time: time ?? this.time,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      unreadCount: unreadCount ?? this.unreadCount,
+      participantIds: participantIds ?? this.participantIds,
+      otherUserId: otherUserId ?? this.otherUserId,
+      isSelected: isSelected ?? this.isSelected,
+      status: status ?? this.status,
     );
   }
 
-  Map<String, dynamic> toFirestore() {
-    return {
-      'userId': userId,
-      'adminId': adminId,
-      'participantIds': participantIds,
-      'status': status.toString(),
-      'createdAt': FieldValue.serverTimestamp(),
-      'updatedAt': FieldValue.serverTimestamp(),
-      'lastMessage': lastMessage,
-      'lastMessageTime': lastMessageTime != null
-          ? FieldValue.serverTimestamp()
-          : null,
-      'unreadCount': unreadCount,
-    };
+  factory Chat.fromFirestore(
+    Map<String, dynamic> data,
+    String chatId,
+    String currentUserId,
+  ) {
+    final participantIds = <String>[];
+    if (data['participantIds'] is List) {
+      participantIds.addAll(List<String>.from(data['participantIds']));
+    }
+
+    String otherId = '';
+    if (participantIds.isNotEmpty) {
+      otherId = participantIds.firstWhere(
+        (id) => id != currentUserId,
+        orElse: () => participantIds.first,
+      );
+    }
+
+    if (otherId.isEmpty && chatId.contains('_')) {
+      final parts = chatId.split('_');
+      if (parts.length == 2) {
+        otherId = parts.firstWhere(
+          (id) => id != currentUserId,
+          orElse: () => parts.first,
+        );
+      }
+    }
+
+    final nameValue = (data['name'] as String?)?.trim();
+    final displayName = nameValue?.isNotEmpty == true ? nameValue! : otherId;
+
+    DateTime timeValue = DateTime.now();
+    final updated = data['updatedAt'];
+    if (updated is Timestamp) {
+      timeValue = updated.toDate();
+    } else if (updated is String) {
+      timeValue = DateTime.tryParse(updated) ?? DateTime.now();
+    }
+
+    final unreadCountMap = data['unreadCountByUser'];
+    int unreadCountValue = 0;
+    if (unreadCountMap is Map) {
+      final userCount = unreadCountMap[currentUserId];
+      if (userCount is int) {
+        unreadCountValue = userCount;
+      } else if (userCount is String) {
+        unreadCountValue = int.tryParse(userCount) ?? 0;
+      }
+    }
+
+    return Chat(
+      chatID: chatId,
+      name: displayName,
+      lastMessage: data['lastMessage']?.toString() ?? '',
+      avatarUrl: data['avatarUrl']?.toString() ?? '',
+      unreadCount: unreadCountValue,
+      time: timeValue,
+      participantIds: participantIds,
+      otherUserId: otherId,
+      status: (data['status'] == 'archived')
+          ? ChatStatus.archived
+          : (data['status'] == 'deleted')
+          ? ChatStatus.deleted
+          : ChatStatus.active,
+    );
   }
 
   @override
   List<Object?> get props => [
-    id,
-    userId,
-    adminId,
+    chatID,
+    name,
+    lastMessage,
+    time,
+    avatarUrl,
+    unreadCount,
     participantIds,
+    otherUserId,
+    isSelected,
     status,
-    createdAt,
-    updatedAt,
   ];
 }
-
-enum ChatStatus { active, resolved, closed }

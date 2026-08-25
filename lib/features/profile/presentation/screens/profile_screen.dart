@@ -104,7 +104,14 @@ class ProfileScreen extends StatelessWidget {
                     title: 'Поддержка',
                     badgeText: 'Онлайн',
                     onTap: () {
-                      context.router.push(const InsidechatRoute());
+                      context.router.push(
+                        ChatsRoute(
+                          numName: 'Поддержка',
+                          isOnline: true,
+                          imageAvatar: '',
+                          userId: 'pNX5msSrrpfFg5kvPARiC2t3ZFf1',
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(height: 24),
@@ -122,9 +129,9 @@ class ProfileScreen extends StatelessWidget {
                           showCustomDialog(
                             context: context,
                             type: DialogType.warning,
-                            title: 'Удалить заказ?',
+                            title: 'Выйти с аккаунта?',
                             description:
-                                'Вы действительно хотите выйти мз панели? Это действие нельзя будет отменить.',
+                                'Вы действительно хотите выйти из панели? Это действие нельзя будет отменить.',
                             accentColor: const Color(0xFFE53E3E),
                             primaryButtonText: 'Да, выйти',
                             onPrimaryPressed: () {

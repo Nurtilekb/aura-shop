@@ -29,6 +29,8 @@ class MessageRepository {
       'unreadCount': FieldValue.increment(1),
       'unreadCountByUser': {senderId: 0, recipientId: FieldValue.increment(1)},
     };
+    print('sendMessage: updating chat doc $chatId with $updateData');
+
     await chatDocRef.set(updateData, SetOptions(merge: true));
   }
 

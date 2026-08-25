@@ -28,7 +28,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: MyAdressesRoute.page),
     AutoRoute(page: OrdersRoute.page),
     AutoRoute(page: SettingsRoute.page),
-    AutoRoute(page: InsidechatRoute.page),
+    AutoRoute(page: ChatsRoute.page),
 
     // 4. Admin Panel Flow
     AutoRoute(page: Main2Route.page),

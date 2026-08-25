@@ -1,5 +1,5 @@
+import 'package:aurashop/bloc/messages/messages_bloc.dart';
 import 'package:aurashop/bloc/products/products_bloc.dart';
-import 'package:aurashop/bloc/support_chat/cubit/chat_cubit.dart';
 import 'package:aurashop/core/routing/app_router.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/bloc/auth/auth_bloc.dart';
@@ -33,48 +33,42 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final chatRepository = ChatRepository();
-
-    return RepositoryProvider(
-      create: (_) => chatRepository,
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (_) => ChatCubit(chatRepository)),
-          BlocProvider(
-            create: (_) => ProductsBloc(productRepository: ProductRepository()),
-          ),
-          BlocProvider(create: (_) => ThemeCubit()),
-          BlocProvider(
-            create: (_) => AuthBloc(
-              authRepository: AuthRepository(
-                googleServerClientId:
-                    '497949764516-g2cuenbqpci4dupgs4dhk5muhrujvg38.apps.googleusercontent.com',
-              ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => MessagesBloc()),
+        BlocProvider(
+          create: (_) => ProductsBloc(productRepository: ProductRepository()),
+        ),
+        BlocProvider(create: (_) => ThemeCubit()),
+        BlocProvider(
+          create: (_) => AuthBloc(
+            authRepository: AuthRepository(
+              googleServerClientId:
+                  '497949764516-g2cuenbqpci4dupgs4dhk5muhrujvg38.apps.googleusercontent.com',
             ),
           ),
-        ],
-        child: BlocListener<AuthBloc, AuthState>(
-          listenWhen: (previous, current) =>
-              current is AuthUnauthenticated &&
-              previous is! AuthUnauthenticated,
-          listener: (context, state) {
-            _appRouter.replaceAll([const SplashRoute()]);
+        ),
+      ],
+      child: BlocListener<AuthBloc, AuthState>(
+        listenWhen: (previous, current) =>
+            current is AuthUnauthenticated && previous is! AuthUnauthenticated,
+        listener: (context, state) {
+          _appRouter.replaceAll([const SplashRoute()]);
+        },
+        child: BlocBuilder<ThemeCubit, ThemeState>(
+          builder: (context, state) {
+            return MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              theme: state.buildTheme(Brightness.light),
+              darkTheme: state.buildTheme(Brightness.dark),
+              themeMode: state.themeMode == ThemeModeStatus.light
+                  ? ThemeMode.light
+                  : state.themeMode == ThemeModeStatus.dark
+                  ? ThemeMode.dark
+                  : ThemeMode.system,
+              routerConfig: _appRouter.config(),
+            );
           },
-          child: BlocBuilder<ThemeCubit, ThemeState>(
-            builder: (context, state) {
-              return MaterialApp.router(
-                debugShowCheckedModeBanner: false,
-                theme: state.buildTheme(Brightness.light),
-                darkTheme: state.buildTheme(Brightness.dark),
-                themeMode: state.themeMode == ThemeModeStatus.light
-                    ? ThemeMode.light
-                    : state.themeMode == ThemeModeStatus.dark
-                    ? ThemeMode.dark
-                    : ThemeMode.system,
-                routerConfig: _appRouter.config(),
-              );
-            },
-          ),
         ),
       ),
     );
