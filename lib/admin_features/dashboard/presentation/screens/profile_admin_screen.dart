@@ -1,8 +1,12 @@
+import 'package:aurashop/bloc/auth/auth_bloc.dart';
+import 'package:aurashop/bloc/auth/auth_event.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
+import 'package:aurashop/shared/widgets/diolog.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class AdminProfileScreen extends StatefulWidget {
@@ -169,7 +173,21 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                 width: double.infinity,
                 height: 52,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showCustomDialog(
+                      context: context,
+                      type: DialogType.warning,
+                      title: 'Удалить заказ?',
+                      description:
+                          'Вы действительно хотите выйти мз панели? Это действие нельзя будет отменить.',
+                      accentColor: const Color(0xFFE53E3E), // Красный цвет
+                      primaryButtonText: 'Да, выйти',
+                      onPrimaryPressed: () {
+                        context.read<AuthBloc>().add(AuthLogoutRequested());
+                      },
+                      secondaryButtonText: 'Отмена',
+                    );
+                  },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: borderColor, width: 1.5),
                     backgroundColor: Colors.white,
