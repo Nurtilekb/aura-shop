@@ -135,8 +135,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
 
     try {
-      await Future.delayed(const Duration(seconds: 1));
-
+      await Future.delayed(const Duration(seconds: 2));
       await _authRepository.signOut();
       emit(AuthUnauthenticated());
     } catch (e) {
