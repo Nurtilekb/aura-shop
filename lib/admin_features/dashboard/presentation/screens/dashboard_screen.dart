@@ -4,6 +4,7 @@ import 'package:aurashop/shared/widgets/admin/dashboard_metric_card.dart';
 import 'package:aurashop/shared/widgets/admin/dashboard_order_tile.dart';
 import 'package:aurashop/shared/widgets/admin/weekly_sales_card.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
@@ -12,13 +13,14 @@ class DashboardScreenAdmin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
       appBar: AppBar(
         title: Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: () {
-              context.router.push(const AdminProfileRoute());
+              context.router.push(AdminProfileRoute(name: user));
             },
             child: Row(
               children: [
@@ -26,7 +28,7 @@ class DashboardScreenAdmin extends StatelessWidget {
                   sizes: 50,
                   padding: const EdgeInsets.all(5),
                   bordRadius: BorderRadius.circular(10),
-                  emoji: 'A',
+                  emoji: user.displayName?[0],
 
                   color: Colors.black,
                   fontwght: FontWeight.bold,
@@ -43,7 +45,7 @@ class DashboardScreenAdmin extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'admin@aura.shop · Администратор',
+                      '${user.displayName} · Администратор',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],

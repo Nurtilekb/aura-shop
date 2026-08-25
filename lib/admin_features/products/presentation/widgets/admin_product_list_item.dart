@@ -3,6 +3,7 @@ import 'package:aurashop/bloc/products/products_event.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/shared/models/product_model.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
+import 'package:aurashop/shared/widgets/diolog.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -65,8 +66,20 @@ class AdminProductListItem extends StatelessWidget {
               icon: Icons.delete_outline,
               backgroundColor: theme.scaffoldBackgroundColor,
               onPressed: () {
-                context.read<ProductsBloc>().add(
-                  DeleteProductEvent(productId: product.id),
+                showCustomDialog(
+                  context: context,
+                  type: DialogType.warning,
+                  title: 'Удалить заказ?',
+                  description:
+                      'Вы действительно хотите отменить этот заказ? Это действие нельзя будет отменить.',
+                  accentColor: const Color(0xFFE53E3E), // Красный цвет
+                  primaryButtonText: 'Да, удалить',
+                  onPrimaryPressed: () {
+                    context.read<ProductsBloc>().add(
+                      DeleteProductEvent(productId: product.id),
+                    );
+                  },
+                  secondaryButtonText: 'Отмена',
                 );
               },
             ),

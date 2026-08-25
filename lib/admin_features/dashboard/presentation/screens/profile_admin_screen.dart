@@ -1,11 +1,13 @@
 import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
 class AdminProfileScreen extends StatefulWidget {
-  const AdminProfileScreen({super.key});
+  const AdminProfileScreen({super.key, this.name});
+  final User? name;
 
   @override
   State<AdminProfileScreen> createState() => _AdminProfileScreenState();
@@ -23,7 +25,15 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
     const subtextColor = Color(0xFF8E8E93);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      appBar: AppBar(
+        title: Text(
+          'Админ ',
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            fontSize: 23,
+            fontWeight: FontWeight(600),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
@@ -32,14 +42,14 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
             children: [
               IconWithBack(
                 backroundcolor: Colors.black,
-                emoji: 'A',
+                emoji: widget.name?.displayName?[0],
                 emojiSizes: 40,
                 color: Theme.of(context).colorScheme.onPrimary,
                 fontwght: FontWeight.bold,
               ),
               const SizedBox(height: 12),
-              const Text(
-                'Дмитрий Орлов',
+              Text(
+                widget.name?.displayName ?? 'User',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -47,8 +57,8 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                 ),
               ),
               const SizedBox(height: 4),
-              const Text(
-                'admin@aura.shop',
+              Text(
+                widget.name!.email ?? "admin@email.com",
                 style: TextStyle(
                   fontSize: 14,
                   color: subtextColor,

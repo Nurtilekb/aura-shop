@@ -1,4 +1,5 @@
-﻿import 'package:aurashop/shared/models/chat_items_model.dart';
+﻿import 'package:aurashop/core/routing/app_router.gr.dart';
+import 'package:aurashop/shared/models/chat_items_model.dart';
 import 'package:aurashop/shared/widgets/app_input_widget.dart';
 import 'package:aurashop/shared/widgets/chip_list.dart';
 import 'package:auto_route/auto_route.dart';
@@ -33,6 +34,7 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
       lastMessage: 'Где мой заказ #AU-24815?',
       unreadCount: 2,
     ),
+
     ChatItemData(
       initials: 'АС',
       avatarBgColor: Color(0xFF5A49F8),
@@ -42,42 +44,7 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
       lastMessage: 'Где мой заказ #AU-24815?',
       unreadCount: 2,
     ),
-    ChatItemData(
-      initials: 'АС',
-      avatarBgColor: Color(0xFF5A49F8),
-      isOnline: true,
-      name: 'Анна Соколова',
-      time: '2 мин',
-      lastMessage: 'Где мой заказ #AU-24815?',
-      unreadCount: 2,
-    ),
-    ChatItemData(
-      initials: 'АС',
-      avatarBgColor: Color(0xFF5A49F8),
-      isOnline: true,
-      name: 'Анна Соколова',
-      time: '2 мин',
-      lastMessage: 'Где мой заказ #AU-24815?',
-      unreadCount: 2,
-    ),
-    ChatItemData(
-      initials: 'АС',
-      avatarBgColor: Color(0xFF5A49F8),
-      isOnline: true,
-      name: 'Анна Соколова',
-      time: '2 мин',
-      lastMessage: 'Где мой заказ #AU-24815?',
-      unreadCount: 2,
-    ),
-    ChatItemData(
-      initials: 'ИП',
-      avatarBgColor: Color(0xFF4A6FA5),
-      isOnline: false,
-      name: 'Игорь Петров',
-      time: '18 мин',
-      lastMessage: 'Можно вернуть худи, не подо...',
-      unreadCount: 1,
-    ),
+
     ChatItemData(
       initials: 'МК',
       avatarBgColor: Color(0xFF387B5B),
@@ -86,26 +53,6 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
       time: '1 ч',
       lastMessage: 'Спасибо, всё пришло вовремя!',
       unreadCount: 0,
-    ),
-    ChatItemData(
-      initials: 'ДВ',
-      avatarBgColor: Color(0xFFC25E38),
-      isOnline: false,
-      name: 'Дмитрий Волков',
-      time: '3 ч',
-      lastMessage: 'Когда будет доставка в Казань?',
-      unreadCount: 1,
-    ),
-    ChatItemData(
-      initials: 'ОК',
-      avatarBgColor: Color(0xFFE2E2DF),
-      avatarTextColor: Color(0xFF6B7280),
-      isOnline: false,
-      name: 'Ольга Крылова',
-      time: 'Вчера',
-      lastMessage: 'Диалог закрыт · оценка ★★★★★',
-      unreadCount: 0,
-      isClosed: true,
     ),
   ];
 
@@ -226,7 +173,9 @@ class _ChatTile extends StatelessWidget {
     const primaryPurple = Color(0xFF5A49F8);
 
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        context.router.push(InsidechatRoute());
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14.0),
         margin: EdgeInsets.symmetric(horizontal: 20),

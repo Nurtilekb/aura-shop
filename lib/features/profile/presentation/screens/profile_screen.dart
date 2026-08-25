@@ -103,7 +103,7 @@ class ProfileScreen extends StatelessWidget {
                     title: 'Поддержка',
                     badgeText: 'Онлайн',
                     onTap: () {
-                      context.router.push(const SupportChatRoute());
+                      context.router.push(const InsidechatRoute());
                     },
                   ),
                   const SizedBox(height: 24),

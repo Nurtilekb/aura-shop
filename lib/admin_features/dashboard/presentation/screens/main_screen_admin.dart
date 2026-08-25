@@ -60,10 +60,7 @@ class _Main2ScreenState extends State<Main2Screen> {
               icon: Icon(Icons.view_in_ar_outlined),
               label: 'Товары',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.list),
-              label: 'Заказы',
-            ),
+            BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Заказы'),
             BottomNavigationBarItem(
               icon: Icon(Icons.message_outlined),
               label: 'Чаты',

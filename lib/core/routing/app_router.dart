@@ -28,7 +28,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: MyAdressesRoute.page),
     AutoRoute(page: OrdersRoute.page),
     AutoRoute(page: SettingsRoute.page),
-    AutoRoute(page: SupportChatRoute.page),
+    AutoRoute(page: InsidechatRoute.page),
 
     // 4. Admin Panel Flow
     AutoRoute(page: Main2Route.page),
@@ -37,6 +37,5 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: AddNewProductRoute.page),
     AutoRoute(page: AdminOrdersRoute.page),
     AutoRoute(page: AdminProfileRoute.page),
-    AutoRoute(page: SupportChatsRoute.page),
   ];
 }
