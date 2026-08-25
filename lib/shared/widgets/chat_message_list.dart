@@ -48,8 +48,11 @@ class ChatMessageList extends StatelessWidget {
         }
 
         return Container(
+          width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-          color: Colors.transparent,
+          color: selectedMessageIds.contains(doc.id)
+              ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)
+              : Colors.transparent,
           child: ChatMessageBubble(
             text: message['text'] ?? '',
             isMe: isMe,
@@ -106,12 +109,13 @@ class ChatMessageBubble extends StatelessWidget {
                 onLongPress: onlongTap,
                 onTap: ontapp,
                 child: Container(
-                  margin: EdgeInsets.only(top: 10),
+                  margin: EdgeInsets.only(top: 10, right: 5, left: 5),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
+                    color: isMe ? Theme.of(context).primaryColor : Colors.white,
                     borderRadius: BorderRadius.circular(16).copyWith(
                       bottomLeft: isMe
                           ? const Radius.circular(16)
@@ -120,9 +124,6 @@ class ChatMessageBubble extends StatelessWidget {
                           ? const Radius.circular(4)
                           : const Radius.circular(16),
                     ),
-                    boxShadow: [
-                      BoxShadow(blurRadius: 4, offset: const Offset(0, 1)),
-                    ],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -166,6 +167,12 @@ class ChatComposer extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
         child: Row(
           children: [
+            IconButton.outlined(
+              hoverColor: Colors.amber,
+              onPressed: () {},
+              icon: Icon(Icons.add, size: 30),
+            ),
+            SizedBox(width: 8),
             Expanded(
               child: AppInputWidget(
                 maxLines: 3,
@@ -173,7 +180,7 @@ class ChatComposer extends StatelessWidget {
                 radius: 25,
                 borderColor: colors.dividerColor,
                 hintText: 'Сообщение',
-                filledColor: colors.hoverColor,
+                filledColor: Colors.transparent,
               ),
             ),
             const SizedBox(width: 8),
@@ -263,18 +270,13 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.greenAccent,
       elevation: 0,
       titleSpacing: 0,
       actionsPadding: const EdgeInsets.only(right: 8),
       actions: [
         PopupMenuButton<String>(
           color: Colors.white,
-          icon: Icon(
-            Icons.more_vert_outlined,
-            size: 29,
-            color: Colors.greenAccent,
-          ),
+          icon: Icon(Icons.more_vert_outlined, size: 29),
           onSelected: (value) {
             // if (value != 'clear') return;
             // showConfirmDialog(
@@ -326,13 +328,16 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           height: 50,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Theme.of(context).dividerColor,
+            color: Theme.of(context).primaryColor,
           ),
           child: avatarUrl.isEmpty
               ? Center(
                   child: Text(
                     getInitials(userName),
-                    style: const TextStyle(fontSize: 14),
+                    style: TextStyle(
+                      fontSize: 28,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
                   ),
                 )
               : null,
@@ -366,11 +371,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
             userName,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: Colors.green,
-            ),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
         ),
         Text(
