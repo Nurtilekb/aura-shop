@@ -38,7 +38,6 @@ Future<T?> showCustomDialog<T>({
   );
 }
 
-/// Универсальный виджет диалогового окна
 class CustomAppDialog extends StatelessWidget {
   final String title;
   final String? description;
@@ -80,7 +79,6 @@ class CustomAppDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 1. Иконка во главе диалога (если задана)
             if (effectiveIcon != null) ...[
               Container(
                 width: 56,
@@ -93,8 +91,6 @@ class CustomAppDialog extends StatelessWidget {
               ),
               const SizedBox(height: 18),
             ],
-
-            // 2. Заголовок
             Text(
               title,
               textAlign: TextAlign.center,
@@ -105,8 +101,6 @@ class CustomAppDialog extends StatelessWidget {
                 letterSpacing: -0.3,
               ),
             ),
-
-            // 3. Подзаголовок / Описание
             if (description != null && description!.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
@@ -119,16 +113,11 @@ class CustomAppDialog extends StatelessWidget {
                 ),
               ),
             ],
-
-            // 4. Любой произвольный виджет (поля ввода, чекбоксы, списки)
             if (customContent != null) ...[
               const SizedBox(height: 16),
               Flexible(child: customContent!),
             ],
-
             const SizedBox(height: 24),
-
-            // 5. Кнопки действий
             Column(
               children: [
                 if (primaryButtonText != null) ...[
@@ -192,7 +181,6 @@ class CustomAppDialog extends StatelessWidget {
     );
   }
 
-  /// Настройки стиля по умолчанию в зависимости от типа диалога
   _DialogStyle _getStyleConfig(DialogType type) {
     switch (type) {
       case DialogType.info:
@@ -232,52 +220,52 @@ class _DialogStyle {
 // ПРИМЕРЫ ВЫЗОВА В ЛЮБОЙ ЧАСТИ ПРИЛОЖЕНИЯ
 // ==========================================
 
-void showExampleDialogs(BuildContext context) {
-  // 1. Простой диалог подтверждения удаления / опасного действия
-  showCustomDialog(
-    context: context,
-    type: DialogType.warning,
-    title: 'Удалить заказ?',
-    description:
-        'Вы действительно хотите отменить этот заказ? Это действие нельзя будет отменить.',
-    accentColor: const Color(0xFFE53E3E), // Красный цвет
-    primaryButtonText: 'Да, удалить',
-    onPrimaryPressed: () {
-      // Ваша логика удаления
-    },
-    secondaryButtonText: 'Отмена',
-  );
+// void showExampleDialogs(BuildContext context) {
+//   // 1. Простой диалог подтверждения удаления / опасного действия
+//   showCustomDialog(
+//     context: context,
+//     type: DialogType.warning,
+//     title: 'Удалить заказ?',
+//     description:
+//         'Вы действительно хотите отменить этот заказ? Это действие нельзя будет отменить.',
+//     accentColor: const Color(0xFFE53E3E), // Красный цвет
+//     primaryButtonText: 'Да, удалить',
+//     onPrimaryPressed: () {
+//       // Ваша логика удаления
+//     },
+//     secondaryButtonText: 'Отмена',
+//   );
 
-  // 2. Уведомление об успехе
-  showCustomDialog(
-    context: context,
-    type: DialogType.success,
-    title: 'Заказ успешно создан!',
-    description:
-        'Номер вашего заказа #AU-24816. Вы можете отслеживать его в разделе "Заказы".',
-    primaryButtonText: 'Понятно',
-  );
+//   // 2. Уведомление об успехе
+//   showCustomDialog(
+//     context: context,
+//     type: DialogType.success,
+//     title: 'Заказ успешно создан!',
+//     description:
+//         'Номер вашего заказа #AU-24816. Вы можете отслеживать его в разделе "Заказы".',
+//     primaryButtonText: 'Понятно',
+//   );
 
-  // 3. Диалог с кастомным содержимым (например, поле ввода причины отмены)
-  showCustomDialog(
-    context: context,
-    type: DialogType.custom,
-    customIcon: Icons.edit_note_rounded,
-    title: 'Укажите причину',
-    description: 'Напишите комментарий к отмене заказа:',
-    customContent: const TextField(
-      maxLines: 3,
-      decoration: InputDecoration(
-        hintText: 'Введите причину...',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-        ),
-      ),
-    ),
-    primaryButtonText: 'Отправить',
-    onPrimaryPressed: () {
-      // Логика отправки комментария
-    },
-    secondaryButtonText: 'Закрыть',
-  );
-}
+//   // 3. Диалог с кастомным содержимым (например, поле ввода причины отмены)
+//   showCustomDialog(
+//     context: context,
+//     type: DialogType.custom,
+//     customIcon: Icons.edit_note_rounded,
+//     title: 'Укажите причину',
+//     description: 'Напишите комментарий к отмене заказа:',
+//     customContent: const TextField(
+//       maxLines: 3,
+//       decoration: InputDecoration(
+//         hintText: 'Введите причину...',
+//         border: OutlineInputBorder(
+//           borderRadius: BorderRadius.all(Radius.circular(12)),
+//         ),
+//       ),
+//     ),
+//     primaryButtonText: 'Отправить',
+//     onPrimaryPressed: () {
+//       // Логика отправки комментария
+//     },
+//     secondaryButtonText: 'Закрыть',
+//   );
+// }
