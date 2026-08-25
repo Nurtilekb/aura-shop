@@ -1,7 +1,9 @@
 import 'package:aurashop/bloc/products/products_bloc.dart';
 import 'package:aurashop/bloc/support_chat/cubit/chat_cubit.dart';
 import 'package:aurashop/core/routing/app_router.dart';
+import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/bloc/auth/auth_bloc.dart';
+import 'package:aurashop/bloc/auth/auth_state.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/firebase_options.dart';
 import 'package:aurashop/repositories/auth_repository.dart';
@@ -51,20 +53,28 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ],
-        child: BlocBuilder<ThemeCubit, ThemeState>(
-          builder: (context, state) {
-            return MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              theme: state.buildTheme(Brightness.light),
-              darkTheme: state.buildTheme(Brightness.dark),
-              themeMode: state.themeMode == ThemeModeStatus.light
-                  ? ThemeMode.light
-                  : state.themeMode == ThemeModeStatus.dark
-                  ? ThemeMode.dark
-                  : ThemeMode.system,
-              routerConfig: _appRouter.config(),
-            );
+        child: BlocListener<AuthBloc, AuthState>(
+          listenWhen: (previous, current) =>
+              current is AuthUnauthenticated &&
+              previous is! AuthUnauthenticated,
+          listener: (context, state) {
+            _appRouter.replaceAll([const SplashRoute()]);
           },
+          child: BlocBuilder<ThemeCubit, ThemeState>(
+            builder: (context, state) {
+              return MaterialApp.router(
+                debugShowCheckedModeBanner: false,
+                theme: state.buildTheme(Brightness.light),
+                darkTheme: state.buildTheme(Brightness.dark),
+                themeMode: state.themeMode == ThemeModeStatus.light
+                    ? ThemeMode.light
+                    : state.themeMode == ThemeModeStatus.dark
+                    ? ThemeMode.dark
+                    : ThemeMode.system,
+                routerConfig: _appRouter.config(),
+              );
+            },
+          ),
         ),
       ),
     );
