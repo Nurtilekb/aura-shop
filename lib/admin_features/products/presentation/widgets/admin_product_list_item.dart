@@ -32,6 +32,7 @@ class AdminProductListItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
+                maxLines: 2,
                 product.name,
                 style: const TextStyle(
                   fontSize: 16,
@@ -41,6 +42,7 @@ class AdminProductListItem extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 product.description,
+                maxLines: 2,
                 style: TextStyle(
                   fontSize: 14,
                   color: theme.textTheme.bodyMedium?.color?.withValues(
