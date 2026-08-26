@@ -24,7 +24,7 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
     super.dispose();
   }
 
-  final List<String> _filters = ['Все', 'Непрочитанные 3'];
+  late final List<String> _filters = ['Все', 'Непрочитанные '];
 
   @override
   Widget build(BuildContext context) {
@@ -147,11 +147,13 @@ class _SupportChatsScreenState extends State<SupportChatsScreen> {
                         if (chats.isEmpty) {
                           return const Padding(
                             padding: EdgeInsets.all(20),
-                            child: Text(
-                              'Новых сообщений пока нет',
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight(700),
+                            child: Center(
+                              child: Text(
+                                'Новых сообщений пока нет',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight(600),
+                                ),
                               ),
                             ),
                           );

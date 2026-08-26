@@ -10,7 +10,8 @@ import 'package:aurashop/repositories/auth_repository.dart';
 
 import 'package:aurashop/repositories/product_repository.dart';
 import 'package:aurashop/features/basket/presentation/screens/basket_screen.dart';
-import 'package:aurashop/features/catalog/presentation/screens/categories_screen.dart';
+import 'package:aurashop/features/catalog/presentation/screens/categories_screen.dart'
+    hide ProductRepository;
 import 'package:aurashop/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:aurashop/features/home/presentation/screens/home_screen.dart';
 import 'package:aurashop/features/profile/presentation/screens/profile_screen.dart';
