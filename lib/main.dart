@@ -1,3 +1,4 @@
+import 'package:aurashop/bloc/cart/cart_bloc.dart';
 import 'package:aurashop/bloc/messages/messages_bloc.dart';
 import 'package:aurashop/bloc/products/products_bloc.dart';
 import 'package:aurashop/core/routing/app_router.dart';
@@ -7,11 +8,11 @@ import 'package:aurashop/bloc/auth/auth_state.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/firebase_options.dart';
 import 'package:aurashop/repositories/auth_repository.dart';
+import 'package:aurashop/repositories/cart_repository.dart';
 
 import 'package:aurashop/repositories/product_repository.dart';
 import 'package:aurashop/features/basket/presentation/screens/basket_screen.dart';
-import 'package:aurashop/features/catalog/presentation/screens/categories_screen.dart'
-    hide ProductRepository;
+import 'package:aurashop/features/catalog/presentation/screens/categories_screen.dart';
 import 'package:aurashop/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:aurashop/features/home/presentation/screens/home_screen.dart';
 import 'package:aurashop/features/profile/presentation/screens/profile_screen.dart';
@@ -34,42 +35,50 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => MessagesBloc()),
-        BlocProvider(
-          create: (_) => ProductsBloc(productRepository: ProductRepository()),
-        ),
-        BlocProvider(create: (_) => ThemeCubit()),
-        BlocProvider(
-          create: (_) => AuthBloc(
-            authRepository: AuthRepository(
-              googleServerClientId:
-                  '497949764516-g2cuenbqpci4dupgs4dhk5muhrujvg38.apps.googleusercontent.com',
+    return MultiRepositoryProvider(
+      providers: [RepositoryProvider(create: (_) => CartRepository())],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) =>
+                CartBloc(repository: context.read<CartRepository>()),
+          ),
+          BlocProvider(create: (_) => MessagesBloc()),
+          BlocProvider(
+            create: (_) => ProductsBloc(productRepository: ProductRepository()),
+          ),
+          BlocProvider(create: (_) => ThemeCubit()),
+          BlocProvider(
+            create: (_) => AuthBloc(
+              authRepository: AuthRepository(
+                googleServerClientId:
+                    '497949764516-g2cuenbqpci4dupgs4dhk5muhrujvg38.apps.googleusercontent.com',
+              ),
             ),
           ),
-        ),
-      ],
-      child: BlocListener<AuthBloc, AuthState>(
-        listenWhen: (previous, current) =>
-            current is AuthUnauthenticated && previous is! AuthUnauthenticated,
-        listener: (context, state) {
-          _appRouter.replaceAll([const SplashRoute()]);
-        },
-        child: BlocBuilder<ThemeCubit, ThemeState>(
-          builder: (context, state) {
-            return MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              theme: state.buildTheme(Brightness.light),
-              darkTheme: state.buildTheme(Brightness.dark),
-              themeMode: state.themeMode == ThemeModeStatus.light
-                  ? ThemeMode.light
-                  : state.themeMode == ThemeModeStatus.dark
-                  ? ThemeMode.dark
-                  : ThemeMode.system,
-              routerConfig: _appRouter.config(),
-            );
+        ],
+        child: BlocListener<AuthBloc, AuthState>(
+          listenWhen: (previous, current) =>
+              current is AuthUnauthenticated &&
+              previous is! AuthUnauthenticated,
+          listener: (context, state) {
+            _appRouter.replaceAll([const SplashRoute()]);
           },
+          child: BlocBuilder<ThemeCubit, ThemeState>(
+            builder: (context, state) {
+              return MaterialApp.router(
+                debugShowCheckedModeBanner: false,
+                theme: state.buildTheme(Brightness.light),
+                darkTheme: state.buildTheme(Brightness.dark),
+                themeMode: state.themeMode == ThemeModeStatus.light
+                    ? ThemeMode.light
+                    : state.themeMode == ThemeModeStatus.dark
+                    ? ThemeMode.dark
+                    : ThemeMode.system,
+                routerConfig: _appRouter.config(),
+              );
+            },
+          ),
         ),
       ),
     );

@@ -1,4 +1,7 @@
-﻿import 'package:aurashop/bloc/theme/theme_bloc.dart';
+﻿import 'package:aurashop/bloc/cart/cart_bloc.dart';
+import 'package:aurashop/bloc/cart/cart_event.dart';
+import 'package:aurashop/bloc/cart/cart_state.dart';
+import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/shared/models/cart_model.dart';
 import 'package:aurashop/shared/widgets/basket_widgets/quantity_counter.dart';
@@ -16,111 +19,115 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  final List<CartItem> _items = [
-    CartItem(id: '1', title: 'Aura Run 2.0', price: 4990, quantity: 1),
-    CartItem(id: '2', title: 'Худи Oversize', price: 3490, quantity: 2),
-    CartItem(id: '3', title: 'Ботинки Trek Pro', price: 7990, quantity: 1),
-  ];
-
-  int get _totalItemsPrice =>
-      _items.fold(0, (sum, item) => sum + (item.price * item.quantity));
-  int get _discount => _totalItemsPrice > 5000 ? 1500 : 0;
-  int get _totalPrice =>
-      (_totalItemsPrice - _discount).clamp(0, double.infinity).toInt();
-  int get _itemsCount => _items.fold(0, (sum, item) => sum + item.quantity);
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Корзина',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Center(
-              child: Text(
-                '$_itemsCount ${_itemsCount == 1
-                    ? "товар"
-                    : _itemsCount < 5
-                    ? "товара"
-                    : "товаров"}',
-                style: TextStyle(color: colorScheme.outline, fontSize: 14),
-              ),
+    return BlocConsumer<CartBloc, CartState>(
+      listener: (context, state) {
+        if (state is CartError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+          );
+        }
+      },
+      builder: (context, state) {
+        final loadedState = state is CartLoaded ? state : null;
+        final items = loadedState?.items ?? const <CartItem>[];
+        final itemsCount = loadedState?.totalCount ?? 0;
+        final totalPrice = loadedState?.totalPrice.round() ?? 0;
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Корзина',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: Center(
+                  child: Text(
+                    '$itemsCount ${itemsCount == 1
+                        ? "товар"
+                        : itemsCount < 5
+                        ? "товара"
+                        : "товаров"}',
+                    style: TextStyle(color: colorScheme.outline, fontSize: 14),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: _items.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.shopping_cart_outlined,
-                    size: 64,
-                    color: colorScheme.outlineVariant,
+          body: state is CartLoading
+              ? const Center(child: CircularProgressIndicator())
+              : items.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.shopping_cart_outlined,
+                        size: 64,
+                        color: colorScheme.outlineVariant,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Корзина пуста',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Добавьте товары из каталога',
+                        style: TextStyle(color: colorScheme.outline),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Корзина пуста',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Добавьте товары из каталога',
-                    style: TextStyle(color: colorScheme.outline),
-                  ),
-                ],
-              ),
-            )
-          : BlocBuilder<ThemeCubit, ThemeState>(
-              builder: (context, state) {
-                return ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    ..._items.map((item) => _buildCartTile(item)),
-                    const SizedBox(height: 12),
-                    SummaryCard(
-                      itemsCount: _itemsCount,
-                      totalItemsPrice: _totalItemsPrice,
-                      discount: _discount,
-                      totalPrice: _totalPrice,
-                    ),
-                  ],
-                );
-              },
-            ),
-      bottomNavigationBar: _items.isEmpty
-          ? null
-          : SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: SizedBox(
-                  height: 56.0,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      context.router.push(const ConfirmOrderRoute());
-                    },
-                    child: const Text(
-                      'Оформить заказ',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                )
+              : BlocBuilder<ThemeCubit, ThemeState>(
+                  builder: (context, state) {
+                    return ListView(
+                      padding: const EdgeInsets.all(16),
+                      children: [
+                        ...items.map((item) => _buildCartTile(item)),
+                        const SizedBox(height: 12),
+                        SummaryCard(
+                          itemsCount: itemsCount,
+                          totalItemsPrice: totalPrice,
+                          discount: 0,
+                          totalPrice: totalPrice,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+          bottomNavigationBar: items.isEmpty
+              ? null
+              : SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: SizedBox(
+                      height: 56.0,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.router.push(const ConfirmOrderRoute());
+                        },
+                        child: const Text(
+                          'Оформить заказ',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
+        );
+      },
     );
   }
 
@@ -130,10 +137,10 @@ class _CartScreenState extends State<CartScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Dismissible(
-        key: Key(item.id),
+        key: Key(item.productId),
         direction: DismissDirection.endToStart,
         onDismissed: (_) {
-          setState(() => _items.removeWhere((i) => i.id == item.id));
+          context.read<CartBloc>().add(CartRemoveRequested(item.productId));
         },
         background: Container(
           alignment: Alignment.centerRight,
@@ -172,7 +179,7 @@ class _CartScreenState extends State<CartScreen> {
                     Text(
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      item.title,
+                      item.name,
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 15,
@@ -196,11 +203,25 @@ class _CartScreenState extends State<CartScreen> {
                 quantity: item.quantity,
                 onDecrement: () {
                   if (item.quantity > 1) {
-                    setState(() => item.quantity--);
+                    context.read<CartBloc>().add(
+                      CartUpdateQuantityRequested(
+                        item.productId,
+                        item.quantity - 1,
+                      ),
+                    );
+                  } else {
+                    context.read<CartBloc>().add(
+                      CartRemoveRequested(item.productId),
+                    );
                   }
                 },
                 onIncrement: () {
-                  setState(() => item.quantity++);
+                  context.read<CartBloc>().add(
+                    CartUpdateQuantityRequested(
+                      item.productId,
+                      item.quantity + 1,
+                    ),
+                  );
                 },
               ),
             ],

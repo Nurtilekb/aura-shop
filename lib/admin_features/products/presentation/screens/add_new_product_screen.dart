@@ -42,7 +42,9 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
     _descriptionController = TextEditingController(
       text: product2?.description ?? '',
     );
-    _priceController = TextEditingController(text: product2?.price ?? '');
+    _priceController = TextEditingController(
+      text: product2?.price.toString() ?? '',
+    );
     _stockController = TextEditingController(
       text: product2?.stock == true ? '1' : '0',
     );
@@ -233,7 +235,9 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
             onPressed: () {
               final product = Product(
                 name: _nameController.text.trim(),
-                price: _priceController.text.trim(),
+                price: double.tryParse(
+                  _priceController.text.trim().replaceAll(',', '.'),
+                ) ?? 0,
                 description: _descriptionController.text.trim(),
                 category: _categoryController.text.trim(),
                 stock: _manageProducts,
@@ -245,7 +249,9 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
               } else {
                 final updatedProduct = widget.product2!.copyWith(
                   name: _nameController.text.trim(),
-                  price: _priceController.text.trim(),
+                  price: double.tryParse(
+                    _priceController.text.trim().replaceAll(',', '.'),
+                  ) ?? 0,
                   description: _descriptionController.text.trim(),
                   category: _categoryController.text.trim(),
                   stock: _manageProducts,

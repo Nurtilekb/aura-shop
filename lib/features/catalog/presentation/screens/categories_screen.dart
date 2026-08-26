@@ -5,7 +5,6 @@ import 'package:aurashop/repositories/product_repository.dart';
 import 'package:aurashop/shared/models/product_model.dart';
 import 'package:aurashop/shared/widgets/chip_list.dart';
 import 'package:aurashop/shared/widgets/catalog_filter_button.dart';
-import 'package:aurashop/shared/widgets/catalog_filters_sheet.dart';
 import 'package:aurashop/shared/widgets/production_card_widget.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -215,7 +214,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
       // 2. Фильтрация по цене (если активна)
       if (_isFilterActive) {
         filtered = filtered.where((p) {
-          final price = _extractPrice(p.price);
+          final price = _extractPrice(p.price.toString());
           return price >= _priceRange.start && price <= _priceRange.end;
         }).toList();
 
@@ -232,12 +231,16 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
           break;
         case ProductSortOption.priceAsc:
           filtered.sort(
-            (a, b) => _extractPrice(a.price).compareTo(_extractPrice(b.price)),
+            (a, b) => _extractPrice(
+              a.price.toString(),
+            ).compareTo(_extractPrice(b.price.toString())),
           );
           break;
         case ProductSortOption.priceDesc:
           filtered.sort(
-            (a, b) => _extractPrice(b.price).compareTo(_extractPrice(a.price)),
+            (a, b) => _extractPrice(
+              b.price.toString(),
+            ).compareTo(_extractPrice(a.price.toString())),
           );
           break;
         case ProductSortOption.rating:
@@ -271,7 +274,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
               ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) =>
-                    const Productcard(indexx: 0, isLoading: true),
+                    const Productcard(indexx: 0, isLoading: true, price: 1),
                 childCount: 6,
               ),
             ),
@@ -365,8 +368,11 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
               childAspectRatio: 0.75,
             ),
             delegate: SliverChildBuilderDelegate(
-              (context, index) =>
-                  Productcard(indexx: index, product: products[index]),
+              (context, index) => Productcard(
+                indexx: index,
+                product: products[index],
+                price: products[index].price,
+              ),
               childCount: products.length,
             ),
           ),

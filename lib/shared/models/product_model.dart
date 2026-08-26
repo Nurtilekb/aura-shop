@@ -1,7 +1,7 @@
 class Product {
   final String id;
   final String name;
-  final String price;
+  final double price;
   final double rating;
   final int? discount;
   final String description;
@@ -27,7 +27,7 @@ class Product {
   Product copyWith({
     String? id,
     String? name,
-    String? price,
+    double? price,
     double? rating,
     int? discount,
     String? description,
@@ -68,7 +68,7 @@ class Product {
     return Product(
       id: documentId,
       name: data['name']?.toString() ?? '',
-      price: data['price']?.toString() ?? '',
+      price: (data['price'] as num?)?.toDouble() ?? 0.0,
       rating: (data['rating'] as num?)?.toDouble() ?? 4.8,
       discount: (data['discount'] as num?)?.toInt(),
       description: data['description']?.toString() ?? '',

@@ -1,5 +1,8 @@
+import 'package:aurashop/bloc/cart/cart_bloc.dart';
+import 'package:aurashop/bloc/cart/cart_event.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
+import 'package:aurashop/shared/models/cart_model.dart';
 import 'package:aurashop/shared/models/product_model.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +19,6 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  int _selectedSizeIndex = 2; // e.g. '41'
-  int _selectedColorIndex = 0;
   bool _isFavorite = false;
   int _quantity = 0;
 
@@ -262,7 +263,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           textBaseline: TextBaseline.alphabetic,
                           children: [
                             Text(
-                              product.price,
+                              product.price.toString(),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
@@ -273,7 +274,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             if (product.discount != null) ...[
                               const SizedBox(width: 12),
                               Text(
-                                '${((int.tryParse(product.price.replaceAll(RegExp(r'[^\d]'), '')) ?? 0) * 1.3).toInt()} ₽',
+                                '${[product.price]} ₽',
                                 style: TextStyle(
                                   fontSize: 16,
                                   decoration: TextDecoration.lineThrough,
@@ -375,8 +376,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ],
             ),
           ),
-
-          // Нижняя панель действий
           bottomNavigationBar: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -391,13 +390,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: SafeArea(
               child: Row(
                 children: [
-                  // Кнопка добавления в корзину
                   Expanded(
                     flex: 2,
                     child: SizedBox(
                       height: 54,
                       child: OutlinedButton.icon(
                         onPressed: () {
+                          context.read<CartBloc>().add(
+                            CartAddRequested(
+                              CartItem(
+                                productId: product.id,
+                                name: product.name,
+                                price: product.price,
+                                image: product.image ?? '',
+                                quantity: 1,
+                              ),
+                            ),
+                          );
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -427,8 +436,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-
-                  // Кнопка "Купить сейчас"
                   Expanded(
                     flex: 3,
                     child: SizedBox(

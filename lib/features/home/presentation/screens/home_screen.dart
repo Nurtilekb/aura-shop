@@ -1,5 +1,7 @@
+import 'package:aurashop/bloc/products/products_bloc.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
+import 'package:aurashop/repositories/product_repository.dart';
 import 'package:aurashop/shared/models/product_model.dart';
 import 'package:aurashop/shared/widgets/app_input_widget.dart';
 import 'package:aurashop/shared/widgets/banner_widget.dart';
@@ -19,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final ScrollController scrollController;
+  final ProductRepository _productRepository = ProductRepository();
   @override
   void initState() {
     super.initState();
@@ -50,272 +53,297 @@ class _HomeScreenState extends State<HomeScreen> {
         'Заказать',
       ],
     ];
-    final popularProducts = const [
-      Product(
-        name: 'Aura Run 2.0',
-        price: '4 990 ₽',
-        rating: 4.8,
-        discount: 30,
-        description:
-            'Легкие беговые кроссовки нового поколения с амортизирующей подошвой и дышащей сеткой.',
-      ),
-      Product(
-        name: 'Кеды Classic White',
-        price: '3 290 ₽',
-        rating: 4.6,
-        description:
-            'Универсальные кожаные кеды в минималистичном стиле, подходящие к любому повседневному образу.',
-      ),
-      Product(
-        name: 'Ботинки Trek Pro',
-        price: '7 990 ₽',
-        rating: 4.9,
-        description:
-            'Прочные всепогодные ботинки с водонепроницаемой мембраной и усиленной поддержкой стопы.',
-      ),
-    ];
     final imagesPath1 = ["👕", "👟", "📱", "🏠"];
     final categoryNames = ["Одежда", "Обувь", "Гаджеты", "Дом"];
-    return Scaffold(
-      backgroundColor: Colors.grey.shade50,
-      body: SafeArea(
-        child: BlocBuilder<ThemeCubit, ThemeState>(
-          builder: (context, state) {
-            return CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
+    return BlocBuilder<ProductsBloc, ProductsState>(
+      builder: (context, _) {
+        return Scaffold(
+          backgroundColor: Colors.grey.shade50,
+          body: SafeArea(
+            child: BlocBuilder<ThemeCubit, ThemeState>(
+              builder: (context, state) {
+                return CustomScrollView(
+                  controller: scrollController,
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(height: 4),
-                            Text(
-                              'Доставка в Москву',
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Доставка в Москву',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                const Text(
+                                  'Привет, Анна',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.black,
+                                    letterSpacing: -0.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            IconWithBack(
+                              ontap: () {
+                                context.router.push(const SearchRoute());
+                              },
+                              backroundcolor: Colors.white,
+                              forborder: Border.all(
+                                width: 0.5,
+                                color: Colors.grey,
+                              ),
+                              bordRadius: BorderRadius.circular(15),
+                              emoji: '🔍',
+                              emojiSizes: 25,
+                              sizes: 50,
+                            ),
+                            const SizedBox(width: 10),
+                            IconWithBack(
+                              ontap: () {},
+                              backroundcolor: Colors.white,
+                              forborder: Border.all(
+                                width: 0.5,
+                                color: Colors.grey,
+                              ),
+                              bordRadius: BorderRadius.circular(15),
+                              emoji: '🛍',
+                              emojiSizes: 25,
+                              sizes: 50,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    PinnedHeaderSliver(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const AppInputWidget(
+                            isBorder: false,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 15,
+                            ),
+                            filledColor: Colors.transparent,
+                            hintText: 'Поиск товаров...',
+                            leading: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text('🔍', style: TextStyle(fontSize: 20)),
+                            ),
+                            trailing: Icon(Icons.settings, size: 15),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: BannerWidget(
+                          state: state,
+                          height: 200,
+                          banners: banners
+                              .map(
+                                (b) => BannerData(
+                                  title: b[0] as String,
+                                  subtitle: b[1] as String,
+                                  icon: b[2] as IconData,
+                                  actionText: b[4] as String,
+                                  gradient: LinearGradient(
+                                    colors: b[3] as List<Color>,
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  onTap: () {},
+                                ),
+                              )
+                              .toList(),
+                          color: Colors.purple,
+                        ),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Категории',
                               style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey.shade600,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            const Text(
-                              'Привет, Анна',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.black,
-                                letterSpacing: -0.5,
+                            TextButton(
+                              onPressed: () {
+                                context.router.push(const AllCategoriesRoute());
+                              },
+                              child: Text(
+                                'Все',
+                                style: TextStyle(
+                                  color: state.directAccentColor,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        const Spacer(),
-                        IconWithBack(
-                          ontap: () {
-                            context.router.push(const SearchRoute());
-                          },
-                          backroundcolor: Colors.white,
-                          forborder: Border.all(width: 0.5, color: Colors.grey),
-                          bordRadius: BorderRadius.circular(15),
-                          emoji: '🔍',
-                          emojiSizes: 25,
-                          sizes: 50,
-                        ),
-                        const SizedBox(width: 10),
-                        IconWithBack(
-                          ontap: () {},
-                          backroundcolor: Colors.white,
-                          forborder: Border.all(width: 0.5, color: Colors.grey),
-                          bordRadius: BorderRadius.circular(15),
-                          emoji: '🛍',
-                          emojiSizes: 25,
-                          sizes: 50,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                PinnedHeaderSliver(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const AppInputWidget(
-                        isBorder: false,
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 15,
-                        ),
-                        filledColor: Colors.transparent,
-                        hintText: 'Поиск товаров...',
-                        leading: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('🔍', style: TextStyle(fontSize: 20)),
-                        ),
-                        trailing: Icon(Icons.settings, size: 15),
                       ),
                     ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: BannerWidget(
-                      state: state,
-                      height: 200,
-                      banners: banners
-                          .map(
-                            (b) => BannerData(
-                              title: b[0] as String,
-                              subtitle: b[1] as String,
-                              icon: b[2] as IconData,
-                              actionText: b[4] as String,
-                              gradient: LinearGradient(
-                                colors: b[3] as List<Color>,
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              onTap: () {},
-                            ),
-                          )
-                          .toList(),
-                      color: Colors.purple,
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Категории',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        child: SizedBox(
+                          height: 100,
+                          child: ListView.separated(
+                            physics: const NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 4,
+                            separatorBuilder: (_, _) =>
+                                const SizedBox(width: 30),
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  IconWithBack(
+                                    ontap: () {
+                                      context.router.push(
+                                        const AllCategoriesRoute(),
+                                      );
+                                    },
+                                    backroundcolor: Colors.grey.shade200,
+                                    emojiSizes: 30,
+                                    bordRadius: BorderRadius.circular(18),
+                                    emoji: imagesPath1[index],
+                                    sizes: 70,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    categoryNames[index],
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            context.router.push(const AllCategoriesRoute());
-                          },
-                          child: Text(
-                            'Все',
-                            style: TextStyle(
-                              color: state.directAccentColor,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    child: SizedBox(
-                      height: 100,
-                      child: ListView.separated(
-                        physics: const NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 4,
-                        separatorBuilder: (_, _) => const SizedBox(width: 30),
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              IconWithBack(
-                                ontap: () {
-                                  context.router.push(
-                                    const AllCategoriesRoute(),
-                                  );
-                                },
-                                backroundcolor: Colors.grey.shade200,
-                                emojiSizes: 30,
-                                bordRadius: BorderRadius.circular(18),
-                                emoji: imagesPath1[index],
-                                sizes: 70,
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Популярное',
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                categoryNames[index],
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                context.router.push(const AllCategoriesRoute());
+                              },
+                              child: Text(
+                                'Смотреть все',
                                 style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade700,
+                                  color: state.directAccentColor,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Популярное',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            context.router.push(const AllCategoriesRoute());
-                          },
-                          child: Text(
-                            'Смотреть все',
-                            style: TextStyle(
-                              color: state.directAccentColor,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 30),
-                  sliver: SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 250,
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => Productcard(
-                          indexx: index,
-                          product: popularProducts[index],
-                        ),
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(width: 20),
-                        itemCount: popularProducts.length,
                       ),
                     ),
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(20, 4, 20, 30),
+                      sliver: SliverToBoxAdapter(
+                        child: StreamBuilder<List<Product>>(
+                          stream: _productRepository.watchProducts(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return SizedBox(
+                                height: 250,
+                                child: Center(
+                                  child: Text(
+                                    'Не удалось загрузить товары: ${snapshot.error}',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              );
+                            }
+
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const SizedBox(
+                                height: 250,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            }
+
+                            final products = snapshot.data ?? const <Product>[];
+                            if (products.isEmpty) {
+                              return const SizedBox(
+                                height: 250,
+                                child: Center(
+                                  child: Text('Товары пока не добавлены'),
+                                ),
+                              );
+                            }
+
+                            return SizedBox(
+                              height: 250,
+                              child: ListView.separated(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) => Productcard(
+                                  indexx: index,
+                                  product: products[index],
+                                  price: products[index].price,
+                                ),
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(width: 20),
+                                itemCount: products.length,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,5 +1,8 @@
+import 'package:aurashop/bloc/cart/cart_bloc.dart';
+import 'package:aurashop/bloc/cart/cart_event.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
+import 'package:aurashop/shared/models/cart_model.dart';
 import 'package:aurashop/shared/models/product_model.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +14,7 @@ class Productcard extends StatelessWidget {
     super.key,
     required this.indexx,
     this.title = 'Товар',
-    this.price = '2 499 ₽',
+    required this.price,
     this.rating = 4.8,
     this.onAddToCart,
     this.isFavorite,
@@ -23,7 +26,7 @@ class Productcard extends StatelessWidget {
 
   final int indexx;
   final String title;
-  final String price;
+  final double price;
   final double rating;
   final VoidCallback? onAddToCart;
   final bool? isFavorite;
@@ -161,7 +164,7 @@ class Productcard extends StatelessWidget {
                                     children: [
                                       Text(
                                         maxLines: 1,
-                                        effectiveProduct.price,
+                                        effectiveProduct.price.toString(),
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
@@ -170,17 +173,31 @@ class Productcard extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                // Кнопка корзины
                                 GestureDetector(
-                                  onTap: () {
-                                    // поглощаем тап — не всплывает к родителю
-                                  },
+                                  onTap: () {},
                                   behavior: HitTestBehavior.opaque,
                                   child: _CartButton(
                                     accentColor: state.directAccentColor,
                                     onTap:
                                         onAddToCart ??
                                         () {
+                                          if (effectiveProduct.id.isEmpty) {
+                                            return;
+                                          }
+
+                                          context.read<CartBloc>().add(
+                                            CartAddRequested(
+                                              CartItem(
+                                                productId: effectiveProduct.id,
+                                                name: effectiveProduct.name,
+                                                price: effectiveProduct.price,
+                                                image:
+                                                    effectiveProduct.image ??
+                                                    '',
+                                                quantity: 1,
+                                              ),
+                                            ),
+                                          );
                                           ScaffoldMessenger.of(
                                             context,
                                           ).showSnackBar(
