@@ -1,4 +1,3 @@
-// lib/screens/all_categories_screen.dart
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/repositories/product_repository.dart';
@@ -83,7 +82,6 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
           return SafeArea(
             child: CustomScrollView(
               slivers: [
-                // AppBar
                 SliverAppBar(
                   backgroundColor: themeColor.scaffoldBackgroundColor,
                   foregroundColor: themeColor.colorScheme.onSurface,
@@ -111,16 +109,12 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
                   actionsPadding: const EdgeInsets.only(right: 20),
                 ),
 
-                // Счетчик товаров
                 SliverToBoxAdapter(child: _buildProductCounter(state)),
 
-                // Категории
                 SliverToBoxAdapter(child: _buildCategories(activeColor)),
 
-                // Фильтры и сортировка
                 SliverToBoxAdapter(child: _buildFilters(activeColor, state)),
 
-                // Стрим продуктов
                 _buildProductsStream(activeColor),
               ],
             ),
@@ -202,7 +196,6 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
     );
   }
 
-  // Получение стрима с фильтрацией и сортировкой
   Stream<List<Product>> _getFilteredProductsStream() {
     return _productRepository.watchProducts().map((products) {
       final selectedCategory = _categories[_selectedCategoryIndex];
@@ -210,21 +203,15 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
         if (selectedCategory == 'Все') return true;
         return p.category == selectedCategory;
       }).toList();
-
-      // 2. Фильтрация по цене (если активна)
       if (_isFilterActive) {
         filtered = filtered.where((p) {
           final price = _extractPrice(p.price.toString());
           return price >= _priceRange.start && price <= _priceRange.end;
         }).toList();
-
-        // Фильтрация по наличию
         if (_onlyInStock) {
           filtered = filtered.where((p) => p.stock == true).toList();
         }
       }
-
-      // 3. Сортировка
       switch (_selectedSort) {
         case ProductSortOption.popular:
           filtered.sort((a, b) => b.reviewsCount.compareTo(a.reviewsCount));
@@ -257,7 +244,6 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
     return int.tryParse(cleaned) ?? 0;
   }
 
-  // Основной виджет со стримом продуктов
   Widget _buildProductsStream(Color activeColor) {
     return StreamBuilder<List<Product>>(
       stream: _getFilteredProductsStream(),
@@ -274,14 +260,12 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
               ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) =>
-                    const Productcard(indexx: 0, isLoading: true, price: 1),
+                    Productcard(indexx: 0, isLoading: true, price: 1),
                 childCount: 6,
               ),
             ),
           );
         }
-
-        // Ошибка
         if (snapshot.hasError) {
           return SliverFillRemaining(
             hasScrollBody: false,
@@ -317,10 +301,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
             ),
           );
         }
-
-        // Данные
         final products = snapshot.data ?? [];
-
         if (products.isEmpty) {
           return SliverFillRemaining(
             hasScrollBody: false,
@@ -356,8 +337,6 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
             ),
           );
         }
-
-        // Список товаров
         return SliverPadding(
           padding: const EdgeInsets.all(20),
           sliver: SliverGrid(

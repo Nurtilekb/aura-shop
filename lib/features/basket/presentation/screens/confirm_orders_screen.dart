@@ -60,11 +60,10 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> {
                       SizedBox(height: 10),
                       Center(
                         child: Text(
-                          'Бесплатно',
+                          '245 ₽',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 16,
-                            color: Colors.green,
                           ),
                         ),
                       ),
@@ -81,10 +80,11 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> {
                       SizedBox(height: 10),
                       Center(
                         child: Text(
-                          '99 ₽',
+                          'Бесплатно',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 16,
+                            color: Colors.green,
                           ),
                         ),
                       ),

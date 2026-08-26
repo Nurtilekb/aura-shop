@@ -3,7 +3,7 @@ import 'package:aurashop/bloc/favorites/favorites_bloc.dart';
 import 'package:aurashop/bloc/favorites/favorites_event.dart';
 import 'package:aurashop/bloc/favorites/favorites_state.dart';
 import 'package:aurashop/repositories/cart_repository.dart';
-import 'package:aurashop/shared/models/cart_model.dart';
+import 'package:aurashop/shared/widgets/production_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -135,16 +135,10 @@ class _FavoritesView extends StatelessWidget {
                           child: Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
+                              color: const Color.fromARGB(255, 224, 223, 223),
                               borderRadius: const BorderRadius.vertical(
                                 top: Radius.circular(12),
                               ),
-                              image: item.image != null
-                                  ? DecorationImage(
-                                      image: NetworkImage(item.image!),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : null,
                             ),
                             child: item.image == null
                                 ? const Icon(
@@ -158,7 +152,7 @@ class _FavoritesView extends StatelessWidget {
                         Expanded(
                           flex: 1,
                           child: Padding(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(12),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -201,7 +195,6 @@ class _FavoritesView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // Кнопка удаления из избранного
                   Positioned(
                     top: 8,
                     right: 8,

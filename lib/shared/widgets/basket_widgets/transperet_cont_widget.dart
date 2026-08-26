@@ -58,7 +58,7 @@ class TransperetContWidget extends StatelessWidget {
           isIncenterWidget ??
               TextButton(
                 child: Text(
-                  'РР·Рј.',
+                  'Изм.',
                   style: TextStyle(color: colorScheme.primary),
                 ),
 

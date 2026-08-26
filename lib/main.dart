@@ -1,4 +1,5 @@
 import 'package:aurashop/bloc/cart/cart_bloc.dart';
+import 'package:aurashop/bloc/favorites/favorites_bloc.dart';
 import 'package:aurashop/bloc/messages/messages_bloc.dart';
 import 'package:aurashop/bloc/products/products_bloc.dart';
 import 'package:aurashop/core/routing/app_router.dart';
@@ -39,6 +40,10 @@ class MyApp extends StatelessWidget {
       providers: [RepositoryProvider(create: (_) => CartRepository())],
       child: MultiBlocProvider(
         providers: [
+          BlocProvider(
+            create: (context) =>
+                FavoritesBloc(repository: context.read<CartRepository>()),
+          ),
           BlocProvider(
             create: (context) =>
                 CartBloc(repository: context.read<CartRepository>()),

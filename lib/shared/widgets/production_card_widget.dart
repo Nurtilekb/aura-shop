@@ -1,9 +1,14 @@
 import 'package:aurashop/bloc/cart/cart_bloc.dart';
 import 'package:aurashop/bloc/cart/cart_event.dart';
+import 'package:aurashop/bloc/favorites/favorites_bloc.dart';
+import 'package:aurashop/bloc/favorites/favorites_event.dart';
+import 'package:aurashop/bloc/favorites/favorites_state.dart';
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/shared/models/cart_model.dart';
 import 'package:aurashop/shared/models/product_model.dart';
+import 'package:aurashop/shared/widgets/custom_widgets/cart_button.dart';
+import 'package:aurashop/shared/widgets/custom_widgets/favorites_button.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -72,7 +77,6 @@ class Productcard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ── Фото ──────────────────────────────────────────
                       Expanded(
                         child: Stack(
                           children: [
@@ -118,7 +122,6 @@ class Productcard extends StatelessWidget {
                         ),
                       ),
 
-                      // ── Информация ───────────────────────────────────
                       Padding(
                         padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
                         child: Column(
@@ -134,7 +137,6 @@ class Productcard extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 2),
-                            // Рейтинг
                             Row(
                               children: [
                                 const Icon(
@@ -156,7 +158,6 @@ class Productcard extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                // Цена
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -176,7 +177,7 @@ class Productcard extends StatelessWidget {
                                 GestureDetector(
                                   onTap: () {},
                                   behavior: HitTestBehavior.opaque,
-                                  child: _CartButton(
+                                  child: CartButton(
                                     accentColor: state.directAccentColor,
                                     onTap:
                                         onAddToCart ??
@@ -223,94 +224,44 @@ class Productcard extends StatelessWidget {
                   ),
                 ),
 
-                // ── Кнопка избранного ─────────────────────────────────
-                Positioned(
-                  top: 10,
-                  right: 10,
-                  child: _FavoriteButton(
-                    isFavorite: isFavorite == true,
-                    accentColor: state.directAccentColor,
-                    onTap:
-                        onFavoriteTap ??
-                        () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '${effectiveProduct.name} добавлен в избранное',
-                              ),
-                              duration: const Duration(seconds: 1),
+                BlocBuilder<FavoritesBloc, FavoritesState>(
+                  builder: (context, favoritesState) {
+                    final isFavoriteFromState =
+                        favoritesState is FavoritesLoaded
+                        ? favoritesState.items.any(
+                            (item) => item.productId == effectiveProduct.id,
+                          )
+                        : isFavorite == true;
+
+                    return Positioned(
+                      top: 10,
+                      right: 10,
+                      child: FavoriteButton(
+                        isFavorite: isFavoriteFromState,
+                        accentColor: state.directAccentColor,
+                        onTap: () {
+                          if (effectiveProduct.id.isEmpty) return;
+
+                          if (onFavoriteTap != null) {
+                            onFavoriteTap!();
+                            return;
+                          }
+
+                          context.read<FavoritesBloc>().add(
+                            FavoritesToggleRequested(
+                              CartItem.fromProduct(effectiveProduct),
                             ),
                           );
                         },
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
           ),
         );
       },
-    );
-  }
-}
-
-// ── Вспомогательные кнопки ────────────────────────────────────────────────────
-
-class _CartButton extends StatelessWidget {
-  const _CartButton({required this.accentColor, required this.onTap});
-
-  final Color accentColor;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-          color: accentColor,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: const Icon(Icons.add, color: Colors.white, size: 16),
-      ),
-    );
-  }
-}
-
-class _FavoriteButton extends StatelessWidget {
-  const _FavoriteButton({
-    required this.isFavorite,
-    required this.accentColor,
-    required this.onTap,
-  });
-
-  final bool isFavorite;
-  final Color accentColor;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.9),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 4,
-              offset: const Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Icon(
-          isFavorite ? Icons.favorite : Icons.favorite_border,
-          color: isFavorite ? Colors.red : Colors.grey.shade500,
-          size: 16,
-        ),
-      ),
     );
   }
 }
