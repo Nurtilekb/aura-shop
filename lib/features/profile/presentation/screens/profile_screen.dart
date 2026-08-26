@@ -20,9 +20,6 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        if (state is AuthLogoutRequested) {
-          return Center(child: CircularProgressIndicator());
-        }
         final firebaseUser = FirebaseAuth.instance.currentUser;
         final authUser = state is AuthAuthenticated ? state.user : null;
         final name = authUser?.name.isNotEmpty == true
@@ -34,133 +31,144 @@ class ProfileScreen extends StatelessWidget {
         final initials =
             authUser?.initials ??
             (name.isNotEmpty ? name[0].toUpperCase() : '?');
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                      vertical: 4,
-                    ),
-                    child: UserProfileHeader(
-                      name: name,
-                      email: email,
-                      userId: firebaseUser?.uid,
-                      initials: initials,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                      vertical: 4,
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: StatCard(value: '12', label: 'Заказов'),
+        return Stack(
+          children: [
+            Scaffold(
+              backgroundColor: Colors.white,
+              body: SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0,
+                          vertical: 4,
                         ),
-                        SizedBox(width: 12),
-                        Expanded(
-                          child: StatCard(value: '6', label: 'Избранное'),
-                        ),
-                        SizedBox(width: 12),
-                        Expanded(
-                          child: StatCard(value: '340', label: 'Бонусы'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  MenuItem(
-                    emaji: '📦',
-                    title: 'Мои заказы',
-                    onTap: () {
-                      context.router.push(OrdersRoute());
-                    },
-                  ),
-                  MenuItem(
-                    emaji: '♡',
-                    title: 'Избранное',
-                    onTap: () {
-                      context.router.push(const FavoritesRoute());
-                    },
-                  ),
-                  MenuItem(
-                    emaji: '📍',
-                    title: 'Мои адреса',
-                    onTap: () {
-                      context.router.push(const MyAdressesRoute());
-                    },
-                  ),
-                  MenuItem(
-                    emaji: '⚙',
-                    title: 'Настройки',
-                    onTap: () {
-                      context.router.push(const SettingsRoute());
-                    },
-                  ),
-                  MenuItem(
-                    emaji: '💬',
-                    title: 'Поддержка',
-                    badgeText: 'Онлайн',
-                    onTap: () {
-                      context.router.push(
-                        ChatsRoute(
-                          numName: 'Поддержка',
-                          isOnline: true,
-                          imageAvatar: '',
-                          userId: AppConstants.supportAdminUid,
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                      vertical: 4,
-                    ),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 52,
-                      child: PressedButton(
-                        height: 60,
-                        onPressed: () {
-                          showCustomDialog(
-                            context: context,
-                            type: DialogType.warning,
-                            title: 'Выйти с аккаунта?',
-                            description:
-                                'Вы действительно хотите выйти из панели? Это действие нельзя будет отменить.',
-                            accentColor: const Color(0xFFE53E3E),
-                            primaryButtonText: 'Да, выйти',
-                            onPrimaryPressed: () {
-                              context.read<AuthBloc>().add(
-                                AuthLogoutRequested(),
-                              );
-                            },
-                            secondaryButtonText: 'Отмена',
-                          );
-                        },
-                        backgroundColor: Colors.white,
-                        borderColor: Colors.grey,
-                        text: 'Выйти',
-                        textstyle: const TextStyle(
-                          color: Colors.redAccent,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                        child: UserProfileHeader(
+                          name: name,
+                          email: email,
+                          userId: firebaseUser?.uid,
+                          initials: initials,
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 24),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.0,
+                          vertical: 4,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: StatCard(value: '12', label: 'Заказов'),
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: StatCard(value: '6', label: 'Избранное'),
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: StatCard(value: '340', label: 'Бонусы'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      MenuItem(
+                        emaji: '📦',
+                        title: 'Мои заказы',
+                        onTap: () {
+                          context.router.push(OrdersRoute());
+                        },
+                      ),
+                      MenuItem(
+                        emaji: '♡',
+                        title: 'Избранное',
+                        onTap: () {
+                          context.router.push(const FavoritesRoute());
+                        },
+                      ),
+                      MenuItem(
+                        emaji: '📍',
+                        title: 'Мои адреса',
+                        onTap: () {
+                          context.router.push(const MyAdressesRoute());
+                        },
+                      ),
+                      MenuItem(
+                        emaji: '⚙',
+                        title: 'Настройки',
+                        onTap: () {
+                          context.router.push(const SettingsRoute());
+                        },
+                      ),
+                      MenuItem(
+                        emaji: '💬',
+                        title: 'Поддержка',
+                        badgeText: 'Онлайн',
+                        onTap: () {
+                          context.router.push(
+                            ChatsRoute(
+                              numName: 'Поддержка',
+                              isOnline: true,
+                              imageAvatar: '',
+                              userId: AppConstants.supportAdminUid,
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0,
+                          vertical: 4,
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 52,
+                          child: PressedButton(
+                            height: 60,
+                            onPressed: () {
+                              showCustomDialog(
+                                context: context,
+                                type: DialogType.warning,
+                                title: 'Выйти с аккаунта?',
+                                description:
+                                    'Вы действительно хотите выйти из панели? Это действие нельзя будет отменить.',
+                                accentColor: const Color(0xFFE53E3E),
+                                primaryButtonText: 'Да, выйти',
+                                onPrimaryPressed: () {
+                                  context.read<AuthBloc>().add(
+                                    AuthLogoutRequested(),
+                                  );
+                                },
+                                secondaryButtonText: 'Отмена',
+                              );
+                            },
+                            backgroundColor: Colors.white,
+                            borderColor: Colors.grey,
+                            text: 'Выйти',
+                            textstyle: const TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
-          ),
+            if (state is AuthLoading)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+              ),
+          ],
         );
       },
     );
