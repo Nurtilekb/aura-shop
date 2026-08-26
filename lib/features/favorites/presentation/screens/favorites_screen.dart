@@ -1,14 +1,30 @@
 ﻿// lib/screens/favorites_screen.dart
+import 'package:aurashop/bloc/favorites/favorites_bloc.dart';
+import 'package:aurashop/bloc/favorites/favorites_event.dart';
+import 'package:aurashop/bloc/favorites/favorites_state.dart';
 import 'package:aurashop/repositories/cart_repository.dart';
 import 'package:aurashop/shared/models/cart_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final cartRepository = CartRepository();
+    return BlocProvider(
+      create: (context) => FavoritesBloc(repository: CartRepository()),
+      child: const _FavoritesView(),
+    );
+  }
+}
+
+class _FavoritesView extends StatelessWidget {
+  const _FavoritesView();
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = context.read<FavoritesBloc>();
 
     return Scaffold(
       appBar: AppBar(
@@ -31,7 +47,7 @@ class FavoritesScreen extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        cartRepository.clearFavorites();
+                        bloc.add(FavoritesClearRequested());
                         Navigator.pop(ctx);
                       },
                       child: const Text(
@@ -46,14 +62,13 @@ class FavoritesScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: StreamBuilder<List<CartItem>>(
-        stream: cartRepository.watchFavorites(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: BlocBuilder<FavoritesBloc, FavoritesState>(
+        builder: (context, state) {
+          if (state is FavoritesLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (snapshot.hasError) {
+          if (state is FavoritesError) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +76,7 @@ class FavoritesScreen extends StatelessWidget {
                   const Text('Ошибка загрузки'),
                   const SizedBox(height: 8),
                   Text(
-                    snapshot.error.toString(),
+                    state.message,
                     style: TextStyle(color: Colors.grey.shade600),
                   ),
                 ],
@@ -69,7 +84,11 @@ class FavoritesScreen extends StatelessWidget {
             );
           }
 
-          final items = snapshot.data ?? [];
+          if (state is! FavoritesLoaded) {
+            return const Center(child: Text('Нет данных'));
+          }
+
+          final items = state.items;
 
           if (items.isEmpty) {
             return const Center(
@@ -188,7 +207,7 @@ class FavoritesScreen extends StatelessWidget {
                     right: 8,
                     child: GestureDetector(
                       onTap: () {
-                        cartRepository.removeFromFavorites(item.productId);
+                        bloc.add(FavoritesRemoveRequested(item.productId));
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Удалено из избранного'),
