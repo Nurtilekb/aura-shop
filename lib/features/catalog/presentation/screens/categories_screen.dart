@@ -206,7 +206,6 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
   // Получение стрима с фильтрацией и сортировкой
   Stream<List<Product>> _getFilteredProductsStream() {
     return _productRepository.watchProducts().map((products) {
-      // 1. Фильтрация по категории
       final selectedCategory = _categories[_selectedCategoryIndex];
       List<Product> filtered = products.where((p) {
         if (selectedCategory == 'Все') return true;
@@ -223,35 +222,6 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
         // Фильтрация по наличию
         if (_onlyInStock) {
           filtered = filtered.where((p) => p.stock == true).toList();
-        }
-
-        // Фильтрация по размерам (если есть поле sizes)
-        if (_selectedSizes.isNotEmpty && filtered.isNotEmpty) {
-          // // Проверяем, есть ли у продукта поле sizes
-          // final firstProduct = filtered.first;
-          // if (firstProduct is ProductWithSizes) {
-          //   filtered = filtered.where((p) {
-          //     final productWithSizes = p as ProductWithSizes;
-          //     return productWithSizes.sizes?.any(
-          //           (size) => _selectedSizes.contains(size),
-          //         ) ??
-          //         false;
-          //   }).toList();
-          // }
-        }
-
-        // Фильтрация по цветам (если есть поле colors)
-        if (_selectedColors.isNotEmpty && filtered.isNotEmpty) {
-          // final firstProduct = filtered.first;
-          // if (firstProduct is ProductWithColors) {
-          //   filtered = filtered.where((p) {
-          //     final productWithColors = p as ProductWithColors;
-          //     return productWithColors.colors?.any(
-          //           (color) => _selectedColors.contains(color),
-          //         ) ??
-          //         false;
-          //   }).toList();
-          // }
         }
       }
 
@@ -289,7 +259,6 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
     return StreamBuilder<List<Product>>(
       stream: _getFilteredProductsStream(),
       builder: (context, snapshot) {
-        // Загрузка
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SliverPadding(
             padding: const EdgeInsets.all(20),
@@ -406,7 +375,6 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
     );
   }
 
-  // Диалог сортировки
   void _showSortDialog(BuildContext context, ThemeState state) {
     showModalBottomSheet(
       context: context,
