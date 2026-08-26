@@ -19,7 +19,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   int _selectedSizeIndex = 2; // e.g. '41'
   int _selectedColorIndex = 0;
   bool _isFavorite = false;
-  int _quantity = 1;
+  int _quantity = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -157,8 +157,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ],
                   ),
                 ),
-
-                // 2. Основная информация
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -167,7 +165,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Категория и статус наличия
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -213,8 +210,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ],
                       ),
                       const SizedBox(height: 8),
-
-                      // Название товара
                       Text(
                         product.name,
                         style: const TextStyle(
@@ -223,8 +218,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                       ),
                       const SizedBox(height: 8),
-
-                      // Рейтинг и отзывы
                       Row(
                         children: [
                           const Icon(
@@ -252,160 +245,47 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Цена
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text(
-                            product.price,
-                            style: const TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                          if (product.discount != null) ...[
-                            const SizedBox(width: 12),
-                            Text(
-                              '${((int.tryParse(product.price.replaceAll(RegExp(r'[^\d]'), '')) ?? 0) * 1.3).toInt()} ₽',
-                              style: TextStyle(
-                                fontSize: 16,
-                                decoration: TextDecoration.lineThrough,
-                                color: colorScheme.outline,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-
-                      // 3. Выбор цвета
-                      const Text(
-                        'Цвет',
+                      // ЦенаText
+                      Text(
+                        'Цена',
+                        maxLines: 1,
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
+                          color: themeState.directAccentColor,
+                          letterSpacing: 1.1,
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: List.generate(
-                          product.id.length,
-                          (index) => GestureDetector(
-                            onTap: () =>
-                                setState(() => _selectedColorIndex = index),
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 12),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: _selectedColorIndex == index
-                                    ? themeState.directAccentColor.withValues(
-                                        alpha: 0.12,
-                                      )
-                                    : colorScheme.surfaceContainerHighest
-                                          .withValues(alpha: 0.5),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: _selectedColorIndex == index
-                                      ? themeState.directAccentColor
-                                      : Colors.transparent,
-                                  width: 1.5,
-                                ),
-                              ),
-                              child: Text(
-                                product.id[index],
-                                style: TextStyle(
-                                  fontWeight: _selectedColorIndex == index
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                  color: _selectedColorIndex == index
-                                      ? themeState.directAccentColor
-                                      : colorScheme.onSurface,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // 4. Выбор размера
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Размер (EU)',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Таблица размеров открыта'),
-                                  duration: Duration(seconds: 1),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              'Таблица размеров',
-                              style: TextStyle(
-                                color: themeState.directAccentColor,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
                       SizedBox(
-                        height: 48,
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: product.name.length,
-                          separatorBuilder: (_, _) => const SizedBox(width: 10),
-                          itemBuilder: (context, index) {
-                            final isSelected = _selectedSizeIndex == index;
-                            return GestureDetector(
-                              onTap: () =>
-                                  setState(() => _selectedSizeIndex = index),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
-                                width: 48,
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? themeState.directAccentColor
-                                      : colorScheme.surfaceContainerHighest
-                                            .withValues(alpha: 0.5),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    product.name[index],
-                                    style: TextStyle(
-                                      color: isSelected
-                                          ? Colors.white
-                                          : colorScheme.onSurface,
-                                      fontWeight: isSelected
-                                          ? FontWeight.bold
-                                          : FontWeight.w500,
-                                      fontSize: 15,
-                                    ),
-                                  ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            Text(
+                              product.price,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 26,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            if (product.discount != null) ...[
+                              const SizedBox(width: 12),
+                              Text(
+                                '${((int.tryParse(product.price.replaceAll(RegExp(r'[^\d]'), '')) ?? 0) * 1.3).toInt()} ₽',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  decoration: TextDecoration.lineThrough,
+                                  color: colorScheme.outline,
                                 ),
                               ),
-                            );
-                          },
+                            ],
+                            SizedBox(width: 10),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 24),
-
-                      // Количество
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -419,7 +299,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           Row(
                             children: [
                               IconButton.filledTonal(
-                                onPressed: _quantity > 1
+                                onPressed: _quantity > 0
                                     ? () => setState(() => _quantity--)
                                     : null,
                                 icon: const Icon(Icons.remove, size: 18),

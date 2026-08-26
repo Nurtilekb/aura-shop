@@ -160,6 +160,7 @@ class Productcard extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
+                                        maxLines: 1,
                                         effectiveProduct.price,
                                         style: const TextStyle(
                                           fontSize: 14,
