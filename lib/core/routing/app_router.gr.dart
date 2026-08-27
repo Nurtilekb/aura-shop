@@ -334,7 +334,6 @@ class EditProfileRoute extends _i28.PageRouteInfo<EditProfileRouteArgs> {
   EditProfileRoute({
     _i32.Key? key,
     String? currentName,
-    String? currentId,
     String? birthday,
     String? currentEmail,
     String? initials,
@@ -344,7 +343,6 @@ class EditProfileRoute extends _i28.PageRouteInfo<EditProfileRouteArgs> {
          args: EditProfileRouteArgs(
            key: key,
            currentName: currentName,
-           currentId: currentId,
            birthday: birthday,
            currentEmail: currentEmail,
            initials: initials,
@@ -363,7 +361,6 @@ class EditProfileRoute extends _i28.PageRouteInfo<EditProfileRouteArgs> {
       return _i9.EditProfileScreen(
         key: args.key,
         currentName: args.currentName,
-
         birthday: args.birthday,
         currentEmail: args.currentEmail,
         initials: args.initials,
@@ -376,7 +373,6 @@ class EditProfileRouteArgs {
   const EditProfileRouteArgs({
     this.key,
     this.currentName,
-    this.currentId,
     this.birthday,
     this.currentEmail,
     this.initials,
@@ -386,8 +382,6 @@ class EditProfileRouteArgs {
 
   final String? currentName;
 
-  final String? currentId;
-
   final String? birthday;
 
   final String? currentEmail;
@@ -396,7 +390,7 @@ class EditProfileRouteArgs {
 
   @override
   String toString() {
-    return 'EditProfileRouteArgs{key: $key, currentName: $currentName, currentId: $currentId, birthday: $birthday, currentEmail: $currentEmail, initials: $initials}';
+    return 'EditProfileRouteArgs{key: $key, currentName: $currentName, birthday: $birthday, currentEmail: $currentEmail, initials: $initials}';
   }
 
   @override
@@ -405,7 +399,6 @@ class EditProfileRouteArgs {
     if (other is! EditProfileRouteArgs) return false;
     return key == other.key &&
         currentName == other.currentName &&
-        currentId == other.currentId &&
         birthday == other.birthday &&
         currentEmail == other.currentEmail &&
         initials == other.initials;
@@ -415,7 +408,6 @@ class EditProfileRouteArgs {
   int get hashCode =>
       key.hashCode ^
       currentName.hashCode ^
-      currentId.hashCode ^
       birthday.hashCode ^
       currentEmail.hashCode ^
       initials.hashCode;

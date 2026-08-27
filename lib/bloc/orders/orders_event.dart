@@ -24,6 +24,15 @@ final class CreateOrderRequested extends OrdersEvent {
   List<Object> get props => [items, totalAmount, deliveryMethod];
 }
 
+final class UpdateOrderStatusRequested extends OrdersEvent {
+  final String orderId;
+  final String status;
+  const UpdateOrderStatusRequested({
+    required this.orderId,
+    required this.status,
+  });
+}
+
 final class LoadOrdersRequested extends OrdersEvent {
   const LoadOrdersRequested();
 }

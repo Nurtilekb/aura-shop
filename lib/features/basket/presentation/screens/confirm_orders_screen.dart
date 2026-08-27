@@ -46,7 +46,7 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> {
                 context.router.push(OrdersRoute());
               },
               onContinueShopping: () {
-                context.router.replaceAll([const MainRoute()]);
+                context.router.pop();
               },
             ),
           );

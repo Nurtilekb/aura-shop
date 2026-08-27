@@ -257,7 +257,6 @@ class UserProfileHeader extends StatelessWidget {
                 EditProfileRoute(
                   currentEmail: email,
                   currentName: name,
-                  currentId: userId,
                   initials: initials,
                 ),
               );

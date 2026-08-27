@@ -12,6 +12,7 @@ class OrdersList extends StatelessWidget {
     this.emptySubtitle = 'Оформите первый заказ в корзине',
     this.emptyButtonText = 'Перейти в корзину',
     this.onEmptyPressed,
+    this.onStatusChanged,
   });
 
   final List<OrderItem> orders;
@@ -20,7 +21,7 @@ class OrdersList extends StatelessWidget {
   final String emptySubtitle;
   final String emptyButtonText;
   final VoidCallback? onEmptyPressed;
-
+  final ValueChanged<OrderItem>? onStatusChanged;
   @override
   Widget build(BuildContext context) {
     if (orders.isEmpty) {
@@ -51,7 +52,14 @@ class OrdersList extends StatelessWidget {
             padding: EdgeInsets.only(
               bottom: index < orders.length - 1 ? 10 : 0,
             ),
-            child: OrderCard(order: orders[index]),
+            child: OrderCard(
+              order: orders[index],
+              onStatusChanged: onStatusChanged == null
+                  ? null
+                  : (status) => onStatusChanged!(
+                      orders[index].copyWith(status: status),
+                    ),
+            ),
           ),
       ],
     );

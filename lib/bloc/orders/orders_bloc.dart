@@ -1,3 +1,4 @@
+import 'package:aurashop/shared/models/order_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +15,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     on<CreateOrderRequested>(_onCreateOrder);
     on<LoadOrdersRequested>(_onLoadOrders);
     on<CancelOrderRequested>(_onCancelOrder);
+    on<UpdateOrderStatusRequested>(_onUpdateOrderStatus);
   }
 
   Future<void> _onCreateOrder(
@@ -43,7 +45,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
 
       await orderRef.set(orderData);
 
-      // Очистить корзину после успешного создания заказа
       final cartSnapshot = await _firestore
           .collection('users')
           .doc(user.uid)
@@ -78,12 +79,24 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       final snapshot = await _firestore
           .collection('orders')
           .where('userId', isEqualTo: user.uid)
-          .orderBy('createdAt', descending: true)
           .get();
 
-      final orders = snapshot.docs
-          .map((doc) => {...doc.data(), 'id': doc.id})
-          .toList();
+      final rawOrders =
+          snapshot.docs
+              .map((doc) => <String, dynamic>{...doc.data(), 'id': doc.id})
+              .toList()
+            ..sort((a, b) {
+              final aDate = a['createdAt'] as Timestamp?;
+              final bDate = b['createdAt'] as Timestamp?;
+
+              if (aDate == null && bDate == null) return 0;
+              if (aDate == null) return 1;
+              if (bDate == null) return -1;
+
+              return bDate.toDate().compareTo(aDate.toDate());
+            });
+
+      final orders = rawOrders.map(OrderItem.fromMap).toList();
 
       emit(OrdersLoaded(orders));
     } catch (e) {
@@ -107,10 +120,25 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         'cancelledAt': FieldValue.serverTimestamp(),
       });
 
-      // Перезагрузить заказы после отмены
       add(const LoadOrdersRequested());
     } catch (e) {
       emit(OrdersError('Ошибка отмены заказа: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onUpdateOrderStatus(
+    UpdateOrderStatusRequested event,
+    Emitter<OrdersState> emit,
+  ) async {
+    try {
+      await _firestore.collection('orders').doc(event.orderId).update({
+        'status': event.status,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      add(const LoadOrdersRequested());
+    } catch (e) {
+      emit(OrdersError('Ошибка изменения статуса: $e'));
     }
   }
 }

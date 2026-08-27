@@ -12,7 +12,7 @@ final class OrdersInitial extends OrdersState {}
 final class OrdersLoading extends OrdersState {}
 
 final class OrdersLoaded extends OrdersState {
-  final List<dynamic> orders;
+  final List<OrderItem> orders;
 
   const OrdersLoaded(this.orders);
 
