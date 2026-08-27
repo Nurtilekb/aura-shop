@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class MessageRepository {
   final FirebaseFirestore _firestore;
@@ -29,7 +30,9 @@ class MessageRepository {
       'unreadCount': FieldValue.increment(1),
       'unreadCountByUser': {senderId: 0, recipientId: FieldValue.increment(1)},
     };
-    print('sendMessage: updating chat doc $chatId with $updateData');
+    if (kDebugMode) {
+      print('sendMessage: updating chat doc $chatId with $updateData');
+    }
 
     await chatDocRef.set(updateData, SetOptions(merge: true));
   }

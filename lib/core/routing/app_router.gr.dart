@@ -363,7 +363,7 @@ class EditProfileRoute extends _i28.PageRouteInfo<EditProfileRouteArgs> {
       return _i9.EditProfileScreen(
         key: args.key,
         currentName: args.currentName,
-        currentId: args.currentId,
+
         birthday: args.birthday,
         currentEmail: args.currentEmail,
         initials: args.initials,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class FavoriteButton extends StatelessWidget {
   const FavoriteButton({
+    super.key,
     required this.isFavorite,
     required this.accentColor,
     required this.onTap,

@@ -235,9 +235,11 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
             onPressed: () {
               final product = Product(
                 name: _nameController.text.trim(),
-                price: double.tryParse(
-                  _priceController.text.trim().replaceAll(',', '.'),
-                ) ?? 0,
+                price:
+                    double.tryParse(
+                      _priceController.text.trim().replaceAll(',', '.'),
+                    ) ??
+                    0,
                 description: _descriptionController.text.trim(),
                 category: _categoryController.text.trim(),
                 stock: _manageProducts,
@@ -249,9 +251,11 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
               } else {
                 final updatedProduct = widget.product2!.copyWith(
                   name: _nameController.text.trim(),
-                  price: double.tryParse(
-                    _priceController.text.trim().replaceAll(',', '.'),
-                  ) ?? 0,
+                  price:
+                      double.tryParse(
+                        _priceController.text.trim().replaceAll(',', '.'),
+                      ) ??
+                      0,
                   description: _descriptionController.text.trim(),
                   category: _categoryController.text.trim(),
                   stock: _manageProducts,
@@ -286,7 +290,7 @@ class DropdownExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
       focusColor: Theme.of(context).scaffoldBackgroundColor,
-      value: options.contains(selectedValue) ? selectedValue : null,
+      initialValue: options.contains(selectedValue) ? selectedValue : null,
       hint: const Text('Выберите категорию'),
       decoration: InputDecoration(
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),

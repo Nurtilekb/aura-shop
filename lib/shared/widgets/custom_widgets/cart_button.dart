@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CartButton extends StatelessWidget {
-  const CartButton({required this.accentColor, required this.onTap});
+  const CartButton({super.key, required this.accentColor, required this.onTap});
 
   final Color accentColor;
   final VoidCallback onTap;

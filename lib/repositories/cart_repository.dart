@@ -24,56 +24,98 @@ class CartRepository {
     return _firestore.collection('users').doc(userId).collection('cart');
   }
 
-  CollectionReference<Map<String, dynamic>> get _currentUserCart {
+  Future<void> addToCart(CartItem item) async {
     final user = _auth.currentUser;
     if (user == null) throw StateError('Пользователь не авторизован');
-    return _userCart(user.uid);
+
+    final cartRef = _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('cart')
+        .doc(item.productId);
+
+    await _firestore.runTransaction((transaction) async {
+      final doc = await transaction.get(cartRef);
+
+      if (doc.exists) {
+        final data = doc.data();
+        final currentQty = _safeGetInt(data?['quantity'], 0);
+        transaction.update(cartRef, {'quantity': currentQty + item.quantity});
+      } else {
+        transaction.set(cartRef, item.toMap());
+      }
+    });
   }
 
-  Future<void> addToCart(CartItem item) async {
-    final docRef = _currentUserCart.doc(item.productId);
-
-    final doc = await docRef.get();
-    if (doc.exists) {
-      final currentQty = doc.data()!['quantity'] as int;
-      await docRef.update({'quantity': currentQty + item.quantity});
-    } else {
-      await docRef.set(item.toMap());
-    }
+  int _safeGetInt(dynamic value, int defaultValue) {
+    if (value == null) return defaultValue;
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    return int.tryParse(value.toString()) ?? defaultValue;
   }
 
   Future<void> updateQuantity(String productId, int quantity) async {
+    final user = _auth.currentUser;
+    if (user == null) throw StateError('Пользователь не авторизован');
+
     if (quantity <= 0) {
       await removeFromCart(productId);
       return;
     }
-    await _currentUserCart.doc(productId).update({'quantity': quantity});
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('cart')
+        .doc(productId)
+        .update({'quantity': quantity});
   }
 
   Future<void> removeFromCart(String productId) async {
-    await _currentUserCart.doc(productId).delete();
+    final user = _auth.currentUser;
+    if (user == null) throw StateError('Пользователь не авторизован');
+
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('cart')
+        .doc(productId)
+        .delete();
   }
 
   Future<void> clearCart() async {
-    final snapshot = await _currentUserCart.get();
+    final user = _auth.currentUser;
+    if (user == null) throw StateError('Пользователь не авторизован');
+
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('cart')
+        .get();
 
     final batch = _firestore.batch();
-    for (var doc in snapshot.docs) {
+    for (final doc in snapshot.docs) {
       batch.delete(doc.reference);
     }
     await batch.commit();
   }
 
   Future<int> getCartCount() async {
-    final snapshot = await _currentUserCart.get();
-    return snapshot.docs.fold<int>(
-      0,
-      (sum, doc) => sum + (doc.data()['quantity'] as int? ?? 0),
-    );
+    final user = _auth.currentUser;
+    if (user == null) return 0;
+
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('cart')
+        .get();
+
+    return snapshot.docs.fold<int>(0, (sum, doc) {
+      final qty = _safeGetInt(doc.data()['quantity'], 0);
+      return sum + qty;
+    });
   }
 
   // ============ ИЗБРАННОЕ (FAVORITES) ============
-  // Используем ту же модель CartItem, но с addedAt
 
   Stream<List<CartItem>> watchFavorites() {
     return _auth.authStateChanges().asyncExpand((user) {
@@ -95,20 +137,30 @@ class CartRepository {
     return _firestore.collection('users').doc(userId).collection('favorites');
   }
 
-  CollectionReference<Map<String, dynamic>> get _currentUserFavorites {
+  Future<void> addToFavorites(CartItem item) async {
     final user = _auth.currentUser;
     if (user == null) throw StateError('Пользователь не авторизован');
-    return _userFavorites(user.uid);
-  }
 
-  Future<void> addToFavorites(CartItem item) async {
-    final docRef = _currentUserFavorites.doc(item.productId);
+    final docRef = _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('favorites')
+        .doc(item.productId);
+
     final favoriteItem = item.copyWith(quantity: 1, addedAt: DateTime.now());
     await docRef.set(favoriteItem.toMap());
   }
 
   Future<void> toggleFavorite(CartItem item) async {
-    final docRef = _currentUserFavorites.doc(item.productId);
+    final user = _auth.currentUser;
+    if (user == null) throw StateError('Пользователь не авторизован');
+
+    final docRef = _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('favorites')
+        .doc(item.productId);
+
     final doc = await docRef.get();
 
     if (doc.exists) {
@@ -120,22 +172,45 @@ class CartRepository {
   }
 
   Future<void> removeFromFavorites(String productId) async {
-    await _currentUserFavorites.doc(productId).delete();
+    final user = _auth.currentUser;
+    if (user == null) throw StateError('Пользователь не авторизован');
+
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('favorites')
+        .doc(productId)
+        .delete();
   }
 
   Future<void> clearFavorites() async {
-    final snapshot = await _currentUserFavorites.get();
+    final user = _auth.currentUser;
+    if (user == null) throw StateError('Пользователь не авторизован');
+
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('favorites')
+        .get();
 
     final batch = _firestore.batch();
-    for (var doc in snapshot.docs) {
+    for (final doc in snapshot.docs) {
       batch.delete(doc.reference);
     }
     await batch.commit();
   }
 
   Future<bool> isFavorite(String productId) async {
+    final user = _auth.currentUser;
+    if (user == null) return false;
+
     try {
-      final doc = await _currentUserFavorites.doc(productId).get();
+      final doc = await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('favorites')
+          .doc(productId)
+          .get();
       return doc.exists;
     } catch (e) {
       return false;
@@ -143,7 +218,15 @@ class CartRepository {
   }
 
   Future<List<CartItem>> getFavoritesList() async {
-    final snapshot = await _currentUserFavorites.get();
+    final user = _auth.currentUser;
+    if (user == null) return const <CartItem>[];
+
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('favorites')
+        .get();
+
     return snapshot.docs
         .map((doc) => CartItem.fromMap(doc.data(), doc.id))
         .toList();
@@ -152,12 +235,8 @@ class CartRepository {
   // ============ ПРОВЕРКА АВТОРИЗАЦИИ ============
 
   bool get isAuthenticated => _auth.currentUser != null;
-
   String? get currentUserId => _auth.currentUser?.uid;
 
-  // ============ УНИВЕРСАЛЬНЫЕ МЕТОДЫ ============
-
-  // Получение количества в корзине + избранном
   Future<int> getTotalItemsCount() async {
     final cartCount = await getCartCount();
     final favorites = await getFavoritesList();
@@ -166,8 +245,16 @@ class CartRepository {
 
   // Проверка, есть ли товар в корзине
   Future<bool> isInCart(String productId) async {
+    final user = _auth.currentUser;
+    if (user == null) return false;
+
     try {
-      final doc = await _currentUserCart.doc(productId).get();
+      final doc = await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('cart')
+          .doc(productId)
+          .get();
       return doc.exists;
     } catch (e) {
       return false;

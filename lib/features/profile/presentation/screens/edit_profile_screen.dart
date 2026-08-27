@@ -9,14 +9,12 @@ class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({
     super.key,
     this.currentName,
-    this._currentId,
     this.birthday,
     this.currentEmail,
     this.initials,
   });
   final String? currentName;
   final String? currentEmail;
-  final String? _currentId;
   final String? birthday;
   final String? initials;
   @override

@@ -84,7 +84,7 @@ class CustomAppDialog extends StatelessWidget {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: effectiveColor.withOpacity(0.12),
+                  color: effectiveColor.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(effectiveIcon, color: effectiveColor, size: 28),

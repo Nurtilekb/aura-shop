@@ -183,9 +183,6 @@ class AuthRepository {
   }
 
   String _handleGoogleSignInException(GoogleSignInException e) {
-    print('Google Sign-In code: ${e.code}');
-    print('Google Sign-In description: ${e.description}');
-
     return 'Google Sign-In: ${e.code} — ${e.description}';
   }
 

@@ -188,14 +188,8 @@ class Productcard extends StatelessWidget {
 
                                           context.read<CartBloc>().add(
                                             CartAddRequested(
-                                              CartItem(
-                                                productId: effectiveProduct.id,
-                                                name: effectiveProduct.name,
-                                                price: effectiveProduct.price,
-                                                image:
-                                                    effectiveProduct.image ??
-                                                    '',
-                                                quantity: 1,
+                                              CartItem.fromProduct(
+                                                effectiveProduct,
                                               ),
                                             ),
                                           );

@@ -9,6 +9,7 @@
       "dependencies": [
         "auto_route",
         "auto_route_generator",
+        "bloc",
         "build_runner",
         "cloud_firestore",
         "cupertino_icons",
@@ -49,6 +50,13 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "bloc",
+      "version": "9.2.1",
+      "dependencies": [
+        "meta"
       ]
     },
     {
@@ -776,13 +784,6 @@
         "collection",
         "flutter",
         "nested"
-      ]
-    },
-    {
-      "name": "bloc",
-      "version": "9.2.1",
-      "dependencies": [
-        "meta"
       ]
     },
     {
