@@ -1,5 +1,7 @@
+import 'package:aurashop/core/routing/app_router.gr.dart';
+import 'package:aurashop/repositories/product_repository.dart';
+import 'package:aurashop/shared/models/product_model.dart';
 import 'package:aurashop/shared/widgets/app_input_widget.dart';
-import 'package:aurashop/shared/widgets/custom_widgets/popular_chips_widget.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -13,14 +15,24 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final List<String> _searchHistory = ['худи oversize', 'рюкзак городской'];
-  final List<String> _popularQueries = [
-    'Наушники',
-    'Куртка зима',
-    'Часы',
-    'Платье',
-    'Кроссовки',
-  ];
+  final FocusNode _searchFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(_searchFocusNode);
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  final ProductRepository _productRepository = ProductRepository();
 
   String _searchQuery = '';
   bool _isSearching = false;
@@ -58,6 +70,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 10, 10, 8),
       child: AppInputWidget(
+        focusNode: _searchFocusNode,
         isBorder: true,
         borderColor: Theme.of(context).primaryColor,
         onChanged: (value) {
@@ -95,7 +108,6 @@ class _SearchScreenState extends State<SearchScreen> {
     return _buildInitialState();
   }
 
-  // Начальное состояние с историей и популярными запросами
   Widget _buildInitialState() {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -103,8 +115,6 @@ class _SearchScreenState extends State<SearchScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 24),
-
-          // История поиска
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -118,9 +128,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  setState(() {
-                    // Очистить историю
-                  });
+                  setState(() {});
                 },
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
@@ -139,82 +147,43 @@ class _SearchScreenState extends State<SearchScreen> {
             ],
           ),
           const SizedBox(height: 12),
-
-          // Список истории
-          ..._searchHistory.map((query) => _buildHistoryItem(query)),
-
-          if (_searchHistory.isNotEmpty) const SizedBox(height: 24),
-
-          // Популярные запросы
-          const Text(
-            'ПОПУЛЯРНЫЕ ЗАПРОСЫ',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          // Чипы популярных запросов
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: _popularQueries
-                .map((query) => PopularChips(query: query))
-                .toList(),
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildHistoryItem(String query) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.grey, width: 0.3)),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.history, size: 18, color: Colors.grey.shade500),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              query,
-              style: const TextStyle(fontSize: 15, color: Colors.black),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              // Удалить из истории
-            },
-            child: Icon(Icons.clear, size: 18, color: Colors.grey.shade400),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Результаты поиска
   Widget _buildSearchResults() {
-    // Имитация результатов поиска
-    final results = _getSearchResults(_searchQuery);
+    return StreamBuilder<List<Product>>(
+      stream: _productRepository.watchProducts(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return _buildEmptyState('Не удалось загрузить товары');
+        }
 
-    if (results.isEmpty) {
-      return _buildEmptyState();
-    }
+        final query = _searchQuery.trim().toLowerCase();
+        final results = (snapshot.data ?? const <Product>[])
+            .where((product) {
+              return product.name.toLowerCase().contains(query) ||
+                  product.category.toLowerCase().contains(query) ||
+                  product.description.toLowerCase().contains(query);
+            })
+            .toList(growable: false);
 
-    return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      itemCount: results.length,
-      separatorBuilder: (_, _) => const Divider(height: 0.5),
-      itemBuilder: (context, index) => _buildResultItem(results[index]),
+        if (results.isEmpty) return _buildEmptyState('Ничего не найдено');
+        return ListView.separated(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          itemCount: results.length,
+          separatorBuilder: (_, _) => const Divider(height: 0.5),
+          itemBuilder: (context, index) => _buildProductItem(results[index]),
+        );
+      },
     );
   }
 
-  // Пустое состояние (нет результатов)
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(String message) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -226,7 +195,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Ничего не найдено',
+            message,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -243,49 +212,36 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildResultItem(String result) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(8),
+  Widget _buildProductItem(Product product) {
+    return InkWell(
+      onTap: () => context.router.push(ProductDetailRoute(product: product)),
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 5),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(Icons.search, size: 18, color: Colors.grey.shade500),
             ),
-            child: Icon(Icons.search, size: 18, color: Colors.grey.shade500),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              result,
-              style: const TextStyle(fontSize: 15, color: Colors.black),
+            const SizedBox(width: 1),
+            Expanded(
+              child: Text(
+                maxLines: 2,
+                product.name,
+                style: const TextStyle(fontSize: 15, color: Colors.black),
+              ),
             ),
-          ),
-        ],
+            SizedBox(width: 10),
+            Text('${product.price} ₽'),
+          ],
+        ),
       ),
     );
-  }
-
-  // Имитация поиска
-  List<String> _getSearchResults(String query) {
-    final allItems = [
-      'Худи oversize черный',
-      'Худи oversize белый',
-      'Рюкзак городской черный',
-      'Рюкзак городской синий',
-      'Наушники беспроводные',
-      'Куртка зимняя',
-      'Часы наручные',
-      'Платье летнее',
-      'Кроссовки белые',
-    ];
-
-    if (query.isEmpty) return [];
-
-    return allItems
-        .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-        .toList();
   }
 }

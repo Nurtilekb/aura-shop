@@ -24,31 +24,19 @@ class MyAdressesScreen extends StatelessWidget {
           child: Column(
             children: [
               TransperetContWidget(
-                isIncenterWidget: IconButton(
-                  iconSize: 20,
-                  onPressed: () {},
-                  icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
-                ),
+                adress: "Введите адресс дома",
                 label: 'Дом · Москва',
                 value: 'ул. Тверская, 12, кв. 45 +7 999 123-45-67',
                 icon: "📍",
               ),
               TransperetContWidget(
-                isIncenterWidget: IconButton(
-                  iconSize: 20,
-                  onPressed: () {},
-                  icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
-                ),
+                adress: "Введите адресс квартиры",
                 label: 'Квартира · Москва',
                 value: 'ул. Арбат, 5, кв. 12 +7 999 987-65-43',
                 icon: "💼",
               ),
               TransperetContWidget(
-                isIncenterWidget: IconButton(
-                  iconSize: 20,
-                  onPressed: () {},
-                  icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
-                ),
+                adress: "Введите адресс дачи",
                 label: 'Дача',
                 value: 'МО, г. Химки, ул. Садовая, 3,+7 999 765-43-21',
                 icon: "📍",

@@ -1,3 +1,4 @@
+import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/shared/models/order_model.dart';
 import 'package:aurashop/shared/models/order_status.dart';
 import 'package:aurashop/shared/widgets/orders/empty_state_widget.dart';
@@ -58,7 +59,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           subtitle:
               'Оформленные заказы будут появляться здесь вместе со статусом доставки.',
           buttonText: 'Начать покупки',
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => context.router.push(AllCategoriesRoute()),
         );
       case OrdersState.noInternet:
         return Column(

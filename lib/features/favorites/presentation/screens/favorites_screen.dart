@@ -3,10 +3,11 @@ import 'package:aurashop/bloc/favorites/favorites_bloc.dart';
 import 'package:aurashop/bloc/favorites/favorites_event.dart';
 import 'package:aurashop/bloc/favorites/favorites_state.dart';
 import 'package:aurashop/repositories/cart_repository.dart';
-import 'package:aurashop/shared/widgets/production_card_widget.dart';
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+@RoutePage()
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
 

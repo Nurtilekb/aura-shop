@@ -134,7 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: Colors.grey.shade200,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const AppInputWidget(
+                          child: AppInputWidget(
+                            onTap: () {
+                              context.router.push(SearchRoute());
+                            },
+                            isReadOnly: true,
                             isBorder: false,
                             contentPadding: EdgeInsets.symmetric(
                               horizontal: 12,

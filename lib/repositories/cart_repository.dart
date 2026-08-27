@@ -101,24 +101,19 @@ class CartRepository {
     return _userFavorites(user.uid);
   }
 
-  // Добавление в избранное
   Future<void> addToFavorites(CartItem item) async {
     final docRef = _currentUserFavorites.doc(item.productId);
-    // При добавлении в избранное quantity всегда 1, добавляем дату
     final favoriteItem = item.copyWith(quantity: 1, addedAt: DateTime.now());
     await docRef.set(favoriteItem.toMap());
   }
 
-  // Переключение избранного (добавить/удалить)
   Future<void> toggleFavorite(CartItem item) async {
     final docRef = _currentUserFavorites.doc(item.productId);
     final doc = await docRef.get();
 
     if (doc.exists) {
-      // Если уже в избранном - удаляем
       await docRef.delete();
     } else {
-      // Если нет - добавляем
       final favoriteItem = item.copyWith(quantity: 1, addedAt: DateTime.now());
       await docRef.set(favoriteItem.toMap());
     }

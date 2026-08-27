@@ -1,3 +1,4 @@
+import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -140,8 +141,7 @@ class OrderSuccessScreen extends StatelessWidget {
                   SizedBox(
                     height: 56,
                     child: ElevatedButton(
-                      onPressed:
-                          onTrackOrder ?? () => context.router.maybePop(),
+                      onPressed: () => context.router.push(OrderTrackingPage()),
                       child: const Text(
                         'Отследить заказ',
                         style: TextStyle(
