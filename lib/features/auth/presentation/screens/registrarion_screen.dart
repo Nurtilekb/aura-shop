@@ -2,11 +2,11 @@ import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/bloc/auth/auth_bloc.dart';
 import 'package:aurashop/bloc/auth/auth_event.dart';
 import 'package:aurashop/bloc/auth/auth_state.dart';
-import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:auto_route/auto_route.dart';
 
 import 'package:aurashop/shared/widgets/app_input_widget.dart';
 import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
+import 'package:aurashop/core/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -94,7 +94,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               ),
                               const SizedBox(height: 32),
                               AppInputWidget(
-                                //  validator: Validators.validateString,
+                                validator: Validators.validateString,
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16,
                                   vertical: 18,
@@ -112,7 +112,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               const SizedBox(height: 16),
                               AppInputWidget(
                                 filledColor: Colors.transparent,
-                                //  validator: Validators.validateEmail,
+                                validator: Validators.validateEmail,
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16,
                                   vertical: 18,
@@ -130,6 +130,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               const SizedBox(height: 16),
                               AppInputWidget(
                                 filledColor: Colors.transparent,
+                                isPasswordField: true,
+                                validator: Validators.validatePassword,
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16,
                                   vertical: 18,
@@ -145,52 +147,85 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 hintText: '••••••',
                               ),
                               const SizedBox(height: 24),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        _isAgreed = !_isAgreed;
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 24,
-                                      height: 24,
-                                      margin: const EdgeInsets.only(top: 2),
-                                      decoration: BoxDecoration(
-                                        color: _isAgreed
-                                            ? directAccentColor
-                                            : Colors.white,
-                                        borderRadius: BorderRadius.circular(6),
-                                        border: Border.all(
-                                          color: _isAgreed
-                                              ? directAccentColor
-                                              : Colors.grey.shade400,
-                                          width: 2,
+                              FormField<bool>(
+                                initialValue: _isAgreed,
+                                validator: Validators.validatebox,
+                                builder: (fieldState) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                _isAgreed = !_isAgreed;
+                                              });
+                                              fieldState.didChange(_isAgreed);
+                                            },
+                                            child: Container(
+                                              width: 24,
+                                              height: 24,
+                                              margin: const EdgeInsets.only(
+                                                top: 2,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: _isAgreed
+                                                    ? directAccentColor
+                                                    : Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                                border: Border.all(
+                                                  color: _isAgreed
+                                                      ? directAccentColor
+                                                      : Colors.grey.shade400,
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              child: _isAgreed
+                                                  ? const Icon(
+                                                      Icons.check,
+                                                      size: 18,
+                                                      color: Colors.white,
+                                                    )
+                                                  : null,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Text(
+                                              'Принимаю условия использования и политику конфиденциальности',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey.shade700,
+                                                height: 1.4,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      if (fieldState.hasError)
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 36,
+                                            top: 4,
+                                          ),
+                                          child: Text(
+                                            fieldState.errorText!,
+                                            style: TextStyle(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.error,
+                                              fontSize: 12,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      child: _isAgreed
-                                          ? const Icon(
-                                              Icons.check,
-                                              size: 18,
-                                              color: Colors.white,
-                                            )
-                                          : null,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text(
-                                      'Принимаю условия использования и политику конфиденциальности',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey.shade700,
-                                        height: 1.4,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                    ],
+                                  );
+                                },
                               ),
                               const SizedBox(height: 32),
                               SizedBox(
@@ -321,15 +356,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   void _handleRegistration() {
     if (_formKey2.currentState?.validate() ?? false) {
-      if (!_isAgreed) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Пожалуйста, примите условия использования'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        return;
-      }
       context.read<AuthBloc>().add(
         AuthRegisterRequested(
           name: _nameController.text.trim(),
