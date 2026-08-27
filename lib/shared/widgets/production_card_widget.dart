@@ -231,7 +231,7 @@ class Productcard extends StatelessWidget {
                         ? favoritesState.items.any(
                             (item) => item.productId == effectiveProduct.id,
                           )
-                        : isFavorite == true;
+                        : false;
 
                     return Positioned(
                       top: 10,

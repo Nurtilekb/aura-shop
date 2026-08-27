@@ -47,7 +47,7 @@ class ProductDetailAppBar extends StatelessWidget
           builder: (context, state) {
             final favorite = state is FavoritesLoaded
                 ? state.items.any((item) => item.productId == product.id)
-                : isFavorite == true;
+                : false;
             return FavoriteButton(
               isFavorite: favorite,
               accentColor: color,

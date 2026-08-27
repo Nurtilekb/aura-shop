@@ -78,12 +78,17 @@ class CartRepository {
   Stream<List<CartItem>> watchFavorites() {
     return _auth.authStateChanges().asyncExpand((user) {
       if (user == null) return Stream.value(const <CartItem>[]);
-      return _userFavorites(user.uid).snapshots().map(
-        (snapshot) => snapshot.docs
-            .map((doc) => CartItem.fromMap(doc.data(), doc.id))
-            .toList(),
-      );
+      return _watchUserFavorites(user.uid);
     });
+  }
+
+  Stream<List<CartItem>> _watchUserFavorites(String userId) async* {
+    yield const <CartItem>[];
+    yield* _userFavorites(userId).snapshots().map(
+      (snapshot) => snapshot.docs
+          .map((doc) => CartItem.fromMap(doc.data(), doc.id))
+          .toList(),
+    );
   }
 
   CollectionReference<Map<String, dynamic>> _userFavorites(String userId) {
