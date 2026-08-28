@@ -208,6 +208,14 @@ class _MyOrdersState extends State<MyOrders> {
   int _selectedStatusIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<OrdersBloc>().add(const LoadAllOrdersRequested());
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: BlocBuilder<OrdersBloc, OrdersState>(
@@ -336,7 +344,7 @@ class _MyOrdersState extends State<MyOrders> {
 
             return RefreshIndicator(
               onRefresh: () async {
-                context.read<OrdersBloc>().add(const LoadOrdersRequested());
+                context.read<OrdersBloc>().add(const LoadAllOrdersRequested());
               },
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
@@ -357,7 +365,7 @@ class _MyOrdersState extends State<MyOrders> {
                           TextButton.icon(
                             onPressed: () {
                               context.read<OrdersBloc>().add(
-                                const LoadOrdersRequested(),
+                                const LoadAllOrdersRequested(),
                               );
                             },
                             icon: const Icon(Icons.refresh, size: 16),

@@ -14,6 +14,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   OrdersBloc() : super(OrdersInitial()) {
     on<CreateOrderRequested>(_onCreateOrder);
     on<LoadOrdersRequested>(_onLoadOrders);
+    on<LoadAllOrdersRequested>(_onLoadAllOrders);
     on<CancelOrderRequested>(_onCancelOrder);
     on<UpdateOrderStatusRequested>(_onUpdateOrderStatus);
   }
@@ -95,6 +96,31 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
 
               return bDate.toDate().compareTo(aDate.toDate());
             });
+
+      final orders = rawOrders.map(OrderItem.fromMap).toList();
+
+      emit(OrdersLoaded(orders));
+    } catch (e) {
+      emit(OrdersError('Ошибка загрузки заказов: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onLoadAllOrders(
+    LoadAllOrdersRequested event,
+    Emitter<OrdersState> emit,
+  ) async {
+    emit(OrdersLoading());
+
+    try {
+      final snapshot = await _firestore
+          .collection('orders')
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      final rawOrders =
+          snapshot.docs
+              .map((doc) => <String, dynamic>{...doc.data(), 'id': doc.id})
+              .toList();
 
       final orders = rawOrders.map(OrderItem.fromMap).toList();
 

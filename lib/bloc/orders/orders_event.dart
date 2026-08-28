@@ -37,6 +37,10 @@ final class LoadOrdersRequested extends OrdersEvent {
   const LoadOrdersRequested();
 }
 
+final class LoadAllOrdersRequested extends OrdersEvent {
+  const LoadAllOrdersRequested();
+}
+
 final class CancelOrderRequested extends OrdersEvent {
   final String orderId;
 
