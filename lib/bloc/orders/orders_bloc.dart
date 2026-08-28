@@ -18,7 +18,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     on<CancelOrderRequested>(_onCancelOrder);
     on<UpdateOrderStatusRequested>(_onUpdateOrderStatus);
   }
-
   Future<void> _onCreateOrder(
     CreateOrderRequested event,
     Emitter<OrdersState> emit,
@@ -117,10 +116,9 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
           .orderBy('createdAt', descending: true)
           .get();
 
-      final rawOrders =
-          snapshot.docs
-              .map((doc) => <String, dynamic>{...doc.data(), 'id': doc.id})
-              .toList();
+      final rawOrders = snapshot.docs
+          .map((doc) => <String, dynamic>{...doc.data(), 'id': doc.id})
+          .toList();
 
       final orders = rawOrders.map(OrderItem.fromMap).toList();
 

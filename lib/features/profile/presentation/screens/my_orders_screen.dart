@@ -11,9 +11,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class OrdersScreen extends StatefulWidget {
-  const OrdersScreen({super.key, this.foradminAppbar, this.isItAdmin});
+  const OrdersScreen({
+    super.key,
+    this.foradminAppbar,
+    this.isItAdmin,
+    this.currentUserId, // ID текущего пользователя
+  });
   final String? foradminAppbar;
   final bool? isItAdmin;
+  final String? currentUserId; // ID текущего пользователя для фильтрации
 
   @override
   State<OrdersScreen> createState() => _OrdersScreenState();
@@ -33,7 +39,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.foradminAppbar ?? 'Мои заказы',
+          widget.foradminAppbar ??
+              (widget.isItAdmin == true ? 'Заказы клиентов' : 'Мои заказы'),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
@@ -51,14 +58,20 @@ class _OrdersScreenState extends State<OrdersScreen> {
           ),
         ],
       ),
-      body: widget.isItAdmin == true ? const MyOrders() : const UserOrders(),
+      body: widget.isItAdmin == true
+          ? const MyOrders() // Админ видит все заказы
+          : UserOrders(
+              userId: widget.currentUserId,
+            ), // Пользователь видит только свои
     );
   }
 }
 
 // Виджет для обычного пользователя
 class UserOrders extends StatefulWidget {
-  const UserOrders({super.key});
+  final String? userId; // ID текущего пользователя
+
+  const UserOrders({super.key, this.userId});
 
   @override
   State<UserOrders> createState() => _UserOrdersState();
@@ -113,9 +126,13 @@ class _UserOrdersState extends State<UserOrders> {
         }
 
         if (state is OrdersLoaded) {
-          final orders = state.orders;
+          // ✅ Фильтруем заказы по userId (айди заказчика)
+          final allOrders = state.orders;
+          final userOrders = widget.userId != null
+              ? allOrders.where((order) => order == widget.userId).toList()
+              : allOrders;
 
-          if (orders.isEmpty) {
+          if (userOrders.isEmpty) {
             return EmptyStateWidget(
               image: _buildCircleAvatar(
                 backgroundColor: colorScheme.surfaceContainerHighest,
@@ -133,47 +150,39 @@ class _UserOrdersState extends State<UserOrders> {
             onRefresh: () async {
               context.read<OrdersBloc>().add(const LoadOrdersRequested());
             },
-            child: Padding(
+            child: ListView(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Всего: ${orders.length}',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey.shade600,
-                        ),
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Всего: ${userOrders.length}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey.shade600,
                       ),
-                      const Spacer(),
-                      TextButton.icon(
-                        onPressed: () {
-                          context.read<OrdersBloc>().add(
-                            const LoadOrdersRequested(),
-                          );
-                        },
-                        icon: const Icon(Icons.refresh, size: 16),
-                        label: const Text('Обновить'),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: OrdersList(
-                      orders: orders,
-                      onStatusChanged: (order) {
-                        // Для обычного пользователя статус менять нельзя
-                        // Можно показать сообщение или оставить пустым
-                      },
                     ),
-                  ),
-                ],
-              ),
+                    const Spacer(),
+                    TextButton.icon(
+                      onPressed: () {
+                        context.read<OrdersBloc>().add(
+                          const LoadOrdersRequested(),
+                        );
+                      },
+                      icon: const Icon(Icons.refresh, size: 16),
+                      label: const Text('Обновить'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                OrdersList(
+                  orders: userOrders, // Показываем только заказы пользователя
+                  onStatusChanged: null, // Пользователь не может менять статус
+                ),
+              ],
             ),
           );
         }
@@ -211,7 +220,7 @@ class _MyOrdersState extends State<MyOrders> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<OrdersBloc>().add(const LoadAllOrdersRequested());
+      context.read<OrdersBloc>().add(const LoadOrdersRequested());
     });
   }
 
@@ -277,9 +286,10 @@ class _MyOrdersState extends State<MyOrders> {
           }
 
           if (state is OrdersLoaded) {
-            final orders = state.orders;
+            // ✅ Админ видит ВСЕ заказы без фильтрации
+            final allOrders = state.orders;
 
-            if (orders.isEmpty) {
+            if (allOrders.isEmpty) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -302,7 +312,7 @@ class _MyOrdersState extends State<MyOrders> {
               );
             }
 
-            final filteredOrders = _filterOrdersByStatus(orders);
+            final filteredOrders = _filterOrdersByStatus(allOrders);
 
             if (filteredOrders.isEmpty) {
               return Center(
@@ -344,65 +354,63 @@ class _MyOrdersState extends State<MyOrders> {
 
             return RefreshIndicator(
               onRefresh: () async {
-                context.read<OrdersBloc>().add(const LoadAllOrdersRequested());
+                context.read<OrdersBloc>().add(const LoadOrdersRequested());
               },
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Всего: ${filteredOrders.length}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade600,
-                            ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Всего: ${filteredOrders.length}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade600,
                           ),
-                          const Spacer(),
-                          TextButton.icon(
-                            onPressed: () {
-                              context.read<OrdersBloc>().add(
-                                const LoadAllOrdersRequested(),
-                              );
-                            },
-                            icon: const Icon(Icons.refresh, size: 16),
-                            label: const Text('Обновить'),
-                            style: TextButton.styleFrom(
-                              foregroundColor: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      OrderStatusFilter(
-                        activeColor: Theme.of(context).primaryColor,
-                        selectedIndex: _selectedStatusIndex,
-                        onSelected: (index) {
-                          setState(() {
-                            _selectedStatusIndex = index;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      Expanded(
-                        child: OrdersList(
-                          orders: filteredOrders,
-                          onStatusChanged: (order) {
+                        ),
+                        const Spacer(),
+                        TextButton.icon(
+                          onPressed: () {
                             context.read<OrdersBloc>().add(
-                              UpdateOrderStatusRequested(
-                                orderId: order.id,
-                                status: order.status,
-                              ),
+                              const LoadOrdersRequested(),
                             );
                           },
+                          icon: const Icon(Icons.refresh, size: 16),
+                          label: const Text('Обновить'),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Theme.of(context).primaryColor,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                    child: OrderStatusFilter(
+                      activeColor: Theme.of(context).primaryColor,
+                      selectedIndex: _selectedStatusIndex,
+                      onSelected: (index) {
+                        setState(() {
+                          _selectedStatusIndex = index;
+                        });
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: OrdersList(
+                      orders: filteredOrders, // Все заказы для админа
+                      onStatusChanged: (order) {
+                        context.read<OrdersBloc>().add(
+                          UpdateOrderStatusRequested(
+                            orderId: order.id,
+                            status: order.status,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             );
           }
