@@ -298,18 +298,65 @@ class ChatsRouteArgs {
 
 /// generated route for
 /// [_i7.ConfirmOrderScreen]
-class ConfirmOrderRoute extends _i28.PageRouteInfo<void> {
-  const ConfirmOrderRoute({List<_i28.PageRouteInfo>? children})
-    : super(ConfirmOrderRoute.name, initialChildren: children);
+class ConfirmOrderRoute extends _i28.PageRouteInfo<ConfirmOrderRouteArgs> {
+  ConfirmOrderRoute({
+    _i32.Key? key,
+    _i30.Product? poduction,
+    int? productlenght,
+    List<_i28.PageRouteInfo>? children,
+  }) : super(
+         ConfirmOrderRoute.name,
+         args: ConfirmOrderRouteArgs(
+           key: key,
+           poduction: poduction,
+           productlenght: productlenght,
+         ),
+         initialChildren: children,
+       );
 
   static const String name = 'ConfirmOrderRoute';
 
   static _i28.PageInfo page = _i28.PageInfo(
     name,
     builder: (data) {
-      return const _i7.ConfirmOrderScreen();
+      final args = data.argsAs<ConfirmOrderRouteArgs>(
+        orElse: () => const ConfirmOrderRouteArgs(),
+      );
+      return _i7.ConfirmOrderScreen(
+        key: args.key,
+        poduction: args.poduction,
+        productlenght: args.productlenght,
+      );
     },
   );
+}
+
+class ConfirmOrderRouteArgs {
+  const ConfirmOrderRouteArgs({this.key, this.poduction, this.productlenght});
+
+  final _i32.Key? key;
+
+  final _i30.Product? poduction;
+
+  final int? productlenght;
+
+  @override
+  String toString() {
+    return 'ConfirmOrderRouteArgs{key: $key, poduction: $poduction, productlenght: $productlenght}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! ConfirmOrderRouteArgs) return false;
+    return key == other.key &&
+        poduction == other.poduction &&
+        productlenght == other.productlenght;
+  }
+
+  @override
+  int get hashCode =>
+      key.hashCode ^ poduction.hashCode ^ productlenght.hashCode;
 }
 
 /// generated route for

@@ -47,12 +47,7 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> {
               onTrackOrder: () {
                 context.router.push(OrdersRoute());
               },
-              onContinueShopping: () {
-                context.router.pushAndPopUntil(
-                  const AllCategoriesRoute(),
-                  predicate: (route) => false,
-                );
-              },
+              onContinueShopping: () {},
             ),
           );
         }
@@ -135,18 +130,21 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            if (widget.poduction != null)
-              SummaryCard(
-                itemsCount: widget.productlenght,
-                totalItemsPrice: widget.poduction!.price.round(),
-                discount: 100,
-                totalPrice: widget.poduction!.price.round(),
-              ),
 
             SummaryCard(
-              totalItemsPrice: itemsTotal.round(),
+              itemsCount: widget.poduction != null
+                  ? widget.productlenght
+                  : cartItems.length,
+              totalItemsPrice: widget.poduction != null
+                  ? (widget.poduction!.price * (widget.productlenght ?? 1))
+                        .round()
+                  : itemsTotal.round(),
               discount: 0,
-              totalPrice: (itemsTotal + deliveryPrice).round(),
+              totalPrice: widget.poduction != null
+                  ? (widget.poduction!.price * (widget.productlenght ?? 1) +
+                            deliveryPrice)
+                        .round()
+                  : (itemsTotal + deliveryPrice).round(),
             ),
           ],
         ),
@@ -165,15 +163,60 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> {
               child: SizedBox(
                 height: 56.0,
                 child: ElevatedButton(
-                  onPressed: cartItems.isEmpty || ordersState is OrdersLoading
-                      ? null
-                      : () {
+                  onPressed: (widget.poduction != null && cartItems.isEmpty)
+                      ? () {
+                          final orderItems = widget.poduction != null
+                              ? [
+                                  {
+                                    'productId': widget.poduction!.id,
+                                    'name': widget.poduction!.name,
+                                    'price': widget.poduction!.price,
+                                    'quantity': widget.productlenght ?? 1,
+                                    'imageUrl': widget.poduction!.image,
+                                  },
+                                ]
+                              : cartItems.map((item) => item.toMap()).toList();
+
+                          final totalAmount = widget.poduction != null
+                              ? widget.poduction!.price *
+                                        (widget.productlenght ?? 1) +
+                                    deliveryPrice
+                              : itemsTotal + deliveryPrice;
+
                           context.read<OrdersBloc>().add(
                             CreateOrderRequested(
-                              items: cartItems
-                                  .map((item) => item.toMap())
-                                  .toList(),
-                              totalAmount: itemsTotal + deliveryPrice,
+                              items: orderItems,
+                              totalAmount: totalAmount,
+                              deliveryMethod: _deliveryMethod == 0
+                                  ? 'courier'
+                                  : 'pickup',
+                              deliveryAddress: 'ул. Тверская, 12, кв. 45',
+                            ),
+                          );
+                        }
+                      : () {
+                          final orderItems = widget.poduction != null
+                              ? [
+                                  {
+                                    'productId': widget.poduction!.id,
+                                    'name': widget.poduction!.name,
+                                    'price': widget.poduction!.price,
+                                    'quantity': widget.productlenght ?? 1,
+                                    'imageUrl': widget.poduction!.image,
+                                  },
+                                ]
+                              : cartItems.map((item) => item.toMap()).toList();
+
+                          final totalAmount = widget.poduction != null
+                              ? widget.poduction!.price *
+                                        (widget.productlenght ?? 1) +
+                                    deliveryPrice
+                              : itemsTotal + deliveryPrice;
+
+                          context.read<OrdersBloc>().add(
+                            CreateOrderRequested(
+                              items: orderItems,
+                              totalAmount: totalAmount,
                               deliveryMethod: _deliveryMethod == 0
                                   ? 'courier'
                                   : 'pickup',

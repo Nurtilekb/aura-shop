@@ -1,6 +1,5 @@
 ﻿import 'package:flutter/material.dart';
 
-/// Р­Р»РµРјРµРЅС‚ СЃРїРёСЃРєР° РјРµРЅСЋ СЃ РёРєРѕРЅРєРѕР№, Р·Р°РіРѕР»РѕРІРєРѕРј Рё РѕРїС†РёРѕРЅР°Р»СЊРЅС‹Рј Р±СЌР№РґР¶РµРј
 class MenuItem extends StatelessWidget {
   final String emaji;
 

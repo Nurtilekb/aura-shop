@@ -178,11 +178,6 @@ class ProductDetailContent extends StatelessWidget {
               ],
             ),
           ),
-          ProductDetailBottomBar(
-            product: product,
-            accentColor: Colors.black12,
-            quantity: quantity,
-          ),
         ],
       ),
     );
