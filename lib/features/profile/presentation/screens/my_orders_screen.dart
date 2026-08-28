@@ -220,25 +220,25 @@ class _MyOrdersState extends State<MyOrders> {
                     ),
                     const SizedBox(height: 16),
                     const Text(
-                      'У вас пока нет заказов',
+                      'У вас пока никто не заказывал',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      'Сделайте свой первый заказ!',
-                      style: TextStyle(color: Colors.grey.shade600),
-                    ),
+                    // Text(
+                    //   'Сделайте свой первый заказ!',
+                    //   style: TextStyle(color: Colors.grey.shade600),
+                    // ),
                     const SizedBox(height: 24),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        context.router.push(AllCategoriesRoute());
-                      },
-                      icon: const Icon(Icons.shopping_bag_outlined),
-                      label: const Text('Начать покупки'),
-                    ),
+                    // ElevatedButton.icon(
+                    //   onPressed: () {
+                    //     context.router.push(AllCategoriesRoute());
+                    //   },
+                    //   icon: const Icon(Icons.shopping_bag_outlined),
+                    //   label: const Text('Начать покупки'),
+                    // ),
                   ],
                 ),
               );

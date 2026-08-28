@@ -113,7 +113,7 @@ class _CartScreenState extends State<CartScreen> {
                       height: 56.0,
                       child: ElevatedButton(
                         onPressed: () {
-                          context.router.push(const ConfirmOrderRoute());
+                          context.router.push(ConfirmOrderRoute());
                         },
                         child: const Text(
                           'Оформить заказ',

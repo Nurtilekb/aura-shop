@@ -2,6 +2,7 @@ import 'package:aurashop/bloc/cart/cart_bloc.dart';
 import 'package:aurashop/bloc/cart/cart_state.dart';
 import 'package:aurashop/bloc/orders/orders_bloc.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
+import 'package:aurashop/shared/models/product_model.dart';
 import 'package:aurashop/shared/widgets/basket_widgets/summary_card_widget.dart';
 import 'package:aurashop/shared/widgets/basket_widgets/transperet_cont_widget.dart';
 import 'package:auto_route/auto_route.dart';
@@ -10,14 +11,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class ConfirmOrderScreen extends StatefulWidget {
-  const ConfirmOrderScreen({super.key});
-
+  const ConfirmOrderScreen({super.key, this.poduction, this.productlenght});
+  final Product? poduction;
+  final int? productlenght;
   @override
   State<ConfirmOrderScreen> createState() => _ConfirmOrderScreenState();
 }
 
 class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> {
-  int _deliveryMethod = 0; // 0: Courier, 1: Pickup
+  int _deliveryMethod = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,10 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> {
                 context.router.push(OrdersRoute());
               },
               onContinueShopping: () {
-                context.router.pop();
+                context.router.pushAndPopUntil(
+                  const AllCategoriesRoute(),
+                  predicate: (route) => false,
+                );
               },
             ),
           );
@@ -130,6 +135,14 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> {
               ),
             ),
             const SizedBox(height: 10),
+            if (widget.poduction != null)
+              SummaryCard(
+                itemsCount: widget.productlenght,
+                totalItemsPrice: widget.poduction!.price.round(),
+                discount: 100,
+                totalPrice: widget.poduction!.price.round(),
+              ),
+
             SummaryCard(
               totalItemsPrice: itemsTotal.round(),
               discount: 0,

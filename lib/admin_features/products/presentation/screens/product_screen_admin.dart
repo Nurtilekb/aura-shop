@@ -5,6 +5,8 @@ import 'package:aurashop/bloc/products/products_bloc.dart';
 import 'package:aurashop/bloc/products/products_event.dart';
 import 'package:aurashop/shared/models/product_model.dart';
 import 'package:aurashop/shared/widgets/app_input_widget.dart';
+import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widget.dart';
+import 'package:aurashop/shared/widgets/custom_widgets/pressed_button.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -117,7 +119,23 @@ class _ProductScreenAdminState extends State<ProductScreenAdmin> {
                   child: state is ProductsLoading && _products.isEmpty
                       ? const Center(child: CircularProgressIndicator())
                       : products.isEmpty
-                      ? const Center(child: Text('Товары не найдены'))
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(80.0),
+                            child: PressedButton(
+                              text: '+ Добавить новый товар',
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const AddNewProductScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        )
                       : ListView.separated(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 20,

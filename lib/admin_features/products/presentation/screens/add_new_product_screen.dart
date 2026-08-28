@@ -233,37 +233,100 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
             text: "Save",
             backgroundColor: Theme.of(context).colorScheme.primary,
             onPressed: () {
+              // Получаем значения из контроллеров
+              final name = _nameController.text.trim();
+              final priceText = _priceController.text.trim().replaceAll(
+                ',',
+                '.',
+              );
+              final description = _descriptionController.text.trim();
+              final category = _categoryController.text.trim();
+
+              // Проверяем обязательные поля
+              if (name.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Пожалуйста, введите название товара'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                return;
+              }
+
+              if (priceText.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Пожалуйста, введите цену товара'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                return;
+              }
+
+              final price = double.tryParse(priceText);
+              if (price == null || price <= 0) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Пожалуйста, введите корректную цену'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                return;
+              }
+
+              if (category.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Пожалуйста, выберите категорию'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                return;
+              }
+
+              if (description.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Пожалуйста, введите описание товара'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                return;
+              }
+
+              // Все поля заполнены корректно - сохраняем
               final product = Product(
-                name: _nameController.text.trim(),
-                price:
-                    double.tryParse(
-                      _priceController.text.trim().replaceAll(',', '.'),
-                    ) ??
-                    0,
-                description: _descriptionController.text.trim(),
-                category: _categoryController.text.trim(),
+                name: name,
+                price: price,
+                description: description,
+                category: category,
                 stock: _manageProducts,
               );
+
               if (widget.product2 == null) {
                 context.read<ProductsBloc>().add(
                   AddProductEvent(product: product),
                 );
               } else {
                 final updatedProduct = widget.product2!.copyWith(
-                  name: _nameController.text.trim(),
-                  price:
-                      double.tryParse(
-                        _priceController.text.trim().replaceAll(',', '.'),
-                      ) ??
-                      0,
-                  description: _descriptionController.text.trim(),
-                  category: _categoryController.text.trim(),
+                  name: name,
+                  price: price,
+                  description: description,
+                  category: category,
                   stock: _manageProducts,
                 );
                 context.read<ProductsBloc>().add(
                   UpdateProductEvent(product: updatedProduct),
                 );
               }
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Товар успешно сохранен ✅'),
+                  backgroundColor: Colors.green,
+                  duration: Duration(seconds: 2),
+                ),
+              );
 
               context.router.maybePop();
             },

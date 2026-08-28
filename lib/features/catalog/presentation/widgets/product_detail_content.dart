@@ -1,4 +1,5 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
+import 'package:aurashop/features/catalog/presentation/widgets/product_detail_bottom_bar.dart';
 import 'package:aurashop/shared/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -176,6 +177,11 @@ class ProductDetailContent extends StatelessWidget {
                 const SizedBox(height: 30),
               ],
             ),
+          ),
+          ProductDetailBottomBar(
+            product: product,
+            accentColor: Colors.black12,
+            quantity: quantity,
           ),
         ],
       ),

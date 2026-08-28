@@ -165,7 +165,7 @@ class Productcard extends StatelessWidget {
                                     children: [
                                       Text(
                                         maxLines: 1,
-                                        effectiveProduct.price.toString(),
+                                        "${effectiveProduct.price.toString()} ₽",
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,

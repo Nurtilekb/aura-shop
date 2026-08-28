@@ -77,7 +77,7 @@ class ProductDetailBottomBar extends StatelessWidget {
             child: SizedBox(
               height: 54,
               child: ElevatedButton(
-                onPressed: () => context.router.push(const ConfirmOrderRoute()),
+                onPressed: () => context.router.push(ConfirmOrderRoute()),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: accentColor,
                   foregroundColor: Colors.white,

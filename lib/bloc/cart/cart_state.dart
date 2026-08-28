@@ -1,5 +1,3 @@
-// lib/bloc/cart/cart_state.dart
-
 import 'package:aurashop/shared/models/cart_model.dart';
 
 abstract class CartState {}
