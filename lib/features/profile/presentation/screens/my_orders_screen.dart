@@ -1,11 +1,13 @@
 import 'package:aurashop/bloc/orders/orders_bloc.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
 import 'package:aurashop/shared/models/order_model.dart';
+import 'package:aurashop/shared/models/order_status.dart';
 import 'package:aurashop/shared/widgets/orders/empty_state_widget.dart';
 import 'package:aurashop/shared/widgets/orders/orders_offline_banner.dart';
 import 'package:aurashop/shared/widgets/orders/order_status_filter.dart';
 import 'package:aurashop/shared/widgets/orders/orders_list.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,11 +17,9 @@ class OrdersScreen extends StatefulWidget {
     super.key,
     this.foradminAppbar,
     this.isItAdmin,
-    this.currentUserId, // ID текущего пользователя
   });
   final String? foradminAppbar;
   final bool? isItAdmin;
-  final String? currentUserId; // ID текущего пользователя для фильтрации
 
   @override
   State<OrdersScreen> createState() => _OrdersScreenState();
@@ -30,7 +30,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<OrdersBloc>().add(const LoadOrdersRequested());
+      if (widget.isItAdmin == true) {
+        // Админ загружает все заказы
+        context.read<OrdersBloc>().add(const LoadAllOrdersRequested());
+      } else {
+        // Пользователь загружает только свои заказы
+        context.read<OrdersBloc>().add(const LoadOrdersRequested());
+      }
     });
   }
 
@@ -47,7 +53,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              context.read<OrdersBloc>().add(const LoadOrdersRequested());
+              if (widget.isItAdmin == true) {
+                context.read<OrdersBloc>().add(const LoadAllOrdersRequested());
+              } else {
+                context.read<OrdersBloc>().add(const LoadOrdersRequested());
+              }
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Обновление заказов...'),
@@ -59,10 +69,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
         ],
       ),
       body: widget.isItAdmin == true
-          ? const MyOrders() // Админ видит все заказы
-          : UserOrders(
-              userId: widget.currentUserId,
-            ), // Пользователь видит только свои
+          ? const AdminOrdersWidget() // Админ видит все заказы
+          : const UserOrdersWidget(), // Пользователь видит только свои
     );
   }
 }

@@ -3,23 +3,30 @@
 class OrderItem {
   const OrderItem({
     required this.id,
+    required this.userId,
     required this.status,
     required this.date,
     required this.total,
     required this.items,
+    this.deliveryMethod,
+    this.deliveryAddress,
   });
 
   final String id;
+  final String userId;
   final String status;
   final String date;
   final int total;
   final List<String> items;
+  final String? deliveryMethod;
+  final String? deliveryAddress;
 
   factory OrderItem.fromMap(Map<String, dynamic> map) {
     final rawItems = map['items'] as List<dynamic>? ?? [];
 
     return OrderItem(
       id: map['id']?.toString() ?? '',
+      userId: map['userId']?.toString() ?? '',
       status: _convertStatus(map['status']?.toString()),
       date: _convertDate(map['createdAt']),
       total: (map['totalAmount'] as num?)?.toInt() ?? 0,
@@ -34,6 +41,8 @@ class OrderItem {
 
         return item.toString();
       }).toList(),
+      deliveryMethod: map['deliveryMethod']?.toString(),
+      deliveryAddress: map['deliveryAddress']?.toString(),
     );
   }
 
@@ -66,13 +75,16 @@ class OrderItem {
     return value?.toString() ?? '';
   }
 
-  OrderItem copyWith({String? status}) {
+  OrderItem copyWith({String? status, String? userId}) {
     return OrderItem(
       id: id,
+      userId: userId ?? this.userId,
       status: status ?? this.status,
       date: date,
       total: total,
       items: items,
+      deliveryMethod: deliveryMethod,
+      deliveryAddress: deliveryAddress,
     );
   }
 }
