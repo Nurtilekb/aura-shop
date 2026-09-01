@@ -160,7 +160,8 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      add(const LoadOrdersRequested());
+      // After admin updates an order status, reload all orders so admin sees latest
+      add(const LoadAllOrdersRequested());
     } catch (e) {
       emit(OrdersError('Ошибка изменения статуса: $e'));
     }

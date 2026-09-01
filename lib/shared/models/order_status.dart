@@ -13,13 +13,55 @@ class OrderStatusPalette {
     'Отменён',
   ];
 
+  // Labels used in admin filter UI (keeps Russian human-readable forms)
   static const filterLabels = [
     allLabel,
+    'Ожидает',
+    'Подтвержден',
     'В пути',
-    'В обработке',
     'Доставлен',
-    'Отменён',
+    'Отменен',
   ];
+
+  // Convert various human-readable labels (possibly coming from UI)
+  // back to Firestore status keys.
+  static String getStatusKey(String label) {
+    switch (label) {
+      case 'Ожидает':
+      case 'Новый':
+        return 'pending';
+      case 'Подтвержден':
+      case 'В обработке':
+        return 'processing';
+      case 'В пути':
+        return 'shipped';
+      case 'Доставлен':
+        return 'delivered';
+      case 'Отменен':
+      case 'Отменён':
+        return 'cancelled';
+      default:
+        return label.toLowerCase();
+    }
+  }
+
+  // Map a firestore status key back to human-readable Russian label
+  static String getLabelForKey(String key) {
+    switch (key) {
+      case 'pending':
+        return 'Новый';
+      case 'processing':
+        return 'В обработке';
+      case 'shipped':
+        return 'В пути';
+      case 'delivered':
+        return 'Доставлен';
+      case 'cancelled':
+        return 'Отменён';
+      default:
+        return key;
+    }
+  }
 
   static Color textColor(String status) {
     switch (status) {

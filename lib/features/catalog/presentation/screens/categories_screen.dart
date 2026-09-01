@@ -1,14 +1,10 @@
 import 'package:aurashop/bloc/theme/theme_bloc.dart';
 import 'package:aurashop/core/routing/app_router.gr.dart';
-import 'package:aurashop/features/catalog/presentation/widgets/catalog_filter_sheet.dart';
-import 'package:aurashop/features/catalog/presentation/widgets/catalog_product_counter.dart';
-import 'package:aurashop/features/catalog/presentation/widgets/catalog_products_sliver.dart';
-import 'package:aurashop/features/catalog/presentation/widgets/catalog_sort_sheet.dart';
-import 'package:aurashop/features/catalog/presentation/widgets/product_sort_option.dart';
 import 'package:aurashop/repositories/product_repository.dart';
 import 'package:aurashop/shared/models/product_model.dart';
 import 'package:aurashop/shared/widgets/catalog_filter_button.dart';
 import 'package:aurashop/shared/widgets/chip_list.dart';
+import 'package:aurashop/features/catalog/presentation/widgets/catalog_helpers.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

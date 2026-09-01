@@ -35,7 +35,8 @@ extension ThemeStateX on ThemeState {
       seedColor: seedColor,
       brightness: brightness,
     );
-
+    // Ensure primary color is the direct accent while keeping other
+    // scheme colors consistent with Material3 seed generation.
     final customScheme = baseScheme.copyWith(
       primary: directAccentColor,
       onPrimary:
@@ -45,24 +46,34 @@ extension ThemeStateX on ThemeState {
           : Colors.black,
     );
 
+    // Choose contrasting text/icon colors based on overall brightness.
+    final onSurface = brightness == Brightness.light
+        ? Colors.black
+        : Colors.white;
+    final surface = brightness == Brightness.light
+        ? Colors.white
+        : customScheme.surface;
+    final background = brightness == Brightness.light
+        ? Colors.white
+        : customScheme.background;
+
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
       colorScheme: customScheme,
-
-      // --- Настройка AppBar ---
+      scaffoldBackgroundColor: background,
+      // AppBar should use surface for dark and white for light to keep contrast
       appBarTheme: AppBarTheme(
-        backgroundColor: brightness == Brightness.light
-            ? Colors.white
-            : customScheme.surface,
+        backgroundColor: surface,
         foregroundColor: customScheme.onSurface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
       ),
-      scaffoldBackgroundColor: brightness == Brightness.light
-          ? Colors.white
-          : customScheme.surface,
-
+      dividerColor: customScheme.outline,
+      textTheme: ThemeData(
+        brightness: brightness,
+      ).textTheme.apply(bodyColor: onSurface, displayColor: onSurface),
+      iconTheme: IconThemeData(color: customScheme.onSurface),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: customScheme.primary,
@@ -78,7 +89,9 @@ extension ThemeStateX on ThemeState {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: customScheme.surfaceContainerHighest,
+        fillColor: brightness == Brightness.light
+            ? customScheme.surfaceContainerHighest
+            : customScheme.surfaceVariant,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
