@@ -7,17 +7,12 @@ import 'package:aurashop/shared/widgets/orders/orders_offline_banner.dart';
 import 'package:aurashop/shared/widgets/orders/order_status_filter.dart';
 import 'package:aurashop/shared/widgets/orders/orders_list.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class OrdersScreen extends StatefulWidget {
-  const OrdersScreen({
-    super.key,
-    this.foradminAppbar,
-    this.isItAdmin,
-  });
+  const OrdersScreen({super.key, this.foradminAppbar, this.isItAdmin});
   final String? foradminAppbar;
   final bool? isItAdmin;
 
@@ -69,8 +64,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
         ],
       ),
       body: widget.isItAdmin == true
-          ? const AdminOrdersWidget() // Админ видит все заказы
-          : const UserOrdersWidget(), // Пользователь видит только свои
+          ? const MyOrders() // Админ видит все заказы
+          : const UserOrders(), // Пользователь видит только свои
     );
   }
 }
@@ -137,7 +132,9 @@ class _UserOrdersState extends State<UserOrders> {
           // ✅ Фильтруем заказы по userId (айди заказчика)
           final allOrders = state.orders;
           final userOrders = widget.userId != null
-              ? allOrders.where((order) => order == widget.userId).toList()
+              ? allOrders
+                    .where((order) => order.userId == widget.userId)
+                    .toList()
               : allOrders;
 
           if (userOrders.isEmpty) {
@@ -228,7 +225,9 @@ class _MyOrdersState extends State<MyOrders> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<OrdersBloc>().add(const LoadOrdersRequested());
+      // Ensure admin view requests ALL orders (OrdersScreen already triggers it,
+      // but avoid overwriting with user-only load here).
+      context.read<OrdersBloc>().add(const LoadAllOrdersRequested());
     });
   }
 
@@ -281,7 +280,7 @@ class _MyOrdersState extends State<MyOrders> {
                     ElevatedButton.icon(
                       onPressed: () {
                         context.read<OrdersBloc>().add(
-                          const LoadOrdersRequested(),
+                          const LoadAllOrdersRequested(),
                         );
                       },
                       icon: const Icon(Icons.refresh),
@@ -362,7 +361,7 @@ class _MyOrdersState extends State<MyOrders> {
 
             return RefreshIndicator(
               onRefresh: () async {
-                context.read<OrdersBloc>().add(const LoadOrdersRequested());
+                context.read<OrdersBloc>().add(const LoadAllOrdersRequested());
               },
               child: Column(
                 children: [
@@ -381,7 +380,7 @@ class _MyOrdersState extends State<MyOrders> {
                         TextButton.icon(
                           onPressed: () {
                             context.read<OrdersBloc>().add(
-                              const LoadOrdersRequested(),
+                              const LoadAllOrdersRequested(),
                             );
                           },
                           icon: const Icon(Icons.refresh, size: 16),
@@ -409,10 +408,14 @@ class _MyOrdersState extends State<MyOrders> {
                     child: OrdersList(
                       orders: filteredOrders, // Все заказы для админа
                       onStatusChanged: (order) {
+                        // Convert human-readable label back to status key
+                        final key = OrderStatusPalette.getStatusKey(
+                          order.status,
+                        );
                         context.read<OrdersBloc>().add(
                           UpdateOrderStatusRequested(
                             orderId: order.id,
-                            status: order.status,
+                            status: key,
                           ),
                         );
                       },
@@ -436,37 +439,12 @@ class _MyOrdersState extends State<MyOrders> {
 
     final selectedLabel = OrderStatusPalette.filterLabels[_selectedStatusIndex];
     final selectedStatusKey = OrderStatusPalette.getStatusKey(selectedLabel);
+    final selectedHumanLabel = OrderStatusPalette.getLabelForKey(
+      selectedStatusKey,
+    );
 
     return orders.where((order) {
-      return order.status.toLowerCase() == selectedStatusKey.toLowerCase();
+      return order.status.toLowerCase() == selectedHumanLabel.toLowerCase();
     }).toList();
-  }
-}
-
-class OrderStatusPalette {
-  static const List<String> filterLabels = [
-    'Все',
-    'Ожидает',
-    'Подтвержден',
-    'В пути',
-    'Доставлен',
-    'Отменен',
-  ];
-
-  static String getStatusKey(String label) {
-    switch (label) {
-      case 'Ожидает':
-        return 'pending';
-      case 'Подтвержден':
-        return 'confirmed';
-      case 'В пути':
-        return 'shipped';
-      case 'Доставлен':
-        return 'delivered';
-      case 'Отменен':
-        return 'cancelled';
-      default:
-        return label.toLowerCase();
-    }
   }
 }

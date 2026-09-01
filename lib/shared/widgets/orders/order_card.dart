@@ -87,9 +87,11 @@ class _OrderCardState extends State<OrderCard> {
                       color: Theme.of(context).scaffoldBackgroundColor,
                       borderRadius: BorderRadius.circular(12),
                       child: InkWell(
-                        onTap: () {
-                          _selectStatus(context);
-                        },
+                        onTap: widget.onStatusChanged == null
+                            ? null
+                            : () {
+                                _selectStatus(context);
+                              },
                         borderRadius: BorderRadius.circular(12),
                         child: Container(
                           height: 50,
@@ -104,16 +106,34 @@ class _OrderCardState extends State<OrderCard> {
                           child: Row(
                             children: [
                               const SizedBox(width: 10),
-                              Text(
-                                _status,
-                                style: TextStyle(
-                                  color: _statusColor(_status),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const Spacer(),
-                              const Icon(Icons.arrow_drop_down),
+                              // If user cannot change status, show larger static status
+                              widget.onStatusChanged == null
+                                  ? Expanded(
+                                      child: Text(
+                                        _status,
+                                        style: TextStyle(
+                                          color: _statusColor(_status),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    )
+                                  : Expanded(
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            _status,
+                                            style: TextStyle(
+                                              color: _statusColor(_status),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          const Icon(Icons.arrow_drop_down),
+                                        ],
+                                      ),
+                                    ),
                             ],
                           ),
                         ),
