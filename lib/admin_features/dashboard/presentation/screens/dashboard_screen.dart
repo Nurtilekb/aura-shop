@@ -3,13 +3,26 @@ import 'package:aurashop/shared/widgets/custom_widgets/iconwith_background_widge
 import 'package:aurashop/shared/widgets/admin/dashboard_metric_card.dart';
 import 'package:aurashop/shared/widgets/admin/dashboard_order_tile.dart';
 import 'package:aurashop/shared/widgets/admin/weekly_sales_card.dart';
+import 'package:aurashop/repositories/product_repository.dart';
+import 'package:aurashop/shared/models/product_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
-class DashboardScreenAdmin extends StatelessWidget {
+class DashboardScreenAdmin extends StatefulWidget {
   const DashboardScreenAdmin({super.key});
+
+  @override
+  State<DashboardScreenAdmin> createState() => _DashboardScreenAdminState();
+}
+
+class _DashboardScreenAdminState extends State<DashboardScreenAdmin> {
+  final ProductRepository _productRepository = ProductRepository();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // analytics are driven by streams in UI
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +126,12 @@ class DashboardScreenAdmin extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              // 3. Секция "Последние заказы"
+              // 3. Секция аналитики по категориям
+              _buildCategoryAnalyticsSection(),
+
+              const SizedBox(height: 24),
+
+              // 4. Секция "Последние заказы"
               const _RecentOrdersSection(),
             ],
           ),
@@ -121,6 +139,137 @@ class DashboardScreenAdmin extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildCategoryAnalyticsSection() {
+    return StreamBuilder<List<Product>>(
+      stream: _productRepository.watchProducts(),
+      builder: (context, prodSnap) {
+        final products = prodSnap.data ?? const [];
+        final prodById = {for (var p in products) p.id: p};
+
+        return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: _firestore
+              .collection('orders')
+              .orderBy('createdAt', descending: true)
+              .snapshots(),
+          builder: (context, orderSnap) {
+            if (orderSnap.connectionState == ConnectionState.waiting &&
+                prodSnap.connectionState == ConnectionState.waiting) {
+              return const SizedBox(
+                height: 80,
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            final stats = <String, CategoryStats>{};
+
+            final docs = orderSnap.data?.docs ?? [];
+            for (final doc in docs) {
+              final data = doc.data();
+              final items = (data['items'] as List<dynamic>?) ?? [];
+
+              for (final rawItem in items) {
+                String category = 'Без категории';
+                double price = 0.0;
+                int quantity = 1;
+
+                if (rawItem is Map) {
+                  final pid = rawItem['productId']?.toString();
+                  price = (rawItem['price'] is num)
+                      ? (rawItem['price'] as num).toDouble()
+                      : double.tryParse(rawItem['price']?.toString() ?? '0') ??
+                            0.0;
+                  quantity = rawItem['quantity'] is num
+                      ? (rawItem['quantity'] as num).toInt()
+                      : int.tryParse(rawItem['quantity']?.toString() ?? '1') ??
+                            1;
+
+                  if (pid != null &&
+                      pid.isNotEmpty &&
+                      prodById.containsKey(pid)) {
+                    category = prodById[pid]!.category;
+                  }
+                } else if (rawItem is String) {
+                  final found = prodById.values.firstWhere(
+                    (p) => p.name.toLowerCase() == rawItem.toLowerCase(),
+                    orElse: () => Product(
+                      id: '',
+                      name: '',
+                      price: 0,
+                      category: 'Без категории',
+                      description: '',
+                    ),
+                  );
+                  category = found.category;
+                }
+
+                final cur =
+                    stats[category] ?? CategoryStats(category: category);
+                cur.itemsCount += quantity;
+                cur.revenue += (price * quantity).round();
+                stats[category] = cur;
+              }
+            }
+
+            if (stats.isEmpty) {
+              return const Text(
+                'Нет данных для отображения',
+                style: TextStyle(color: Colors.black54),
+              );
+            }
+
+            final entries = stats.values.toList();
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      'Аналитика по категориям',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Column(
+                  children: entries.map((c) {
+                    return ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                        c.category,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      subtitle: Text(
+                        '${c.itemsCount} товаров · ${c.revenue} ₽',
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 8),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class CategoryStats {
+  final String category;
+  int itemsCount;
+  int revenue;
+
+  CategoryStats({
+    required this.category,
+    this.itemsCount = 0,
+    this.revenue = 0,
+  });
 }
 
 class _RecentOrdersSection extends StatelessWidget {
